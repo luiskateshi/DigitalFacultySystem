@@ -19,12 +19,14 @@ namespace DigitalFacultySystem.ClientApp.Pages.AcademicYear
 
         public String Message { get; set; } = string.Empty;
 
+        private string url = "api/AcademicYear";
+
         protected override async Task OnInitializedAsync()
         {
             if(!string.IsNullOrEmpty(Id))
             {
                 var Id = Guid.Parse(this.Id);
-                var academicYear = await _academicYearService.GetById(Id);
+                var academicYear = await _academicYearService.GetById(Id, url);
 
                 if(academicYear != null)
                     academicYearModel = academicYear;
@@ -46,7 +48,7 @@ namespace DigitalFacultySystem.ClientApp.Pages.AcademicYear
                     StartDate = academicYearModel.StartDate,
                     EndDate = academicYearModel.EndDate
                 };
-                var result = await _academicYearService.Add(newAcademicYear);
+                var result = await _academicYearService.Add(newAcademicYear, url);
                 if(result != null)
                     _navi.NavigateTo("/academicYears");
 
@@ -62,7 +64,7 @@ namespace DigitalFacultySystem.ClientApp.Pages.AcademicYear
                     StartDate = academicYearModel.StartDate,
                     EndDate = academicYearModel.EndDate
                 };
-                var result = await _academicYearService.Update(updateAcademicYear);
+                var result = await _academicYearService.Update(updateAcademicYear, url);
                 if(result != null)
                     _navi.NavigateTo("/academicYears");
 

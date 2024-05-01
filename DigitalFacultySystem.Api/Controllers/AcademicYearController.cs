@@ -3,8 +3,6 @@ using DigitalFacultySystem.DataService.Data;
 using DigitalFacultySystem.DataService.Repositories.Interfaces;
 using DigitalFacultySystem.Domain.Entities;
 using DigitalFacultySystem.Entities.Dtos.RequestResponse;
-using DigitalFacultySystem.Entities.Dtos.Requests;
-using DigitalFacultySystem.Entities.Dtos.Responses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

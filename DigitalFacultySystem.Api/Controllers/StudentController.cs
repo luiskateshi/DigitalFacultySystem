@@ -2,8 +2,7 @@
 using DigitalFacultySystem.DataService.Data;
 using DigitalFacultySystem.DataService.Repositories.Interfaces;
 using DigitalFacultySystem.Domain.Entities;
-using DigitalFacultySystem.Entities.Dtos.Requests;
-using DigitalFacultySystem.Entities.Dtos.Responses;
+using DigitalFacultySystem.Entities.Dtos.RequestResponse;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -28,7 +27,7 @@ namespace DigitalFacultySystem.Api.Controllers
                 return NotFound("Student not found");
             }
 
-            var result = _mapper.Map<StudentResponse>(student);
+            var result = _mapper.Map<StudentDto>(student);
             return Ok(result);
         }
 
@@ -36,12 +35,12 @@ namespace DigitalFacultySystem.Api.Controllers
         public async Task<IActionResult> GetAllStudents()
         {
             var students = await _unitOfWork.Students.All();
-            var result = _mapper.Map<IEnumerable<StudentResponse>>(students);
+            var result = _mapper.Map<IEnumerable<StudentDto>>(students);
             return Ok(result);
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddStudent([FromBody]CreateStudentRequest createStudent)
+        public async Task<IActionResult> AddStudent([FromBody] StudentDto createStudent)
         {
             var student = _mapper.Map<Student>(createStudent);
             await _unitOfWork.Students.Add(student);
@@ -64,7 +63,7 @@ namespace DigitalFacultySystem.Api.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateStudent(UpdateStudentRequest student)
+        public async Task<IActionResult> UpdateStudent(StudentDto student)
         {
             var studentToUpdate = _mapper.Map<Student>(student);
             var result = await _unitOfWork.Students.Update(studentToUpdate);

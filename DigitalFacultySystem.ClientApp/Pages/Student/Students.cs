@@ -1,6 +1,6 @@
 ﻿using DigitalFacultySystem.ClientApp.Services.Interfaces;
 using DigitalFacultySystem.Domain.Entities;
-using DigitalFacultySystem.Entities.Dtos.Responses;
+using DigitalFacultySystem.Entities.Dtos.RequestResponse;
 using Microsoft.AspNetCore.Components;
 
 namespace DigitalFacultySystem.ClientApp.Pages.Student
@@ -9,18 +9,18 @@ namespace DigitalFacultySystem.ClientApp.Pages.Student
     public partial class Students
     {
         [Inject]
-        private IStudentService _studentService { get; set; }
+        private IGenericService<StudentDto> _studentService { get; set; }
+        public IEnumerable<StudentDto> _students { get; set; } = new List<StudentDto>();
 
-        public IEnumerable<StudentResponse> _students { get; set; } = new List<StudentResponse>();
+        private string apiUrl = "api/Student";
 
-        // This method is called when the component is initialized
+
         protected override async Task OnInitializedAsync()
         {
-
-            var students = await _studentService.GetStudents();
-            if (students?.Count != 0)
+            var rows = await _studentService.GetAll(apiUrl);
+            if (rows?.Count != 0)
             {
-                _students = students;
+                _students = rows;
             }
         }
 

@@ -1,6 +1,5 @@
 ﻿using DigitalFacultySystem.ClientApp.Services.Interfaces;
-using DigitalFacultySystem.Entities.Dtos.Requests;
-using DigitalFacultySystem.Entities.Dtos.Responses;
+using DigitalFacultySystem.Entities.Dtos.RequestResponse;
 using Microsoft.AspNetCore.Components;
 using System.Dynamic;
 
@@ -9,7 +8,7 @@ namespace DigitalFacultySystem.ClientApp.Pages.Student
     public partial class Student
     {
         [Inject]
-        public IStudentService _studentService { get; set; } 
+        public IGenericService<StudentDto> _studentService { get; set; } 
 
         [Parameter] 
         public String studentId { get; set; } = string.Empty;
@@ -17,16 +16,18 @@ namespace DigitalFacultySystem.ClientApp.Pages.Student
         [Inject]
         public NavigationManager _navi { get; set; }
 
-        public StudentResponse studentModel { get; set; } = new ();
+        public StudentDto studentModel { get; set; } = new ();
 
         public String Message { get; set; } = string.Empty;
+
+        private string url = "api/Student";
 
         protected override async Task OnInitializedAsync()
         {
             if(!string.IsNullOrEmpty(studentId))
             {
                 var Id = Guid.Parse(studentId);
-                var student = await _studentService.GetStudent(Id);
+                var student = await _studentService.GetById(Id, url);
 
                 if(student != null)
                     studentModel = student;
@@ -42,7 +43,7 @@ namespace DigitalFacultySystem.ClientApp.Pages.Student
         {
             if(string.IsNullOrEmpty(studentId))
             {
-                var newStudent = new CreateStudentRequest()
+                var newStudent = new StudentDto()
                 {
                     Firstname = studentModel.Firstname,
                     Lastname = studentModel.Lastname,
@@ -51,7 +52,7 @@ namespace DigitalFacultySystem.ClientApp.Pages.Student
                     IdCard = studentModel.IdCard,
                     Tel = studentModel.Tel
                 };
-                var result = await _studentService.AddStudent(newStudent);
+                var result = await _studentService.Add(newStudent, url);
                 if(result != null)
                     _navi.NavigateTo("/students");
 
@@ -60,7 +61,7 @@ namespace DigitalFacultySystem.ClientApp.Pages.Student
             }
             else
             {
-                var updateStudent = new UpdateStudentRequest()
+                var updateStudent = new StudentDto()
                 {
                     Id = studentModel.Id,
                     Firstname = studentModel.Firstname,
@@ -70,7 +71,7 @@ namespace DigitalFacultySystem.ClientApp.Pages.Student
                     IdCard = studentModel.IdCard,
                     Tel = studentModel.Tel
                 };  
-                var result = await _studentService.UpdateStudent(updateStudent);
+                var result = await _studentService.Update(updateStudent, url);
                 if(result)
                     _navi.NavigateTo("/students");
                 
@@ -82,7 +83,7 @@ namespace DigitalFacultySystem.ClientApp.Pages.Student
         {
             if(!string.IsNullOrEmpty(studentId))
             {
-                var result = await _studentService.DeleteStudent(studentModel.Id);
+                var result = await _studentService.Delete(studentModel.Id, url);
                 if(result)
                     _navi.NavigateTo("/students");
                 Message = "Failed to delete student";

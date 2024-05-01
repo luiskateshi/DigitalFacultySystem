@@ -17,8 +17,11 @@ namespace DigitalFacultySystem.ClientApp
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
             
-            builder.Services.AddScoped<IStudentService, StudentService>();
-            builder.Services.AddScoped<IGenericService<AcademicYearDto>, AcademicYearService>();
+
+            builder.Services.AddScoped<IGenericService<DepartmentDto>, GenericService<DepartmentDto>>();
+            builder.Services.AddScoped<IGenericService<AcademicYearDto>, GenericService<AcademicYearDto>>();
+            builder.Services.AddScoped<IGenericService<StudentDto>, GenericService<StudentDto>>();
+
 
 
             builder.Services.AddScoped(hc => new HttpClient 

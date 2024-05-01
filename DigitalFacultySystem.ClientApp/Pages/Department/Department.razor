@@ -1,0 +1,34 @@
+﻿@page "/Department"
+@page "/Department/{id}"
+<h3>Department - @departmentModel.Name</h3>
+
+@if (string.IsNullOrEmpty(Id))
+{
+    <PageTitle>Department Add</PageTitle>
+    <h3>Add a new Department</h3>
+}
+else
+{
+    <PageTitle>Department Update</PageTitle>
+    <p>Update Department</p>
+}
+
+
+<div class="row card">
+    <EditForm Model="@departmentModel" OnValidSubmit="@HandleValidSumbit" OnInvalidSubmit="@HandleInValidSumbit" FormName="sampleForm">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-group">
+            <label for="name">Name</label>
+            <InputText class="form-control" @bind-Value="departmentModel.Name" />
+            <br />
+            <button type="submit" class="btn btn-primary">Save Academic Year</button>
+
+
+            <div class="form-group">
+                <p>@Message</p>
+            </div>
+        </div>
+    </EditForm>
+</div>

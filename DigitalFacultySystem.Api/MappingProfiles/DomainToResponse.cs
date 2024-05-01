@@ -1,6 +1,5 @@
 ﻿using DigitalFacultySystem.Domain.Entities;
 using DigitalFacultySystem.Entities.Dtos.RequestResponse;
-using DigitalFacultySystem.Entities.Dtos.Responses;
 
 namespace DigitalFacultySystem.Api.MappingProfiles
 {
@@ -8,8 +7,10 @@ namespace DigitalFacultySystem.Api.MappingProfiles
     {
         public DomainToResponse()
         {
-            CreateMap<Student, StudentResponse>();
+            CreateMap<Student, StudentDto>();
             CreateMap<AcademicYear, AcademicYearDto>();
+            CreateMap<Department, DepartmentDto>();
+
 
 
         }

@@ -13,16 +13,22 @@ namespace DigitalFacultySystem.DataService.Repositories
     {
         private readonly AppDbContext _context;
 
+
+        //////////////////////////////////////////////////////////////////////////////////////ADD HERE
         public IStudentRepository Students { get; }
 
         public IAcademicYearRepository AcademicYears { get; }
 
+        public IDepartmentRepository Departments { get; }
+
         public UnitOfWork(AppDbContext context, ILoggerFactory loggerFactory)
         {
+            //////////////////////////////////////////////////////////////////////////////////////ADD HERE
             _context = context;
             var logger = loggerFactory.CreateLogger("Logers");
             Students = new StudentRepository(_context, logger);
             AcademicYears = new AcademicYearRepository(_context, logger);
+            Departments = new DepartmentRepository(_context, logger);
             
         }
 
