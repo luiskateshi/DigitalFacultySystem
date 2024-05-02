@@ -63,13 +63,8 @@ namespace DigitalFacultySystem.DataService.Repositories
                 {
                     return false;
                 }
+                MyFieldsMapper.MapFields(student, result);
                 result.isActive = true;
-                result.Firstname = student.Firstname;
-                result.Lastname = student.Lastname;
-                result.Birthdate = student.Birthdate;
-                result.IdCard = student.IdCard;
-                result.Email = student.Email;
-                result.Tel = student.Tel;
 
                 return true;
 

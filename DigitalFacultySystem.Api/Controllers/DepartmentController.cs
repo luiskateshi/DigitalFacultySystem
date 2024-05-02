@@ -16,8 +16,7 @@ namespace DigitalFacultySystem.Api.Controllers
         public async Task<IActionResult> GetAllDepartments()
         {
             var departments = await _unitOfWork.Departments.All();
-            var result = _mapper.Map<IEnumerable<DepartmentDto>>(departments);
-            return Ok(result);
+            return Ok(_mapper.Map<IEnumerable<DepartmentDto>>(departments));
         }
 
         [HttpGet]

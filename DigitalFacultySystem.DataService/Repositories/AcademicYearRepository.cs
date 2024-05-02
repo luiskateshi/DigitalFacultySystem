@@ -40,10 +40,8 @@ namespace DigitalFacultySystem.DataService.Repositories
             {
                 return false;
             }
+            MyFieldsMapper.MapFields(entity, result);
             result.isActive = true;
-            result.Name = entity.Name;
-            result.StartDate = entity.StartDate;
-            result.EndDate = entity.EndDate;
 
             return true;
         }

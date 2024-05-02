@@ -10,5 +10,6 @@ namespace DigitalFacultySystem.DataService.Repositories.Interfaces
     public interface IStudentRepository : IGenericRepository<Student>{}
     public interface IAcademicYearRepository : IGenericRepository<AcademicYear>{}
     public interface IDepartmentRepository : IGenericRepository<Department> { }
+    public interface IDegreeProgramRepository : IGenericRepository<DegreeProgram> { }
 
 }

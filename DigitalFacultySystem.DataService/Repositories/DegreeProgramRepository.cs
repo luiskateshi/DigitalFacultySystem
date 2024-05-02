@@ -11,13 +11,13 @@ using System.Threading.Tasks;
 
 namespace DigitalFacultySystem.DataService.Repositories
 {
-    internal class DepartmentRepository : GenericRepository<Department>, IDepartmentRepository
+    internal class DegreeProgramRepository : GenericRepository<DegreeProgram>, IDegreeProgramRepository
     {
-        public DepartmentRepository(AppDbContext context, ILogger logger) : base(context, logger)
+        public DegreeProgramRepository(AppDbContext context, ILogger logger) : base(context, logger)
         {
         }
 
-        public override async Task<IEnumerable<Department>> All()
+        public override async Task<IEnumerable<DegreeProgram>> All()
         {
             return await _dbSet.Where(x => x.isActive == true)
                     .AsNoTracking()
@@ -26,7 +26,7 @@ namespace DigitalFacultySystem.DataService.Repositories
                     .ToListAsync();
         }
 
-        public override async Task<bool> Update(Department entity)
+        public override async Task<bool> Update(DegreeProgram entity)
         {
             var result = await _dbSet.FirstOrDefaultAsync(x => x.Id == entity.Id);
             if (result == null)
@@ -36,9 +36,8 @@ namespace DigitalFacultySystem.DataService.Repositories
             MyFieldsMapper.MapFields(entity, result);
             result.isActive = true;
 
-            return true;
 
+            return true;
         }
-        
     }
 }

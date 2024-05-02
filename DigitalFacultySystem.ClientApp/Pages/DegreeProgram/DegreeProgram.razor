@@ -1,0 +1,38 @@
+﻿@page "/DegreeProgram"
+@page "/DegreeProgram/{id}"
+<h3>Degree Program - @degreeModel.Name</h3>
+
+@if (string.IsNullOrEmpty(Id))
+{
+    <PageTitle>Degree Program Add</PageTitle>
+    <h3>Add a new Degree Program</h3>
+}
+else
+{
+    <PageTitle>Degree Program Update</PageTitle>
+    <p>Update Degree Program</p>
+}
+
+
+<div class="row card">
+    <EditForm Model="@degreeModel" OnValidSubmit="@HandleValidSumbit" OnInvalidSubmit="@HandleInValidSumbit" FormName="sampleForm">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-group">
+            <label for="name">Name</label>
+            <InputText class="form-control" @bind-Value="degreeModel.Name" />
+            <label for="grade">Grade</label>
+            <InputText class="form-control" @bind-Value="degreeModel.Grade" />
+            <label for="studyLength">Length of studies (in semesters)</label>
+            <InputNumber class="form-control" @bind-Value="degreeModel.StudyLength" />
+            <br />
+            <button type="submit" class="btn btn-primary">Save</button>
+
+
+            <div class="form-group">
+                <p>@Message</p>
+            </div>
+        </div>
+    </EditForm>
+</div>
