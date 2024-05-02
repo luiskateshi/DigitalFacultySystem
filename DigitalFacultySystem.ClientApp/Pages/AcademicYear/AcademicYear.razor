@@ -1,6 +1,6 @@
 ﻿@page "/AcademicYear"
 @page "/AcademicYear/{id}"
-<h3>Academic Year</h3>
+
 
 @if (string.IsNullOrEmpty(Id))
 {
@@ -9,7 +9,8 @@
 }
 else
 {
-    <PageTitle>Academic Year Update</PageTitle>
+    <PageTitle>Academic Year</PageTitle>
+    <h3>Academic Year - @academicYearModel.Name</h3>
     <p>Update Academic Year</p>
 }
 

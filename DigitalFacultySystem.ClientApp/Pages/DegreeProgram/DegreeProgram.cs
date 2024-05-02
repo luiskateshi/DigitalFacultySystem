@@ -19,6 +19,11 @@ namespace DigitalFacultySystem.ClientApp.Pages.DegreeProgram
 
         public String Message { get; set; } = string.Empty;
 
+        public IEnumerable<DepartmentDto> departments { get; set; } = new List<DepartmentDto>();
+
+        [Inject]
+        public IGenericService<DepartmentDto> _departmentService { get; set; }
+
         private string url = "api/DegreeProgram";
 
         protected override async Task OnInitializedAsync()
@@ -27,6 +32,7 @@ namespace DigitalFacultySystem.ClientApp.Pages.DegreeProgram
             {
                 var Id = Guid.Parse(this.Id);
                 var degree = await _degreeService.GetById(Id, url);
+                departments = await _departmentService.GetAll("api/Department");
 
                 if (degree != null)
                     degreeModel = degree;
@@ -44,7 +50,10 @@ namespace DigitalFacultySystem.ClientApp.Pages.DegreeProgram
             {
                 var newDegree = new DegreeProgramDto()
                 {
-                    Name = degreeModel.Name
+                    Grade = degreeModel.Grade,
+                    Name = degreeModel.Name,
+                    StudyLength = degreeModel.StudyLength,
+                    DepartmentId = degreeModel.DepartmentId
                 };
                 var result = await _degreeService.Add(newDegree, url);
                 if (result != null)
@@ -59,7 +68,9 @@ namespace DigitalFacultySystem.ClientApp.Pages.DegreeProgram
                 {
                     Id = degreeModel.Id,
                     Grade = degreeModel.Grade,
-                    Name = degreeModel.Name
+                    Name = degreeModel.Name,
+                    StudyLength = degreeModel.StudyLength,
+                    DepartmentId = degreeModel.DepartmentId
                 };
                 var result = await _degreeService.Update(updateDegree, url);
                 if (result != null)

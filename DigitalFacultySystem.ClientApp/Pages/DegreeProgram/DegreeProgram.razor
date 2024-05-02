@@ -26,6 +26,14 @@ else
             <InputText class="form-control" @bind-Value="degreeModel.Grade" />
             <label for="studyLength">Length of studies (in semesters)</label>
             <InputNumber class="form-control" @bind-Value="degreeModel.StudyLength" />
+            <label for="department">Department</label>
+            <select class="form-control" @bind="degreeModel.DepartmentId">
+                <option value="">Select Department</option>
+                @foreach (var department in departments)
+                {
+                    <option value="@department.Id">@department.Name</option>
+                }
+            </select>
             <br />
             <button type="submit" class="btn btn-primary">Save</button>
 
