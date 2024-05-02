@@ -1,0 +1,39 @@
+﻿@page "/Lecturers"
+<h3>Lecturers</h3>
+
+<a href="@("Lecturer")" class="btn btn-success"> Add new</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Firstname</th>
+            <th>Lastname</th>
+            <th>Birthdate</th>
+            <th>Identity Card No.</th>
+            <th>Grade</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Actions</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var row in lecturers)
+        {
+            <tr>
+                <td>@row.Id</td>
+                <td>@row.Firstname</td>
+                <td>@row.Lastname</td>
+                <td>@row.Birthdate</td>
+                <td>@row.IdCard</td>
+                <td>@row.Grade</td>
+                <td>@row.Email</td>
+                <td>@row.Tel</td>
+
+                <td><a href="@("Lecturer/" + row.Id)" class="btn btn-warning">Edit</a></td>
+
+            </tr>
+        }
+    </tbody>
+
+</table>

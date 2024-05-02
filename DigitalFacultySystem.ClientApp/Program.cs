@@ -22,6 +22,7 @@ namespace DigitalFacultySystem.ClientApp
             builder.Services.AddScoped<IGenericService<AcademicYearDto>, GenericService<AcademicYearDto>>();
             builder.Services.AddScoped<IGenericService<StudentDto>, GenericService<StudentDto>>();
             builder.Services.AddScoped<IGenericService<DegreeProgramDto>, GenericService<DegreeProgramDto>>();
+            builder.Services.AddScoped<IGenericService<LecturerDto>, GenericService<LecturerDto>>();
 
 
 

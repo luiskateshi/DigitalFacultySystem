@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DigitalFacultySystem.Entities.Dtos.RequestResponse
 {
-    internal class LecturerDto
+    public class LecturerDto
     {
         public Guid Id { get; set; }
         public string? Firstname { get; set; }
