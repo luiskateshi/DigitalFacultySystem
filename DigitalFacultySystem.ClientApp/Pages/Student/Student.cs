@@ -1,4 +1,5 @@
 ﻿using DigitalFacultySystem.ClientApp.Services.Interfaces;
+using DigitalFacultySystem.Entities;
 using DigitalFacultySystem.Entities.Dtos.RequestResponse;
 using Microsoft.AspNetCore.Components;
 using System.Dynamic;
@@ -43,15 +44,8 @@ namespace DigitalFacultySystem.ClientApp.Pages.Student
         {
             if(string.IsNullOrEmpty(studentId))
             {
-                var newStudent = new StudentDto()
-                {
-                    Firstname = studentModel.Firstname,
-                    Lastname = studentModel.Lastname,
-                    Email = studentModel.Email,
-                    Birthdate = studentModel.Birthdate,
-                    IdCard = studentModel.IdCard,
-                    Tel = studentModel.Tel
-                };
+                var newStudent = new StudentDto();
+                MyFieldsMapper.MapFields(studentModel, newStudent);
                 var result = await _studentService.Add(newStudent, url);
                 if(result != null)
                     _navi.NavigateTo("/students");
@@ -61,16 +55,8 @@ namespace DigitalFacultySystem.ClientApp.Pages.Student
             }
             else
             {
-                var updateStudent = new StudentDto()
-                {
-                    Id = studentModel.Id,
-                    Firstname = studentModel.Firstname,
-                    Lastname = studentModel.Lastname,
-                    Email = studentModel.Email,
-                    Birthdate = studentModel.Birthdate,
-                    IdCard = studentModel.IdCard,
-                    Tel = studentModel.Tel
-                };  
+                var updateStudent = new StudentDto();
+                MyFieldsMapper.MapFields(studentModel, updateStudent);
                 var result = await _studentService.Update(updateStudent, url);
                 if(result)
                     _navi.NavigateTo("/students");

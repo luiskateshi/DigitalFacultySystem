@@ -16,7 +16,8 @@ namespace DigitalFacultySystem.Api.Controllers
         [HttpGet("all")]
         public async Task<IActionResult> GetDegreePrograms()
         {
-            var degreePrograms = await _unitOfWork.DegreePrograms.All();
+            var degreePrograms = await _unitOfWork.DegreePrograms
+                .All();
             return Ok(_mapper.Map<IEnumerable<DegreeProgramDto>>(degreePrograms));
         }
 

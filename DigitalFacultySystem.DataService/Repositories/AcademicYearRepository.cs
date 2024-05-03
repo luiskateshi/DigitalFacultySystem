@@ -1,6 +1,7 @@
 ﻿using DigitalFacultySystem.DataService.Data;
 using DigitalFacultySystem.DataService.Repositories.Interfaces;
 using DigitalFacultySystem.Domain.Entities;
+using DigitalFacultySystem.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 

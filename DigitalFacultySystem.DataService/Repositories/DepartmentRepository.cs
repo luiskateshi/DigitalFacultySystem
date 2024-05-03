@@ -1,6 +1,7 @@
 ﻿using DigitalFacultySystem.DataService.Data;
 using DigitalFacultySystem.DataService.Repositories.Interfaces;
 using DigitalFacultySystem.Domain.Entities;
+using DigitalFacultySystem.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
@@ -39,6 +40,14 @@ namespace DigitalFacultySystem.DataService.Repositories
             return true;
 
         }
-        
+
+        public override async Task<Department?> GetById(Guid id)
+        {
+            //include related entities
+            return await _dbSet.AsNoTracking()
+                .Include(x => x.DegreePrograms)
+                .FirstOrDefaultAsync(x => x.Id == id);
+        }
+
     }
 }

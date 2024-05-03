@@ -1,4 +1,5 @@
 ﻿using DigitalFacultySystem.ClientApp.Services.Interfaces;
+using DigitalFacultySystem.Entities;
 using DigitalFacultySystem.Entities.Dtos.RequestResponse;
 using Microsoft.AspNetCore.Components;
 
@@ -28,12 +29,14 @@ namespace DigitalFacultySystem.ClientApp.Pages.DegreeProgram
 
         protected override async Task OnInitializedAsync()
         {
+            //get all departments for dropdown
+            departments = await _departmentService.GetAll("api/Department");
+
             if (!string.IsNullOrEmpty(Id))
             {
                 var Id = Guid.Parse(this.Id);
                 var degree = await _degreeService.GetById(Id, url);
-                departments = await _departmentService.GetAll("api/Department");
-
+                
                 if (degree != null)
                     degreeModel = degree;
             }
@@ -48,13 +51,9 @@ namespace DigitalFacultySystem.ClientApp.Pages.DegreeProgram
         {
             if (string.IsNullOrEmpty(Id))
             {
-                var newDegree = new DegreeProgramDto()
-                {
-                    Grade = degreeModel.Grade,
-                    Name = degreeModel.Name,
-                    StudyLength = degreeModel.StudyLength,
-                    DepartmentId = degreeModel.DepartmentId
-                };
+                var newDegree = new DegreeProgramDto();
+                MyFieldsMapper.MapFields(degreeModel, newDegree);
+                
                 var result = await _degreeService.Add(newDegree, url);
                 if (result != null)
                     _navi.NavigateTo("/degreePrograms");
@@ -64,14 +63,9 @@ namespace DigitalFacultySystem.ClientApp.Pages.DegreeProgram
             }
             else
             {
-                var updateDegree = new DegreeProgramDto()
-                {
-                    Id = degreeModel.Id,
-                    Grade = degreeModel.Grade,
-                    Name = degreeModel.Name,
-                    StudyLength = degreeModel.StudyLength,
-                    DepartmentId = degreeModel.DepartmentId
-                };
+                var updateDegree = new DegreeProgramDto();
+                MyFieldsMapper.MapFields(degreeModel, updateDegree);
+
                 var result = await _degreeService.Update(updateDegree, url);
                 if (result != null)
                     _navi.NavigateTo("/degreePrograms");

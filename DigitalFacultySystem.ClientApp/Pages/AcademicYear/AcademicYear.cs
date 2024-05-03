@@ -1,4 +1,5 @@
 ﻿using DigitalFacultySystem.ClientApp.Services.Interfaces;
+using DigitalFacultySystem.Entities;
 using DigitalFacultySystem.Entities.Dtos.RequestResponse;
 using Microsoft.AspNetCore.Components;
 
@@ -42,12 +43,9 @@ namespace DigitalFacultySystem.ClientApp.Pages.AcademicYear
         {
             if(string.IsNullOrEmpty(Id))
             {
-                var newAcademicYear = new AcademicYearDto()
-                {
-                    Name = academicYearModel.Name,
-                    StartDate = academicYearModel.StartDate,
-                    EndDate = academicYearModel.EndDate
-                };
+                var newAcademicYear = new AcademicYearDto();
+                MyFieldsMapper.MapFields(academicYearModel, newAcademicYear);
+
                 var result = await _academicYearService.Add(newAcademicYear, url);
                 if(result != null)
                     _navi.NavigateTo("/academicYears");
@@ -57,13 +55,8 @@ namespace DigitalFacultySystem.ClientApp.Pages.AcademicYear
             }
             else
             {
-                var updateAcademicYear = new AcademicYearDto()
-                {
-                    Id = academicYearModel.Id,
-                    Name = academicYearModel.Name,
-                    StartDate = academicYearModel.StartDate,
-                    EndDate = academicYearModel.EndDate
-                };
+                var updateAcademicYear = new AcademicYearDto();
+                MyFieldsMapper.MapFields(academicYearModel, updateAcademicYear);
                 var result = await _academicYearService.Update(updateAcademicYear, url);
                 if(result != null)
                     _navi.NavigateTo("/academicYears");

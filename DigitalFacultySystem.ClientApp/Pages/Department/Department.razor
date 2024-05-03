@@ -1,5 +1,6 @@
 ﻿@page "/Department"
 @page "/Department/{id}"
+@using DigitalFacultySystem.ClientApp.Pages.DegreeProgram
 <h3>Department - @departmentModel.Name</h3>
 
 @if (string.IsNullOrEmpty(Id))
@@ -32,3 +33,39 @@ else
         </div>
     </EditForm>
 </div>
+
+<br />
+<br />
+<h4>Degree Programs</h4>
+@if(@departmentModel.DegreePrograms != null && @departmentModel.DegreePrograms.Count > 0)
+{
+    // Degree Programs
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Grade</th>
+                <th>Length of studies (in semesters)</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var row in @departmentModel.DegreePrograms)
+            {
+                <tr>
+                    <td>@row.Id</td>
+                    <td>@row.Name</td>
+                    <td>@row.Grade</td>
+                    <td>@row.StudyLength</td>
+                    <td><a href="@("DegreeProgram/" + row.Id)" class="btn btn-warning">Edit</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    
+}
+else
+{
+    <p>No Degree Programs found</p>
+}

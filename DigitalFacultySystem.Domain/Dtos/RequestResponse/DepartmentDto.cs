@@ -10,5 +10,6 @@ namespace DigitalFacultySystem.Entities.Dtos.RequestResponse
     {
         public Guid Id { get; set; }
         public string? Name { get; set; }
+        public ICollection<DegreeProgramDto> DegreePrograms { get; set; } = new List<DegreeProgramDto>();
     }
 }

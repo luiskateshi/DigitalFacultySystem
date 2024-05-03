@@ -1,4 +1,5 @@
 ﻿using DigitalFacultySystem.ClientApp.Services.Interfaces;
+using DigitalFacultySystem.Entities;
 using DigitalFacultySystem.Entities.Dtos.RequestResponse;
 using Microsoft.AspNetCore.Components;
 
@@ -42,16 +43,8 @@ namespace DigitalFacultySystem.ClientApp.Pages.Lecturer
         {
             if (string.IsNullOrEmpty(Id))
             {
-                var newlecturer = new LecturerDto()
-                {
-                    Firstname = lecturerModel.Firstname,
-                    Lastname = lecturerModel.Lastname,
-                    Birthdate = lecturerModel.Birthdate,
-                    IdCard = lecturerModel.IdCard,
-                    Email = lecturerModel.Email,
-                    Tel = lecturerModel.Tel,
-                    Grade = lecturerModel.Grade,
-                };
+                var newlecturer = new LecturerDto();
+                MyFieldsMapper.MapFields(lecturerModel, newlecturer);
                 var result = await _lecturerService.Add(newlecturer, url);
                 if (result != null)
                     _navi.NavigateTo("/lecturers");
@@ -61,17 +54,8 @@ namespace DigitalFacultySystem.ClientApp.Pages.Lecturer
             }
             else
             {
-                var updateLecturer = new LecturerDto()
-                {
-                    Id = lecturerModel.Id,
-                    Firstname = lecturerModel.Firstname,
-                    Lastname = lecturerModel.Lastname,
-                    Birthdate = lecturerModel.Birthdate,
-                    IdCard = lecturerModel.IdCard,
-                    Email = lecturerModel.Email,
-                    Tel = lecturerModel.Tel,
-                    Grade = lecturerModel.Grade,
-                };
+                var updateLecturer = new LecturerDto();
+                MyFieldsMapper.MapFields(lecturerModel, updateLecturer);
                 var result = await _lecturerService.Update(updateLecturer, url);
                 if (result != null)
                     _navi.NavigateTo("/lecturers");
@@ -81,3 +65,4 @@ namespace DigitalFacultySystem.ClientApp.Pages.Lecturer
         }
     }
 }
+

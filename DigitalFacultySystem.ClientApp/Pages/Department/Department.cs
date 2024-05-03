@@ -1,4 +1,5 @@
 ﻿using DigitalFacultySystem.ClientApp.Services.Interfaces;
+using DigitalFacultySystem.Entities;
 using DigitalFacultySystem.Entities.Dtos.RequestResponse;
 using Microsoft.AspNetCore.Components;
 
@@ -17,6 +18,8 @@ namespace DigitalFacultySystem.ClientApp.Pages.Department
 
         public DepartmentDto departmentModel { get; set; } = new ();
 
+        public ICollection<DegreeProgramDto> degreePrograms { get; set; } = new List<DegreeProgramDto>();
+
         public String Message { get; set; } = string.Empty;
 
         private string url = "api/Department";
@@ -27,8 +30,9 @@ namespace DigitalFacultySystem.ClientApp.Pages.Department
             {
                 var Id = Guid.Parse(this.Id);
                 var department = await _departmentService.GetById(Id, url);
+                degreePrograms = department.DegreePrograms;
 
-                if(department != null)
+                if (department != null)
                     departmentModel = department;
             }
         }
@@ -42,10 +46,8 @@ namespace DigitalFacultySystem.ClientApp.Pages.Department
         {
             if(string.IsNullOrEmpty(Id))
             {
-                var newDepartment = new DepartmentDto()
-                {
-                    Name = departmentModel.Name
-                };
+                var newDepartment = new DepartmentDto();
+                MyFieldsMapper.MapFields(departmentModel, newDepartment);
                 var result = await _departmentService.Add(newDepartment, url);
                 if(result != null)
                     _navi.NavigateTo("/departments");
@@ -55,11 +57,8 @@ namespace DigitalFacultySystem.ClientApp.Pages.Department
             }
             else
             {
-                var updateDepartment = new DepartmentDto()
-                {
-                    Id = departmentModel.Id,
-                    Name = departmentModel.Name
-                };
+                var updateDepartment = new DepartmentDto();
+                MyFieldsMapper.MapFields(departmentModel, updateDepartment);
                 var result = await _departmentService.Update(updateDepartment, url);
                 if(result != null)
                     _navi.NavigateTo("/departments");
