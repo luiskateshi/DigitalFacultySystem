@@ -7,44 +7,44 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DigitalFacultySystem.Api.Controllers
 {
-    public class LecturerController : BaseController
+    public class StudyPlanController : BaseController
     {
-        public LecturerController(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
+        public StudyPlanController(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
         {
         }
 
         [HttpGet("all")]
         public async Task<IActionResult> All()
         {
-            var lecturers = await _unitOfWork.Lecturers.All();
-            return Ok(_mapper.Map<IEnumerable<LecturerDto>>(lecturers));
+            var studyPlans = await _unitOfWork.StudyPlans.All();
+            return Ok(_mapper.Map<IEnumerable<StudyPlanDto>>(studyPlans));
         }
 
         [HttpGet]
         public async Task<IActionResult> GetById(Guid id)
         {
-            var lecturer = await _unitOfWork.Lecturers.GetById(id);
-            if (lecturer == null)
+            var studyPlan = await _unitOfWork.StudyPlans.GetById(id);
+            if (studyPlan == null)
             {
                 return NotFound();
             }
-            return Ok(_mapper.Map<LecturerDto>(lecturer)); 
-        }             
+            return Ok(_mapper.Map<StudyPlanDto>(studyPlan));
+        }
 
         [HttpPost]
-        public async Task<IActionResult> Add(LecturerDto lecturerDto)
+        public async Task<IActionResult> Add(StudyPlanDto studyPlanDto)
         {
-            var lecturer = _mapper.Map<Lecturer>(lecturerDto);
-            await _unitOfWork.Lecturers.Add(lecturer);
+            var studyPlan = _mapper.Map<StudyPlan>(studyPlanDto);
+            await _unitOfWork.StudyPlans.Add(studyPlan);
             await _unitOfWork.CompleteAsync();
             return Ok();
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(LecturerDto lecturerDto)
+        public async Task<IActionResult> Update(StudyPlanDto studyPlanDto)
         {
-            var lecturer = _mapper.Map<Lecturer>(lecturerDto);
-            var result = await _unitOfWork.Lecturers.Update(lecturer);
+            var studyPlan = _mapper.Map<StudyPlan>(studyPlanDto);
+            var result = await _unitOfWork.StudyPlans.Update(studyPlan);
             if (!result)
             {
                 return NotFound();

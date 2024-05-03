@@ -25,6 +25,8 @@ namespace DigitalFacultySystem.DataService.Repositories
 
         public ILecturerRepository Lecturers { get; }
 
+        public IStudyPlanRepository StudyPlans { get; }
+
         public UnitOfWork(AppDbContext context, ILoggerFactory loggerFactory)
         {
             //////////////////////////////////////////////////////////////////////////////////////ADD HERE
@@ -35,6 +37,7 @@ namespace DigitalFacultySystem.DataService.Repositories
             Departments = new DepartmentRepository(_context, logger);
             DegreePrograms = new DegreeProgramRepository(_context, logger);
             Lecturers = new LecturerRepository(_context, logger);
+            StudyPlans = new StudyPlanRepository(_context, logger);
             
         }
 
