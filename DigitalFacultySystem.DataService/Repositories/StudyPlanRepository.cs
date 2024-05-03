@@ -21,7 +21,9 @@ namespace DigitalFacultySystem.DataService.Repositories
                     .OrderBy(x => x.Name)
                     .ToListAsync();
         }
- 
+
+        
+
         public override async Task<bool> Update(StudyPlan entity)
         {
             var result = await _dbSet.FirstOrDefaultAsync(x => x.Id == entity.Id);

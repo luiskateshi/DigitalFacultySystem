@@ -13,6 +13,7 @@ namespace DigitalFacultySystem.Api.MappingProfiles
             CreateMap<DegreeProgram, DegreeProgramDto>();   
             CreateMap<Lecturer, LecturerDto>();
             CreateMap<StudyPlan, StudyPlanDto>();
+            CreateMap<Subject, SubjectDto>();
                    
         }
     }

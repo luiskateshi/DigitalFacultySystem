@@ -15,6 +15,7 @@ namespace DigitalFacultySystem.DataService.Repositories.Interfaces
         IDegreeProgramRepository DegreePrograms { get; }
         ILecturerRepository Lecturers { get; }
         IStudyPlanRepository StudyPlans { get; }
+        ISubjectRepository Subjects { get; }
 
         Task<bool> CompleteAsync();
     }

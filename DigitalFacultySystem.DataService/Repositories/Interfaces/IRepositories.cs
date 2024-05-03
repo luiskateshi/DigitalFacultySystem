@@ -13,6 +13,10 @@ namespace DigitalFacultySystem.DataService.Repositories.Interfaces
     public interface IDegreeProgramRepository : IGenericRepository<DegreeProgram> { }
     public interface ILecturerRepository : IGenericRepository<Lecturer> { }
     public interface IStudyPlanRepository : IGenericRepository<StudyPlan> { }
-   
+    public interface ISubjectRepository : IGenericRepository<Subject> {
+        //custom method to get all subjects for a specific studyplan
+        Task<IEnumerable<Subject>> AllForStudyPlan(Guid studyPlanId);
+    }
+
 
 }
