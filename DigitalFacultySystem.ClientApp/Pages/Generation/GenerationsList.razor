@@ -1,0 +1,32 @@
+﻿@page "/generations"
+<h3>Generations</h3>
+
+@if (generations == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <a href="Generation" class="btn btn-primary">Add New</a>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Generation ID</th>
+                <th>Name</th>
+                <th>Current Year of studies</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var row in generations)
+            {
+                <tr>
+                    <td>@row.Id</td>
+                    <td>@row.Name</td>
+                    <td>@row.CurrentYearOfStudies</td>
+                    <td><a href="@("Generation/" + row.Id)" class="btn btn-warning">Edit</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

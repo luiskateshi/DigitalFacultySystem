@@ -17,6 +17,7 @@ namespace DigitalFacultySystem.DataService.Repositories.Interfaces
         //custom method to get all subjects for a specific studyplan
         Task<IEnumerable<Subject>> AllForStudyPlan(Guid studyPlanId);
     }
+    public interface IGenerationRepository : IGenericRepository<Generation> { }
 
 
 }

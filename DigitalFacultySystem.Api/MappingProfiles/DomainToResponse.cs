@@ -14,6 +14,7 @@ namespace DigitalFacultySystem.Api.MappingProfiles
             CreateMap<Lecturer, LecturerDto>();
             CreateMap<StudyPlan, StudyPlanDto>();
             CreateMap<Subject, SubjectDto>();
+            CreateMap<Generation, GenerationDto>();
                    
         }
     }

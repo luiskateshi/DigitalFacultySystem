@@ -1,0 +1,63 @@
+﻿@page "/Generation"
+@page "/Generation/{id}"
+
+@if (string.IsNullOrEmpty(Id))
+{
+    <PageTitle>Generation Add</PageTitle>
+    <h3>Add a Generation</h3>
+}
+else
+{
+    <h3>Generation - @generatioModel.Name</h3>
+    <PageTitle>Generation Update</PageTitle>
+    <p>Update Generation</p>
+}
+
+<div class="row card">
+    <EditForm Model="@generatioModel" OnValidSubmit="@HandleValidSubmit" OnInvalidSubmit="@HandleInvalidSubmit" FormName="sampleForm">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-group">
+            <label for="name">Name</label>
+            <InputText class="form-control" @bind-Value="generatioModel.Name" />
+            <label for="currentYr">Current Year of studies</label>
+            <InputNumber class="form-control" @bind-Value="generatioModel.CurrentYearOfStudies" />
+            <label for="startYear">Starting Academic Year</label>
+            <select class="form-control" @bind="generatioModel.StartAcademicYearId">
+                <option value="">Select Start Academic Year</option>
+                @foreach (var row in academicYears)
+                {
+                    <option value="@row.Id">@row.Name</option>
+                }
+            </select>
+            <label for="degreeProg">Degree Program</label>
+            <select class="form-control" @bind="generatioModel.DegreeId">
+                <option value="">Select Degree Program</option>
+                @foreach (var row in degreePrograms)
+                {
+                    <option value="@row.Id">@row.Name</option>
+                }
+            </select>
+            <label for="studyPlan">Study Plan</label>
+            <select class="form-control" @bind="generatioModel.StudyPlanId">
+                <option value="">Select Study Plan</option>
+                @foreach (var row in studyPlans)
+                {
+                    <option value="@row.Id">@row.Name</option>
+                }
+            </select>
+
+
+
+
+            <br />
+            <button type="submit" class="btn btn-primary">Save</button>
+
+
+            <div class="form-group">
+                <p>@Message</p>
+            </div>
+        </div>
+    </EditForm>
+</div>
