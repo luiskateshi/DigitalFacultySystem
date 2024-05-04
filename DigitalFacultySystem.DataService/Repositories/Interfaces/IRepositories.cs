@@ -18,6 +18,7 @@ namespace DigitalFacultySystem.DataService.Repositories.Interfaces
         Task<IEnumerable<Subject>> AllForStudyPlan(Guid studyPlanId);
     }
     public interface IGenerationRepository : IGenericRepository<Generation> { }
+    public interface IGroupRepository : IGenericRepository<Group> { }
 
 
 }

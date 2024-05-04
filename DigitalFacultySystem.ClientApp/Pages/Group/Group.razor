@@ -1,0 +1,41 @@
+﻿@page "/Group"
+@page "/Group/{id}"
+
+@if (string.IsNullOrEmpty(Id))
+{
+    <PageTitle>Group Add</PageTitle>
+    <h3>Add a Group</h3>
+}
+else
+{
+    <h3>Group - @groupModel.Name</h3>
+    <PageTitle>Group Update</PageTitle>
+    <p>Update Group</p>
+}
+
+<div class="row card">
+    <EditForm Model="@groupModel" OnValidSubmit="@HandleValidSubmit" OnInvalidSubmit="@HandleInvalidSubmit" FormName="sampleForm">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-group">
+            <label for="name">Name</label>
+            <InputText class="form-control" @bind-Value="groupModel.Name" />
+            <label for="gen">Generation</label>
+            <select class="form-control" @bind="groupModel.GenerationId">
+                <option value="">Select a Generation</option>
+                @foreach (var row in generations)
+                {
+                    <option value="@row.Id">@row.Name</option>
+                }
+            </select>
+            <br />
+            <button type="submit" class="btn btn-primary">Save</button>
+
+
+            <div class="form-group">
+                <p>@Message</p>
+            </div>
+        </div>
+    </EditForm>
+</div>
