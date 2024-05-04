@@ -19,6 +19,7 @@ namespace DigitalFacultySystem.DataService.Repositories.Interfaces
     }
     public interface IGenerationRepository : IGenericRepository<Generation> { }
     public interface IGroupRepository : IGenericRepository<Group> { }
+    public interface ICourseRepository : IGenericRepository<Course> { }
 
 
 }

@@ -33,6 +33,7 @@ namespace DigitalFacultySystem.DataService.Repositories
 
         public IGroupRepository Groups { get; }
 
+        public ICourseRepository Courses { get; }
         public UnitOfWork(AppDbContext context, ILoggerFactory loggerFactory)
         {
             //////////////////////////////////////////////////////////////////////////////////////ADD HERE
@@ -47,6 +48,7 @@ namespace DigitalFacultySystem.DataService.Repositories
             Subjects = new SubjectRepository(_context, logger);
             Generations = new GenerationRepository(_context, logger);
             Groups = new GroupRepository(_context, logger);
+            Courses = new CourseRepository(_context, logger);
             
         }
 
