@@ -4,6 +4,8 @@ using DigitalFacultySystem.Domain.Entities;
 using DigitalFacultySystem.Entities.Dtos.RequestResponse;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using static System.Net.WebRequestMethods;
+using System.Text;
 
 namespace DigitalFacultySystem.Api.Controllers
 {
@@ -35,10 +37,19 @@ namespace DigitalFacultySystem.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] GroupDto groupDto)
         {
-            var group = _mapper.Map<Group>(groupDto);
-            await _unitOfWork.Groups.Add(group);
-            await _unitOfWork.CompleteAsync();
-            return Ok();
+            try
+            {
+                var group = _mapper.Map<Group>(groupDto);
+                await _unitOfWork.Groups.Add(group);
+                await _unitOfWork.CompleteAsync();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
+            
         }
 
         [HttpPut]

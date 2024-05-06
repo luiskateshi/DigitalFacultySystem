@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace DigitalFacultySystem.Entities.Dtos.RequestResponse
 {
-    public class GroupDto
+    public class StudentInGroupDto
     {
         public Guid Id { get; set; }
-        public string Name { get; set; }
-        public Guid? GenerationId { get; set; }
-        public GenerationDto? Generation { get; set; }
+        public Guid? StudentId { get; set; }
+        public Guid? GroupId { get; set; }
+        public bool isActive { get; set; }
     }
 }

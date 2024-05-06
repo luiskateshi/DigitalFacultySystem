@@ -22,6 +22,8 @@ else
         <div class="form-group">
             <label for="name">Name</label>
             <InputText class="form-control" @bind-Value="studyPlanModel.Name" />
+            <label for="name">Code</label>
+            <InputText class="form-control" @bind-Value="studyPlanModel.Code" />
             <label for="startDate">Start Date</label>
             <InputDate class="form-control" @bind-Value="studyPlanModel.StartDate" />
             <label for="endDate">End Date</label>
@@ -42,4 +44,59 @@ else
             </div>
         </div>
     </EditForm>
+
+    <!--Here will be displayed 2 tables one with all subjects that are not in this study plan and one with subjects thate are already in-->
+    <div class="row">
+        <div class="col-md-6">
+            <h4>Subjects</h4>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var subject in subjectsNotIn)
+                    {
+                        <tr>
+                            <td>@subject.Id</td>
+                            <td>@subject.Name</td>
+                            <td>
+                                <button class="btn btn-primary" @onclick="() => AddSubjectToStudyPlan(subject.Id)">Add</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-6">
+            <h4>Subjects in Study Plan</h4>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>ECTS Credits</th>
+                        <th>Semester</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var subject in planSubjects)
+                    {
+                        <tr>
+                            <td>@subject.Name</td>
+                            <td>@subject.CreditsNo</td>
+                            <td>@subject.Semester</td>
+                            <td>
+                                <a href="@("StudyPlanSubject/"+subject.Id)" class="btn btn-warning"> Edit</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+    </div>
 </div>

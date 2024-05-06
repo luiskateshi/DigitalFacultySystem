@@ -15,5 +15,6 @@ namespace DigitalFacultySystem.Entities.Dtos.RequestResponse
         public string? IdCard { get; set; }
         public string? Email { get; set; }
         public string? Tel { get; set; }
+        public Guid? DegreeProgramId { get; set; } 
     }
 }

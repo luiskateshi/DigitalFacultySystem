@@ -1,4 +1,5 @@
 ﻿using DigitalFacultySystem.Entities.DbSet;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DigitalFacultySystem.Domain.Entities;
 
@@ -18,6 +19,9 @@ public class Student : BaseEntity
 
     public Guid? UserId { get; set; }
 
+    //aspiringDegree field 
+    public Guid? DegreeProgramId { get; set; }
+
     public List<ExamRetakeRequest> ExamRetakeRequests { get; set; } = new List<ExamRetakeRequest>();
 
     public List<StudentInCourse> StudentInCourses { get; set; } = new List<StudentInCourse>();
@@ -27,4 +31,6 @@ public class Student : BaseEntity
     public StudentsInGroup? StudentsInGroup { get; set; } // Assuming each student belongs to only one group
 
     public virtual User? User { get; set; }
+
+    public virtual DegreeProgram? DegreeProgram { get; set; }
 }

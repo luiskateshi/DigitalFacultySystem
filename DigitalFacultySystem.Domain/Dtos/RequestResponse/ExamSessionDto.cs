@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace DigitalFacultySystem.Entities.Dtos.RequestResponse
 {
-    public class GroupDto
+    public class ExamSessionDto
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
-        public Guid? GenerationId { get; set; }
-        public GenerationDto? Generation { get; set; }
+        public DateOnly StartDate { get; set; }
+        public DateOnly EndDate { get; set; }
+        public Guid AcademicYearId { get; set; }
     }
 }

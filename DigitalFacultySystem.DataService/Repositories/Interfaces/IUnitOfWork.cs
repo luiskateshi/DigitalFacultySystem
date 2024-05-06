@@ -19,6 +19,9 @@ namespace DigitalFacultySystem.DataService.Repositories.Interfaces
         IGenerationRepository Generations { get; }
         IGroupRepository Groups { get; }
         ICourseRepository Courses { get; }
+        IExamsSessionRepository ExamsSessions { get; }
+        IStudentInGroupRepository StudentsInGroups { get; }
+        IStudyPlanSubjectRepository StudyPlanSubjects { get; }
 
         Task<bool> CompleteAsync();
     }

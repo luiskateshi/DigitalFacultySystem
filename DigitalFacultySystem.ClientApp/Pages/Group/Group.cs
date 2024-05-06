@@ -12,6 +12,13 @@ namespace DigitalFacultySystem.ClientApp.Pages.Group
 
         [Inject]
         public IGenericService<GenerationDto> _generationService { get; set; }
+        [Inject]
+        public IGenericService<StudentDto> _studentService { get; set; }
+        [Inject]
+        public IGenericService<StudentInGroupDto> _studentInGroupService { get; set; }
+
+        public List<StudentDto> studentsWithoutGroup = new List<StudentDto>();
+        public List<StudentDto> studentsInGroup = new List<StudentDto>();
 
         public List<GenerationDto> generations = new List<GenerationDto>();
         [Inject]
@@ -26,6 +33,7 @@ namespace DigitalFacultySystem.ClientApp.Pages.Group
         protected override async Task OnInitializedAsync()
         {
             generations = await _generationService.GetAll("api/generation");
+            
             if (!string.IsNullOrEmpty(Id))
             {
                 var Id = Guid.Parse(this.Id);
@@ -34,6 +42,7 @@ namespace DigitalFacultySystem.ClientApp.Pages.Group
                 {
                     groupModel = response;
                 }
+                await refreshStudents();
             }
         }
 
@@ -47,9 +56,7 @@ namespace DigitalFacultySystem.ClientApp.Pages.Group
 
             if (string.IsNullOrEmpty(Id))
             {
-                var newGroup = new GroupDto();
-                MyFieldsMapper.MapFields(groupModel, newGroup);
-                var response = await _groupService.Add(newGroup, apiUrl);
+                var response = await _groupService.Add(groupModel, apiUrl);
                 if (response != null)
                 {
                     _navi.NavigateTo("/groups");
@@ -57,14 +64,37 @@ namespace DigitalFacultySystem.ClientApp.Pages.Group
             }
             else
             {
-                var updateGroup = new GroupDto();
-                MyFieldsMapper.MapFields(groupModel, updateGroup);
                 var response = await _groupService.Update(groupModel, apiUrl);
                 if (response != null)
                 {
                     _navi.NavigateTo("/groups");
                 }
             }
+        }
+
+        protected async Task AddStudentToGroup(Guid studentId)
+        {
+            var studentInGroup = new StudentInGroupDto
+            {
+                StudentId = studentId,
+                GroupId = groupModel.Id
+            };
+            await _studentInGroupService.Add(studentInGroup, "api/studentInGroup");
+            await refreshStudents();
+        }
+
+        protected async Task RemoveStudentFromGroup(Guid studentId)
+        {
+            await _studentInGroupService.Delete(studentId, "api/studentInGroup");
+            await refreshStudents();
+        }
+
+        private async Task refreshStudents()
+        {
+            //getting all students that don't have a group but are in the same degree as that of the group in this page
+            studentsWithoutGroup = await _studentService.GetAllById(groupModel.Generation.DegreeId, "api/studentInGroup/noGroup");
+            //getting all students that are in the group
+            studentsInGroup = await _studentService.GetAllById(groupModel.Id, "api/studentInGroup/byGroup");
         }
     }
 }

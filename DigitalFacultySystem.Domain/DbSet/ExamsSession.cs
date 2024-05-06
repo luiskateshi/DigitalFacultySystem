@@ -11,8 +11,6 @@ public class ExamsSession : BaseEntity
 
     public Guid? AcademicYearId { get; set; }
 
-    public bool? Active { get; set; }
-
     public virtual AcademicYear? AcademicYear { get; set; }
 
     public virtual ICollection<ExamRetakeRequest> ExamRetakeRequests { get; set; } = new List<ExamRetakeRequest>();

@@ -9,7 +9,12 @@ namespace DigitalFacultySystem.ClientApp.Pages.Student
     public partial class Student
     {
         [Inject]
-        public IGenericService<StudentDto> _studentService { get; set; } 
+        public IGenericService<StudentDto> _studentService { get; set; }
+
+        [Inject]
+        public IGenericService<DegreeProgramDto> _degreeProgService { get; set; }
+
+        public List<DegreeProgramDto> degreePrograms = new List<DegreeProgramDto>();
 
         [Parameter] 
         public String studentId { get; set; } = string.Empty;
@@ -25,6 +30,7 @@ namespace DigitalFacultySystem.ClientApp.Pages.Student
 
         protected override async Task OnInitializedAsync()
         {
+            degreePrograms = await _degreeProgService.GetAll("api/DegreeProgram");
             if(!string.IsNullOrEmpty(studentId))
             {
                 var Id = Guid.Parse(studentId);

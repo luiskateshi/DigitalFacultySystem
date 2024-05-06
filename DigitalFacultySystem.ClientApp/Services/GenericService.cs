@@ -80,6 +80,21 @@ namespace DigitalFacultySystem.ClientApp.Services
             }
         }
 
+        public async Task<List<TDto>> GetAllById(Guid? id, string apiUrl)
+        {
+            try
+            {
+                var apiResponse = await _http.GetStreamAsync($"{apiUrl}?id={id}");
+                var entities = await JsonSerializer.DeserializeAsync<List<TDto>>(apiResponse, _SerializerOptions);
+                return entities;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
+        }
+
         public async Task<bool> Update(TDto entity, string apiUrl)
         {
             try

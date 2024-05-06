@@ -8,6 +8,8 @@ public class StudyPlanSubject : BaseEntity
 
     public Guid? StudyPlanId { get; set; }
 
+    public String? Name { get; set; }
+
     public int? CreditsNo { get; set; }
 
     public int? TotalHoursLectures { get; set; }

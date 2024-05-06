@@ -18,12 +18,24 @@ namespace DigitalFacultySystem.DataService.Repositories
         {
         }
 
+        
         public override async Task<IEnumerable<Group>> All()
         {
-            var result =  await _dbSet.Where(x => x.isActive == true)
-                    .AsNoTracking()
-                    .AsSplitQuery()
-                    .ToListAsync();
+            var result = await _dbSet                
+                .Where(x => x.isActive)
+                .AsNoTracking()
+                .AsSplitQuery()
+                .ToListAsync();
+            return result;
+        }
+        //get group by id but also fill the generation field 
+        public override async Task<Group> GetById(Guid id)
+        {
+            var result = await _dbSet
+                .Include(x => x.Generation)
+                .Where(x => x.Id == id)
+                .AsNoTracking()
+                .FirstOrDefaultAsync();
             return result;
         }
 

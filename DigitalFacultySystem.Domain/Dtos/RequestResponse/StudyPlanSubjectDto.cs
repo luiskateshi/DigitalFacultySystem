@@ -13,6 +13,8 @@ namespace DigitalFacultySystem.Entities.Dtos.RequestResponse
 
         public Guid? StudyPlanId { get; set; }
 
+        public String? Name { get; set; }
+
         public int? CreditsNo { get; set; }
 
         public int? TotalHoursLectures { get; set; }
@@ -21,6 +23,8 @@ namespace DigitalFacultySystem.Entities.Dtos.RequestResponse
 
         public int? TotalHoursLab { get; set; }
 
-        public int? Semester { get; set; }
+        public int? Semester { get; set; }       
+
+        public SubjectDto? Subject { get; set; }
     }
 }

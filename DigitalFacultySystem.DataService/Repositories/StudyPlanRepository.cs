@@ -15,11 +15,20 @@ namespace DigitalFacultySystem.DataService.Repositories
 
         public override async Task<IEnumerable<StudyPlan>> All()
         {
-            return await _dbSet
+            try
+            {
+                return await _dbSet
                     .AsNoTracking()
                     .AsSplitQuery()
                     .OrderBy(x => x.Name)
                     .ToListAsync();
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "Error in StudyPlanRepository.All()");
+                return null;
+            }
+            
         }
 
         

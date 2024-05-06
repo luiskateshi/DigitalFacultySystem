@@ -1,4 +1,5 @@
 ﻿using DigitalFacultySystem.ClientApp.Services.Interfaces;
+using DigitalFacultySystem.Domain.Entities;
 using DigitalFacultySystem.Entities;
 using DigitalFacultySystem.Entities.Dtos.RequestResponse;
 using Microsoft.AspNetCore.Components;
@@ -15,6 +16,15 @@ namespace DigitalFacultySystem.ClientApp.Pages.StudyPlan
 
         [Inject]
         public IGenericService<DepartmentDto> _degreeProgService { get; set; }
+
+        [Inject]
+        public IGenericService<StudyPlanSubjectDto> _studyPlanSubjectService { get; set; }
+
+        [Inject]
+        public IGenericService<SubjectDto> _subjectService { get; set; }
+
+        public List<SubjectDto> subjectsNotIn = new List<SubjectDto>();
+        public List<StudyPlanSubjectDto> planSubjects = new List<StudyPlanSubjectDto>();
 
         [Parameter]
         public String Id { get; set; } = string.Empty;
@@ -38,6 +48,8 @@ namespace DigitalFacultySystem.ClientApp.Pages.StudyPlan
                 if (result != null)
                     studyPlanModel = result;
             }
+
+            await refreshSubjects();
         }
 
         protected void HandleInValidSumbit()
@@ -67,6 +79,30 @@ namespace DigitalFacultySystem.ClientApp.Pages.StudyPlan
                 Message = "Failed to update study plan";
             }
         }
+
+        protected async Task refreshSubjects()
+        {
+            if (studyPlanModel.Id != Guid.Empty)
+            {
+                planSubjects = await _studyPlanSubjectService.GetAllById(studyPlanModel.Id, "api/StudyPlanSubject/byStudyPlan");
+                subjectsNotIn = await _subjectService.GetAllById(studyPlanModel.Id, "api/StudyPlanSubject/notInStudyPlan");
+            }
+        }
+
+        protected async Task AddSubjectToStudyPlan(Guid subjectId)
+        {
+            var studyPlanSubject = new StudyPlanSubjectDto
+            {
+                StudyPlanId = studyPlanModel.Id,
+                SubjectId = subjectId
+            };
+
+            var result = await _studyPlanSubjectService.Add(studyPlanSubject, "api/StudyPlanSubject");
+            if (result != null)
+                await refreshSubjects();
+        }
+
+        
 
     }
 }

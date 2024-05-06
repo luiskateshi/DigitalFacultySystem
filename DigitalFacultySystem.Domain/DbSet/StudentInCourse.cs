@@ -7,6 +7,8 @@ public class StudentInCourse : BaseEntity
 
     public Guid? AcademicYearId { get; set; }
 
+    public Guid? CourseId { get; set; }
+
     public virtual AcademicYear? AcademicYear { get; set; }
 
     public virtual Course? Course { get; set; }

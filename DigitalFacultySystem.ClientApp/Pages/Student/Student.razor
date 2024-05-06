@@ -30,18 +30,30 @@ else
             <label for="tel">Phone</label>
             <InputText class="form-control" @bind-Value="studentModel.Tel" />
 
+            <label for="degreeProgram">Degree Program</label>
+            <InputSelect class="form-control" @bind-Value="studentModel.DegreeProgramId">
+                <option value="">Select Degree Program</option>
+                @foreach (var degreeProgram in degreePrograms)
+                {
+                    <option value="@degreeProgram.Id">@degreeProgram.Name</option>
+                }
+            </InputSelect>
+            <br />
             <button type="submit" class="btn btn-primary">Save</button>
 
             @if(!string.IsNullOrEmpty(studentId))
             {
-                <button type="button" class="btn btn-danger" @onclick="DeleteStudent">Delete Student</button>
+                <!--Margin left-->
+                <button style="margin-left: 10px" type="button" class="btn btn-danger" @onclick="DeleteStudent">Delete Student</button>
             }
 
             <div class="form-group">
                 <p>@Message</p>
             </div>
         </div>
-            
-
     </EditForm>
+    <br />
+
+
+
 </div>

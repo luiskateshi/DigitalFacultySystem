@@ -12,6 +12,8 @@ public class StudyPlan : BaseEntity
 
     public Guid? DegreeProgId { get; set; }
 
+    public String? Code { get; set; }
+
     public virtual DegreeProgram? DegreeProg { get; set; }
 
     public virtual ICollection<Generation> Generations { get; set; } = new List<Generation>();

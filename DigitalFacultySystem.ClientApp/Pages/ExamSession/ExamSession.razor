@@ -1,0 +1,47 @@
+﻿@page "/ExamSession"
+@page "/ExamSession/{id}"
+
+
+@if (string.IsNullOrEmpty(Id))
+{
+    <PageTitle>Exam Session Add</PageTitle>
+    <h3>Add a new Exam Session</h3>
+}
+else
+{
+    <PageTitle>Exam Session</PageTitle>
+    <h3>Exam Session - @examSessionModel.Name</h3>
+    <p>Update Exam Session</p>
+}
+
+
+<div class="row card">
+    <EditForm Model="@examSessionModel" OnValidSubmit="@HandleValidSumbit" OnInvalidSubmit="@HandleInValidSumbit" FormName="sampleForm">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-group">
+            <label for="name">Name</label>
+            <InputText class="form-control" @bind-Value="examSessionModel.Name" />
+            <label for="startDate">Start Date</label>
+            <InputDate class="col-md-8 form-control" @bind-Value="examSessionModel.StartDate" />
+            <label for="endDate">End Date</label>
+            <InputDate class="col-md-8 form-control" @bind-Value="examSessionModel.EndDate" />
+            <label for="academicYear">AcademicYear</label>
+            <select class="form-control" @bind="examSessionModel.AcademicYearId">
+                <option value="">Select Academic Year</option>
+                @foreach (var row in academicYears)
+                {
+                    <option value="@row.Id">@row.Name</option>
+                }
+            </select>
+            <br />
+            <button type="submit" class="btn btn-primary">Save</button>
+
+
+            <div class="form-group">
+                <p>@Message</p>
+            </div>
+        </div>
+    </EditForm>
+</div>

@@ -9,7 +9,6 @@ namespace DigitalFacultySystem.Api.MappingProfiles
     {
         public RequestToDomain()
         {
-            //add 1 year to the birthdate and isActive = true
             CreateMap<StudentDto, Student>();
             CreateMap<AcademicYearDto, AcademicYear>();
             CreateMap<DepartmentDto, Department>();
@@ -20,6 +19,9 @@ namespace DigitalFacultySystem.Api.MappingProfiles
             CreateMap<GenerationDto, Generation>();
             CreateMap<GroupDto, Group>();
             CreateMap<CourseDto, Course>();
+            CreateMap<ExamSessionDto, ExamsSession>();
+            CreateMap<StudentInGroupDto, StudentsInGroup>();
+            CreateMap<StudyPlanSubjectDto, StudyPlanSubject>();
         }
     }
 }
