@@ -14,5 +14,8 @@ namespace DigitalFacultySystem.Entities.Dtos.RequestResponse
         public Guid? SecondLecturerId { get; set; }
         public Guid? LabLecturerId { get; set; }
         public Guid? StudyPlanSubjectId { get; set; }
+
+        //include the study plan subject
+        public StudyPlanSubjectDto StudyPlanSubject { get; set; }
     }
 }

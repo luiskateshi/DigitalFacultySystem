@@ -41,6 +41,7 @@ namespace DigitalFacultySystem.Api.Controllers
             return Ok(result);
         }
 
+
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] StudyPlanSubjectDto studyPlanSubjectDto)
         {

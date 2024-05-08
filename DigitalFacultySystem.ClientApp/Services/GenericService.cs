@@ -26,6 +26,10 @@ namespace DigitalFacultySystem.ClientApp.Services
             {
                 var entityJson = new StringContent(JsonSerializer.Serialize(entity), Encoding.UTF8, "application/json");
                 var response = await _http.PostAsync(apiUrl, entityJson);
+                if (!response.IsSuccessStatusCode)
+                {
+                    return false;
+                }
                 response.EnsureSuccessStatusCode();
                 return true;
             }
@@ -80,6 +84,8 @@ namespace DigitalFacultySystem.ClientApp.Services
             }
         }
 
+
+
         public async Task<List<TDto>> GetAllById(Guid? id, string apiUrl)
         {
             try
@@ -101,6 +107,52 @@ namespace DigitalFacultySystem.ClientApp.Services
             {
                 var entityJson = new StringContent(JsonSerializer.Serialize(entity), Encoding.UTF8, "application/json");
                 var response = await _http.PutAsync(apiUrl, entityJson);
+                response.EnsureSuccessStatusCode();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
+        }
+
+        public async Task<bool> UpdateList(IEnumerable<TDto> entities, string apiUrl)
+        {
+            try
+            {
+                var entitiesJson = new StringContent(JsonSerializer.Serialize(entities), Encoding.UTF8, "application/json");
+                var response = await _http.PostAsync(apiUrl, entitiesJson);
+                response.EnsureSuccessStatusCode();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
+        }
+
+        public async Task<bool> ExecuteProcess(string apiUrl)
+        {
+            try
+            {
+                var response = await _http.PostAsync(apiUrl, null);
+                response.EnsureSuccessStatusCode();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
+        }
+
+        public async Task<bool> ExecuteProcessById(Guid Id, string apiUrl)
+        {
+            try
+            {
+                var response = await _http.PostAsync($"{apiUrl}?id={Id}", null);
                 response.EnsureSuccessStatusCode();
                 return true;
             }

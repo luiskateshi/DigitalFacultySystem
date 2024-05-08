@@ -1,4 +1,5 @@
 ﻿using DigitalFacultySystem.Domain.Entities;
+using DigitalFacultySystem.Entities.Dtos.RequestResponse;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +20,13 @@ namespace DigitalFacultySystem.DataService.Repositories.Interfaces
     }
     public interface IGenerationRepository : IGenericRepository<Generation> { }
     public interface IGroupRepository : IGenericRepository<Group> { }
-    public interface ICourseRepository : IGenericRepository<Course> { }
+    public interface ICourseRepository : IGenericRepository<Course> {
+        Task<Course> GenerateCourseFromStudyPlanSubject(StudyPlanSubject studyPlanSubject);
+        Task<bool> GenerateStudentsInCourse();
+        Task<IEnumerable<CourseAttendanceDto>> GetStudentsInCourse(Guid courseId);
+        Task<bool> UpdateCourseAttendance(IEnumerable<CourseAttendanceDto> courseAttendanceDtos);
+        Task<bool> CalculateCourseAttendance(Guid courseId);
+    }
     public interface IExamsSessionRepository : IGenericRepository<ExamsSession> { }
     public interface IStudentInGroupRepository : IGenericRepository<StudentsInGroup> {
         Task<IEnumerable<Student>> GetStudentsByGroup(Guid groupId);
@@ -30,6 +37,7 @@ namespace DigitalFacultySystem.DataService.Repositories.Interfaces
         Task<IEnumerable<StudyPlanSubject>> GetSubjectsByStudyPlan(Guid studyPlanId);
         Task<IEnumerable<Subject>> GetSubjectsNotInStudyPlan(Guid studyPlanId);
     }
+    public interface IExamRepository : IGenericRepository<Exam> { }
 
 
 }

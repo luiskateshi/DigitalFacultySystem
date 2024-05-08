@@ -12,7 +12,7 @@ namespace DigitalFacultySystem.Entities.Dtos.RequestResponse
         public string Name { get; set; }
         public Guid? StudyPlanId { get; set; }
         public Guid? StartAcademicYearId { get; set; }
-        public int? CurrentYearOfStudies { get; set; }
+        public int? CurrentSemesterOfStudies { get; set; }
         public Guid? DegreeId { get; set; }
     }
 }

@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using static System.Net.WebRequestMethods;
 using System.Text;
+using DigitalFacultySystem.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace DigitalFacultySystem.Api.Controllers
 {

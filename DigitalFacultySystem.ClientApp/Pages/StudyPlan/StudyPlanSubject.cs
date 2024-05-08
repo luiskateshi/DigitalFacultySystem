@@ -61,5 +61,21 @@ namespace DigitalFacultySystem.ClientApp.Pages.StudyPlan
                 _navigationManager.NavigateTo("/studyPlan/" + planSubjectModel.StudyPlanId);
             }
         }
+        //generate course from study plan button click
+        protected async Task GenerateCourse()
+        {
+            var response = await _planSubjectService.Add(planSubjectModel, "api/course/fromStudyPlanSubject");
+            //check if bad request
+            if (response)
+            {
+                Message = "Course generated successfully!";
+            }
+            else
+            {
+                Message = "Course was already generated for this study plan subject!";
+            }
+
+        }
+
     }
 }

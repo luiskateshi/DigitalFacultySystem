@@ -44,6 +44,11 @@ namespace DigitalFacultySystem.DataService.Repositories
             return true;
         }
 
+        //generate an exam for all courses that are active 
+
+
+
+
     }
 
 

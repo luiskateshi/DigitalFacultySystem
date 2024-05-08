@@ -29,14 +29,33 @@ namespace DigitalFacultySystem.Api.Controllers
             }
             return Ok(_mapper.Map<CourseDto>(course));
         }
-        [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CourseDto courseDto)
+
+        [HttpPost("fromStudyPlanSubject")] //the course will be generated from study plan subject
+        public async Task<IActionResult> Add([FromBody] StudyPlanSubjectDto studyPlanSubjectDto)
         {
-            var course = _mapper.Map<Course>(courseDto);
-            await _unitOfWork.Courses.Add(course);
+            //map
+            var studyPlanSubject = _mapper.Map<StudyPlanSubject>(studyPlanSubjectDto);
+            var result = await _unitOfWork.Courses.GenerateCourseFromStudyPlanSubject(studyPlanSubject);
+            if (result == null)
+            {
+                //return bad request if the course already exists
+                return BadRequest();
+            }
             await _unitOfWork.CompleteAsync();
-            return CreatedAtAction(nameof(Get), new { id = course.Id }, _mapper.Map<CourseDto>(course));
+            return Ok();
+            
         }
+        [HttpPost("generateStudentsInCourses")]
+        public async Task<IActionResult> GenerateStudentsInCourses()
+        {
+            var result = await _unitOfWork.Courses.GenerateStudentsInCourse();
+            if (!result)
+            {
+                return NotFound();
+            }
+            return Ok();
+        }
+        
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] CourseDto courseDto)
         {
@@ -49,5 +68,52 @@ namespace DigitalFacultySystem.Api.Controllers
             await _unitOfWork.CompleteAsync();
             return Ok();
         }
+
+        [HttpDelete]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var result = await _unitOfWork.Courses.Delete(id);
+            if (!result)
+            {
+                return NotFound();
+            }
+            await _unitOfWork.CompleteAsync();
+            return Ok();
+        }
+
+        [HttpGet("GetStudentsInCourse")]
+        public async Task<IActionResult> GetStudentsInCourse(Guid Id)
+        {
+            IEnumerable<CourseAttendanceDto> courseAttendanceDtos = await _unitOfWork.Courses.GetStudentsInCourse(Id);
+            return Ok(courseAttendanceDtos);
+        }
+
+        //update course attendance for a course using a lsit of courseAttendanceDtos
+        [HttpPost("UpdateCourseAttendance")]
+        public async Task<IActionResult> UpdateCourseAttendance([FromBody] IEnumerable<CourseAttendanceDto> entities)
+        {
+            var result = await _unitOfWork.Courses.UpdateCourseAttendance(entities);
+            if (!result)
+            {
+                return NotFound();
+            }
+            await _unitOfWork.CompleteAsync();
+            return Ok();
+        }
+
+        //execute stored procedure to calculate courseAttendance for a course
+        [HttpPost("CalculateCourseAttendance")]
+        public async Task<IActionResult> CalculateCourseAttendance(Guid Id)
+        {
+            Guid courseId = Id;
+            var result = await _unitOfWork.Courses.CalculateCourseAttendance(courseId);
+            if (!result)
+            {
+                return NotFound();
+            }
+            await _unitOfWork.CompleteAsync();
+            return Ok();
+        }
+
     }
 }

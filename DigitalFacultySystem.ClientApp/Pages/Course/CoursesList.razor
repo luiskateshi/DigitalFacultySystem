@@ -1,6 +1,6 @@
 ﻿@page "/courses"
 <h3>Courses</h3>
-
+<AlertCard @ref="alertCard" />
 @if (courses == null)
 {
     <p><em>Loading...</em></p>
@@ -8,6 +8,8 @@
 else
 {
     <a href="course" class="btn btn-primary">Add New</a>
+    <!--Add a new button on the top right side-->
+    <a @onclick="GenerateStudentsInCourses" class="btn btn-dark" style="float:right">Generate Students in Courses</a>
     <table class="table">
         <thead>
             <tr>

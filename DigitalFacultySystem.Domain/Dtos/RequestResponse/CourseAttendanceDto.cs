@@ -8,12 +8,15 @@ namespace DigitalFacultySystem.Entities.Dtos.RequestResponse
 {
     public class CourseAttendanceDto
     {
-        public Guid Id { get; set; }
-        public int? SeminarHoursAttended { get; set; }
-        public int? LabHoursAttended { get; set; }
+        public int? SeminarHoursAttended { get; set; } = 0;
+        public int? LabHoursAttended { get; set; } = 0;
+        public bool isAttended { get; set; } = false;
         public Guid? StudentInCourseId { get; set; }
-        public StudentDto student { get; set; }
-        public CourseDto course { get; set; }
+        public Guid? CourseId { get; set; }
+        public Guid? StudentId { get; set; }
+        public string? StudentName { get; set; }
+        public string? StudentLastName { get; set; }
+        public string? groupName { get; set; }
 
     }
 }

@@ -31,6 +31,7 @@ namespace DigitalFacultySystem.ClientApp
             builder.Services.AddScoped<IGenericService<ExamSessionDto>, GenericService<ExamSessionDto>>();
             builder.Services.AddScoped<IGenericService<StudentInGroupDto>, GenericService<StudentInGroupDto>>();
             builder.Services.AddScoped<IGenericService<StudyPlanSubjectDto>, GenericService<StudyPlanSubjectDto>>();
+            builder.Services.AddScoped<IGenericService<CourseAttendanceDto>, GenericService<CourseAttendanceDto>>();
             
 
             builder.Services.AddScoped(hc => new HttpClient 

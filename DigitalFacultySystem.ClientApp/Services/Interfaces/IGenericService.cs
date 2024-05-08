@@ -8,5 +8,11 @@
         Task<List<T>> GetAll(string apiUrl);
         Task<List<T>> GetAllById(Guid? id, string apiUrl);
         Task<bool> Update(T entity, string apiUrl);
+        Task<bool> UpdateList(IEnumerable<T> entities, string apiUrl);
+        Task<bool> ExecuteProcess(string apiUrl);
+        Task<bool> ExecuteProcessById(Guid Id, string apiUrl);
+
+
+
     }
 }

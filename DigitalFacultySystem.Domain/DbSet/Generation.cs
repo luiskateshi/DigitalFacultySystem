@@ -10,7 +10,7 @@ public class Generation : BaseEntity
 
     public Guid? StartAcademicYearId { get; set; }
 
-    public int? CurrentYearOfStudies { get; set; }
+    public int? CurrentSemesterOfStudies { get; set; }
 
     public Guid? DegreeId { get; set; }
 

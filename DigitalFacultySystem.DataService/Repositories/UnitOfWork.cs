@@ -62,8 +62,17 @@ namespace DigitalFacultySystem.DataService.Repositories
 
         public async Task<bool> CompleteAsync()
         {
-            var result = await _context.SaveChangesAsync();
-            return result > 0;
+            try
+            {
+                var result = await _context.SaveChangesAsync();
+                return result > 0;
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
         }
 
         public void Dispose()

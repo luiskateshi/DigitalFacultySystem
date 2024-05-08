@@ -8,7 +8,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
+using static System.Net.WebRequestMethods;
 
 namespace DigitalFacultySystem.DataService.Repositories
 {
@@ -42,17 +44,26 @@ namespace DigitalFacultySystem.DataService.Repositories
 
         public override async Task<bool> Update(Group entity)
         {
-            var group = await _dbSet.Where(x => x.Id == entity.Id)
+            
+            try
+            {
+                var group = await _dbSet.Where(x => x.Id == entity.Id)
                 .FirstOrDefaultAsync();
 
-            if (group == null)
-            {
-                return false;
-            }
-            MyFieldsMapper.MapFields(entity, group);
+                if (group == null)
+                {
+                    return false;
+                }
+                MyFieldsMapper.MapFields(entity, group);
 
-            _dbSet.Update(group);
-            return true;
+                _dbSet.Update(group);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
         }
     }
 }
