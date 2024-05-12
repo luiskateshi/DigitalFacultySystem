@@ -22,6 +22,8 @@ namespace DigitalFacultySystem.DataService.Repositories.Interfaces
         IExamsSessionRepository ExamsSessions { get; }
         IStudentInGroupRepository StudentsInGroups { get; }
         IStudyPlanSubjectRepository StudyPlanSubjects { get; }
+        IExamRepository Exams { get; }
+        IExamRetakeRequestRepository ExamRetakeRequests { get; }
 
         Task<bool> CompleteAsync();
     }

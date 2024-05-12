@@ -4,14 +4,14 @@
 
 @if (string.IsNullOrEmpty(Id))
 {
-    <PageTitle>Exam Session Add</PageTitle>
-    <h3>Add a new Exam Session</h3>
+    <PageTitle>Exam Season Add</PageTitle>
+    <h3>Add a new Exam Season</h3>
 }
 else
 {
-    <PageTitle>Exam Session</PageTitle>
-    <h3>Exam Session - @examSessionModel.Name</h3>
-    <p>Update Exam Session</p>
+    <PageTitle>Exam Season</PageTitle>
+    <h3>Exam Season - @examSessionModel.Name</h3>
+    <p>Update Exam Season</p>
 }
 
 
@@ -36,7 +36,14 @@ else
                 }
             </select>
             <br />
-            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="submit" class="btn btn-warning">Save</button>
+
+            @if (!string.IsNullOrEmpty(Id))
+            {
+                <button style="margin-left: 20px" type="button" class="btn btn-dark" @onclick="GenerateStudentsInCourses">Autogenerate exams</button>
+                <button style="margin-left: 20px" type="button" class="btn btn-dark" @onclick="EndExamSession">End this exam Session</button>
+
+            }
 
 
             <div class="form-group">
@@ -45,3 +52,38 @@ else
         </div>
     </EditForm>
 </div>
+<br />
+<br />
+<!--Show all exams in a table-->
+@if (exams.Count > 0)
+{
+    <h4>Exams in this exam season</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Exam Id</th>
+                <th>Exam Name</th>
+                <th>Exam Date</th>
+                <th>No. of Students</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var exam in exams)
+            {
+                <tr>
+                    <td>@exam.Id</td>
+                    <td>@exam.Name</td>
+                    <td>@exam.Date</td>
+                    <td>@exam.NumberOfStudents</td>
+                    <td>
+                    <td><a href="@("exam/" + exam.Id)" class="btn btn-warning">Edit</a></td>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+

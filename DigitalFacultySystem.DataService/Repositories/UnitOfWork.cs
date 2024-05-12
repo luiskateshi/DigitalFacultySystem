@@ -16,29 +16,21 @@ namespace DigitalFacultySystem.DataService.Repositories
 
         //////////////////////////////////////////////////////////////////////////////////////ADD HERE
         public IStudentRepository Students { get; }
-
         public IAcademicYearRepository AcademicYears { get; }
-
         public IDepartmentRepository Departments { get; }
-
         public IDegreeProgramRepository DegreePrograms { get; }
-
         public ILecturerRepository Lecturers { get; }
-
         public IStudyPlanRepository StudyPlans { get; }
-
         public ISubjectRepository Subjects { get; }
-
         public IGenerationRepository Generations { get; }
-
         public IGroupRepository Groups { get; }
-
         public ICourseRepository Courses { get; }
-
         public IExamsSessionRepository ExamsSessions { get; }
-
         public IStudentInGroupRepository StudentsInGroups { get; }
         public IStudyPlanSubjectRepository StudyPlanSubjects { get; }
+        public IExamRepository Exams { get; }
+
+        public IExamRetakeRequestRepository ExamRetakeRequests { get; }
         public UnitOfWork(AppDbContext context, ILoggerFactory loggerFactory)
         {
             //////////////////////////////////////////////////////////////////////////////////////ADD HERE
@@ -57,6 +49,8 @@ namespace DigitalFacultySystem.DataService.Repositories
             ExamsSessions = new ExamsSessionRepository(_context, logger);
             StudentsInGroups = new StudentInGroupRepository(_context, logger);
             StudyPlanSubjects = new StudyPlanSubjectRepository(_context, logger);
+            Exams = new ExamRepository(_context, logger);
+            ExamRetakeRequests = new ExamRetakeRequestRepository(_context, logger);
             
         }
 

@@ -10,9 +10,6 @@ namespace DigitalFacultySystem.ClientApp.Pages.Course
         [Inject]
         public IGenericService<CourseDto> _coursService { get; set; }
 
-        //inject JSRuntime
-        [Inject]
-        public IJSRuntime JsRuntime { get; set; }
         public List<CourseDto> courses { get; set; } = new List<CourseDto>();
         private string apiUrl = "api/course";
 

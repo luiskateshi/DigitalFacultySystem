@@ -20,7 +20,7 @@ else
 
         <div class="form-group">
             <label for="name">Name</label>
-            <InputText class="form-control" @bind-Value="courseModel.Name" />
+            <input class="form-control" @binnd="courseModel.Name" />
             <label for="gen0">Main Lecturer of the course</label>
             <select class="form-control" @bind="courseModel.MainLecturerId">
                 <option value="">Select Main Lecturer</option>
@@ -67,9 +67,11 @@ else
 </div>
 <br />
 <br />
+<h2>Student Course Attendances</h2>
 <!--Show all the students in this course that are loaded into courseattendances-->
 @if (courseAttendances != null)
 {
+    <AlertCard @ref="alertCard" />
     <div style="text-align: right;">
         <a @onclick="SaveCourseAttendances" class="btn btn-warning" style="float: right; margin-left: 10px;">Save changes</a>
         <a @onclick="CalculateCourseAttendance" class="btn btn-dark" style="float: right; ">Calculate attendance</a>

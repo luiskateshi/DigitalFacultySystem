@@ -36,6 +36,7 @@ namespace DigitalFacultySystem.ClientApp.Pages.Course
         private string apiUrl = "api/course";
         private String CourseSubject { get; set; }
 
+        private AlertCard alertCard;
 
         protected override async Task OnInitializedAsync()
         {
@@ -51,8 +52,14 @@ namespace DigitalFacultySystem.ClientApp.Pages.Course
                     courseModel = response;
                     CourseSubject = courseModel.StudyPlanSubject.Name;
                 }
+                await RefreshStudentsInCourse();
 
             }
+        }
+        protected async Task RefreshStudentsInCourse()
+        {
+            var Id = Guid.Parse(this.Id);
+            courseAttendances = await _courseAttendanceService.GetAllById(Id, "api/course/GetStudentsInCourse");
         }
 
         protected void HandleInvalidSubmit()
@@ -118,12 +125,17 @@ namespace DigitalFacultySystem.ClientApp.Pages.Course
             var response = await _courseAttendanceService.ExecuteProcessById(courseModel.Id, "api/course/CalculateCourseAttendance");
             if (response)
             {
-                Message = "Course attendance calculated successfully!";
+                await RefreshStudentsInCourse();
+                ShowSuccessAlert();
             }
             else
             {
                 Message = "Failed to calculate course attendance!";
             }
+        }
+        public void ShowSuccessAlert()
+        {
+            alertCard.ShowAlert("The stored procedure has been executed successfully. The \"is Attended\" status for the course has been determined based on the study plan subject associated with this course and the total hours allocated for seminars and laboratories. To mark the course as \"attended\" for a student, it is required that at least 75% of the total seminar hours and 100% of the total lab hours have been attended.", "alert-success");
         }
 
     }

@@ -2,6 +2,7 @@
 using DigitalFacultySystem.DataService.Repositories.Interfaces;
 using DigitalFacultySystem.Domain.Entities;
 using DigitalFacultySystem.Entities;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
@@ -44,9 +45,34 @@ namespace DigitalFacultySystem.DataService.Repositories
             return true;
         }
 
-        //generate an exam for all courses that are active 
+        public async Task<bool> GenerateExamsAndStudentsInExams(Guid examSessionId)                                 
+        {
+            try
+            {
+                await _context.Database.ExecuteSqlRawAsync("EXEC SP_InsertExamsAndStudentsInExam @examSessionId", new SqlParameter("@examSessionId", examSessionId));
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while executing stored procedure");
+                return false;
+            }
+        }
 
-
+        //end exam session by executing a stored procedure
+        public async Task<bool> EndExamSession(Guid examSessionId)
+        {
+            try
+            {
+                await _context.Database.ExecuteSqlRawAsync("EXEC SP_EndExamSession @examSessionId", new SqlParameter("@examSessionId", examSessionId));
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while executing stored procedure");
+                return false;
+            }
+        }
 
 
     }

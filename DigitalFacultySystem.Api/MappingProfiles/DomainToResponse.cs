@@ -20,6 +20,7 @@ namespace DigitalFacultySystem.Api.MappingProfiles
             CreateMap<ExamsSession, ExamSessionDto>();
             CreateMap<StudentsInGroup, StudentInGroupDto>();
             CreateMap<StudyPlanSubject, StudyPlanSubjectDto>();
+            CreateMap<Exam, ExamDto>();
 
                    
         }

@@ -1,6 +1,6 @@
 ﻿USE [uniDb]
 GO
-/****** Object:  StoredProcedure [dbo].[SP_InsertStudentsInCourse]    Script Date: 08/05/2024 13:06:54 ******/
+/****** Object:  StoredProcedure [dbo].[SP_InsertStudentsInCourse]    Script Date: 09/05/2024 19:09:36 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -58,8 +58,8 @@ BEGIN
             AND sic.CourseId = c.Id
         );
 
-        INSERT INTO CourseAttendances (Id, StudentInCourseId, SeminarHoursAttended, LabHoursAttended, IsAttended)
-        SELECT NEWID(), sic.Id, 0, 0, 0 
+        INSERT INTO CourseAttendances (Id, StudentInCourseId, SeminarHoursAttended, LabHoursAttended, IsAttended, IsActive)
+        SELECT NEWID(), sic.Id, 0, 0, 0, 1
         FROM StudentInCoursees sic
         WHERE sic.StudentId = @studentId
 		AND NOT EXISTS (
@@ -79,10 +79,12 @@ BEGIN
 END;
 
 
-
   --select s.Firstname, s.Lastname, c.Name, g.Name, gen.Name from Students s
   --join StudentsInGroups sig on sig.StudentId = s.id
   --join Groups g on g.Id = sig.GroupId
   --join Generations gen on gen.id = g.GenerationId
   --join StudentInCoursees sc on sc.StudentId = s.id
   --join courses c on c.id = sc.Course
+
+
+  --update this SP so that it doesnt insert a record for a student in studentInCourse that inside studentsInExam table has a record with an examGrade more than 4.

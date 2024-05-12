@@ -7,7 +7,7 @@ public class StudentsInExam : BaseEntity
 
     public Guid? ExamId { get; set; }
 
-    public short? Attended { get; set; }
+    public bool? Attended { get; set; }
 
     public int? ExamGrade { get; set; }
 

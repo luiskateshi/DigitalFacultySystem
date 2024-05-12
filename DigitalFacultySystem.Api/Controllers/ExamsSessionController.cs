@@ -50,6 +50,35 @@ namespace DigitalFacultySystem.Api.Controllers
             return Ok();
         }
 
+        //generate exams and students in exams
+        [HttpPost("GenerateExamsAndStudentsInExams")]
+        public async Task<IActionResult> GenerateExamsAndStudentsInExams(Guid Id)
+        {
+            var examSessionId = Id;
+            var result = await _unitOfWork.ExamsSessions.GenerateExamsAndStudentsInExams(examSessionId);
+            if (result)
+            {
+                await _unitOfWork.CompleteAsync();
+                return Ok();
+            }
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
+
+        //execute sp to end exam session
+        [HttpPost("EndExamSession")]
+        public async Task<IActionResult> EndExamSession(Guid Id)
+        {
+            var examSessionId = Id;
+            var result = await _unitOfWork.ExamsSessions.EndExamSession(examSessionId);
+            if (result)
+            {
+                await _unitOfWork.CompleteAsync();
+                return Ok();
+            }
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
+
+
 
     }
 }
