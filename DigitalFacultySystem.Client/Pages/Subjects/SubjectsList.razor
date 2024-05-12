@@ -1,0 +1,30 @@
+﻿@page "/subjects"
+<h3>Subjects</h3>
+
+@if (subjects == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <a href="Subject" class="btn btn-primary">Add New</a>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Subject ID</th>
+                <th>Subject Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var subject in subjects)
+            {
+                <tr>
+                    <td>@subject.Id</td>
+                    <td>@subject.Name</td>
+                    <td><a href="@("Subject/" + subject.Id)" class="btn btn-warning">Edit</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

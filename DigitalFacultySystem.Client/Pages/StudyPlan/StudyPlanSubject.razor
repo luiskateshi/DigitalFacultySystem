@@ -1,0 +1,39 @@
+﻿@page "/StudyPlanSubject/{id}"
+
+<h3>Study Plan Subject - @planSubjectModel.Name</h3>
+<PageTitle>Study Plan Subject Update</PageTitle>
+<p>Update Study Plan Subject</p>
+        
+<div class="row card">
+    <EditForm Model="@planSubjectModel" OnValidSubmit="@HandleValidSubmit" OnInvalidSubmit="@HandleInvalidSubmit" FormName="sampleForm">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-group">
+            <label>Plan Subject Name</label>
+            <InputText class="form-control" @bind-Value="planSubjectModel.Name" />
+            <label>Credits (ECTS)</label>
+            <InputNumber class="form-control" @bind-Value="planSubjectModel.CreditsNo" />
+            <label>Total Hours Lectures</label>
+            <InputNumber class="form-control" @bind-Value="planSubjectModel.TotalHoursLectures" />
+            <label>Total Hours Seminars</label>
+            <InputNumber class="form-control" @bind-Value="planSubjectModel.TotalHoursSeminars" />
+            <label>Total Hours Labs</label>
+            <InputNumber class="form-control" @bind-Value="planSubjectModel.TotalHoursLab" />
+            <label>Semester No.</label>
+            <InputNumber class="form-control" @bind-Value="planSubjectModel.Semester" />
+
+
+            <br />
+            <button type="submit" class="btn btn-primary">Save</button>
+            <!-- Delete-->
+            <button type="button" class="btn btn-danger" @onclick="Delete">Remove from Study Plan</button>
+            <!--Autogenerate course-->
+            <button type="button" class="btn btn-dark" @onclick="GenerateCourse">Generate Course</button>
+
+            <div class="form-group">
+                <p>@Message</p>
+            </div>
+        </div>
+    </EditForm>
+</div>

@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DigitalFacultySystem.Api", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DigitalFacultySystem.DataService", "DigitalFacultySystem.DataService\DigitalFacultySystem.DataService.csproj", "{D242CB06-F2E3-4D58-A6E1-3279F47EF783}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DigitalFacultySystem.ClientApp", "DigitalFacultySystem.ClientApp\DigitalFacultySystem.ClientApp.csproj", "{29CA465A-637F-46B5-A33D-BA47C5880ED7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DigitalFacultySystem.Client", "DigitalFacultySystem.Client\DigitalFacultySystem.Client.csproj", "{B04FB0C9-8863-4F7D-910A-7D097555CDAA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +29,10 @@ Global
 		{D242CB06-F2E3-4D58-A6E1-3279F47EF783}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D242CB06-F2E3-4D58-A6E1-3279F47EF783}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D242CB06-F2E3-4D58-A6E1-3279F47EF783}.Release|Any CPU.Build.0 = Release|Any CPU
-		{29CA465A-637F-46B5-A33D-BA47C5880ED7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{29CA465A-637F-46B5-A33D-BA47C5880ED7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{29CA465A-637F-46B5-A33D-BA47C5880ED7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{29CA465A-637F-46B5-A33D-BA47C5880ED7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B04FB0C9-8863-4F7D-910A-7D097555CDAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B04FB0C9-8863-4F7D-910A-7D097555CDAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B04FB0C9-8863-4F7D-910A-7D097555CDAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B04FB0C9-8863-4F7D-910A-7D097555CDAA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

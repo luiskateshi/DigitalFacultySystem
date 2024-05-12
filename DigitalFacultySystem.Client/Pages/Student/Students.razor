@@ -1,0 +1,33 @@
+﻿@page "/Students"
+<h3>Students</h3>
+
+<a href="@("Student")" class="btn btn-success"> Add new</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Firstname</th>
+            <th>Lastname</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Birthday</th>
+            <th>Edit</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var student in _students)
+        {
+            <tr>
+                <td>@student.Id</td>
+                <td>@student.Firstname</td>
+                <td>@student.Lastname</td>
+                <td>@student.Email</td>
+                <td>@student.Tel</td>
+                <td>@student.Birthdate</td>
+                <td><a href="@("Student/" + student.Id)" class="btn btn-primary">Edit</a></td>
+            </tr>
+        }
+    </tbody>
+
+</table>

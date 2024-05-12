@@ -3,9 +3,11 @@ using DigitalFacultySystem.Entities.Dtos.RequestResponse;
 using DigitalFacultySystem.Domain.Entities;
 using DigitalFacultySystem.DataService.Repositories.Interfaces;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DigitalFacultySystem.Api.Controllers
 {
+    [Authorize]
     public class DepartmentController : BaseController
     {
         public DepartmentController(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)

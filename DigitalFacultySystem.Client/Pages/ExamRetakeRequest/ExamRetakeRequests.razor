@@ -1,0 +1,56 @@
+﻿@page "/ExamRetakeRequests"
+
+<PageTitle>Exam Retake Requests</PageTitle>
+<h3>Exam Retake Requests</h3>
+
+<p>Add a new exam retake request for this Academic Year</p>
+<div class="row card">
+    <EditForm Model="@requestModel" OnValidSubmit="@HandleValidSumbit" OnInvalidSubmit="@HandleInValidSumbit" FormName="sampleForm">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-group">
+            <label for="name">Select the exam you want to retake</label>
+            <br />
+            <!--Choose from dropdown-->
+            <select class="form-control" @bind="requestModel.PlanSubjectId">
+                <option value="">Exam you want to retake</option>
+                @foreach (var exam in possibleExamRetakes)
+                {
+                    <option value="@exam.ExamId">@exam.ExamName</option>
+                }
+            </select>
+            <br />
+            <AlertCard @ref="alertCard" />
+            <!--button to submit-->
+            <button type="submit" class="btn btn-warning">Submit</button>
+        </div>
+    </EditForm>
+    <h2>Your Exam Retake Requests</h2>
+    @if (requests.Count > 0)
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Exam Name</th>
+                    <th>Request Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var row in requests)
+                {
+                    <tr>
+                        <td>@row.PlanSubjectId</td>
+                        <td>@row.DateOfRequest</td>
+                        <td>Approved</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else{
+        <h5>No exam retake requests were made for this academic year</h5>
+
+    }
+</div>

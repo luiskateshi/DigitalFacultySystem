@@ -1,0 +1,32 @@
+﻿@page "/courses"
+<h3>Courses</h3>
+<AlertCard @ref="alertCard" />
+@if (courses == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <a href="course" class="btn btn-primary">Add New</a>
+    <!--Add a new button on the top right side-->
+    <a @onclick="GenerateStudentsInCourses" class="btn btn-dark" style="float:right">Generate Students in Courses</a>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Course ID</th>
+                <th>Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var row in courses)
+            {
+                <tr>
+                    <td>@row.Id</td>
+                    <td>@row.Name</td>
+                    <td><a href="@("Course/" + row.Id)" class="btn btn-warning">Edit</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

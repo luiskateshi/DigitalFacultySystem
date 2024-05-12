@@ -1,0 +1,100 @@
+﻿@page "/login"
+@using DigitalFacultySystem.Client.Authentication
+@using DigitalFacultySystem.Entities.Dtos.SecurityDtos
+@inject AuthenticationStateProvider authStateProvider
+@inject NavigationManager navigationManager
+@inject HttpClient httpClient
+
+
+<div class="container">
+    <div class="col-md-6">
+        <EditForm Model="@LoginUser" OnValidSubmit="HandleLogin">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            @if(!String.IsNullOrEmpty(Message))
+            {
+                <div class="alert alert-warning">
+                    <p>@Message</p>
+                </div>
+            }
+
+            <div class="card">
+                <div class="card-header">Please Login</div>
+                <div class="card-body">
+
+                    <div class="form-group">
+
+                        <label class="form-label">Email Address</label>
+                        <InputText @bind-Value="LoginUser.Email" class="form-control"></InputText>
+                    </div>
+
+
+                    <div class="form-group mt-3">
+                        <label class="form-label">Password</label>
+                        <InputText @bind-Value="LoginUser.Password" class="form-control"></InputText>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary">Login</button>
+
+                </div>
+            </div>
+
+       </EditForm>
+            
+            
+
+    </div>
+
+</div>
+
+
+
+@code {
+    private LoginUser LoginUser { get; set; } = new();
+    private string? Message;
+
+    private async Task HandleLogin()
+    {
+        Message = String.Empty;
+        var response = await httpClient.PostAsJsonAsync("login", LoginUser);
+        if (!response.IsSuccessStatusCode)
+        {
+            Message = "Invalid login attempt";
+            return;
+        }
+
+        var result = await response.Content.ReadFromJsonAsync<LoginResponse>();
+        if (string.IsNullOrEmpty(result!.AccessToken))
+        {
+            Message = "Invalid login attempt";
+            return;
+        }
+
+        httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", result.AccessToken);
+        var getUserClaims = await httpClient.GetAsync("manage/info");
+        if (!getUserClaims.IsSuccessStatusCode)
+        {
+            Message = "Invalid login attempt";
+            return;
+        }
+
+        var userDetails = await getUserClaims.Content.ReadFromJsonAsync<UserDetails>();
+        var authenticationModel = new AuthenticationModel()
+            {
+                Token = result.AccessToken,
+                RefreshToken = result.RefreshToken,
+                Username = userDetails!.Email
+            };
+
+        var customAuthStateProvider = (CustomAuthenticationStateProvider)authStateProvider;
+        await customAuthStateProvider.UpdateAuthenticationState(authenticationModel);
+        navigationManager.NavigateTo("/");
+
+
+
+
+    }
+}
+

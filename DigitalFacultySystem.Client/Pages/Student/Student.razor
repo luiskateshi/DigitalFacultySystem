@@ -1,0 +1,59 @@
+﻿@page "/Student"
+@page "/Student/{studentId}"
+<h3>Student</h3>
+
+@if(string.IsNullOrEmpty(studentId))
+{
+    <PageTitle>Student Add</PageTitle>
+    <h3>Add a new Student</h3>
+}
+else
+{
+    <PageTitle>Student Update</PageTitle>
+    <p>Update Student Data</p>
+}
+
+<div class="row">
+    <EditForm Model="@studentModel" OnValidSubmit="@HandleValidSumbit" OnInvalidSubmit="@HandleInValidSumbit" FormName="sampleForm">
+        <DataAnnotationsValidator/>
+        <ValidationSummary/>
+
+        <div class="form-group">
+            <label for="firstname">Firstname</label>
+            <InputText class="form-control" @bind-Value="studentModel.Firstname" />
+            <label for="firstname">Lastname</label>
+            <InputText class="form-control" @bind-Value="studentModel.Lastname" />
+            <label for="birthdate">Birthdate</label>
+            <InputDate class="col-md-8 form-control" @bind-Value="studentModel.Birthdate" />
+            <label for="email">Email</label>
+            <InputText class="form-control" @bind-Value="studentModel.Email" />
+            <label for="tel">Phone</label>
+            <InputText class="form-control" @bind-Value="studentModel.Tel" />
+
+            <label for="degreeProgram">Degree Program</label>
+            <InputSelect class="form-control" @bind-Value="studentModel.DegreeProgramId">
+                <option value="">Select Degree Program</option>
+                @foreach (var degreeProgram in degreePrograms)
+                {
+                    <option value="@degreeProgram.Id">@degreeProgram.Name</option>
+                }
+            </InputSelect>
+            <br />
+            <button type="submit" class="btn btn-primary">Save</button>
+
+            @if(!string.IsNullOrEmpty(studentId))
+            {
+                <!--Margin left-->
+                <button style="margin-left: 10px" type="button" class="btn btn-danger" @onclick="DeleteStudent">Delete Student</button>
+            }
+
+            <div class="form-group">
+                <p>@Message</p>
+            </div>
+        </div>
+    </EditForm>
+    <br />
+
+
+
+</div>

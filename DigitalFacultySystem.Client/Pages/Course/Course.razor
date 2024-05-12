@@ -1,0 +1,106 @@
+﻿@page "/Course"
+@page "/Course/{id}"
+
+@if (string.IsNullOrEmpty(Id))
+{
+    <PageTitle>Course Add</PageTitle>
+    <h3>Add a Course</h3>
+}
+else
+{
+    <h3>Course - @courseModel.Name</h3>
+    <PageTitle>Course Update</PageTitle>
+    <p>Update Course</p>
+}
+
+<div class="row card">
+    <EditForm Model="@courseModel" OnValidSubmit="@HandleValidSubmit" OnInvalidSubmit="@HandleInvalidSubmit" FormName="sampleForm">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input class="form-control" @binnd="courseModel.Name" />
+            <label for="gen0">Main Lecturer of the course</label>
+            <select class="form-control" @bind="courseModel.MainLecturerId">
+                <option value="">Select Main Lecturer</option>
+                @foreach (var row in lecturers)
+                {
+                    <option value="@row.Id">@row.Firstname @row.Lastname</option>
+                }
+            </select>
+            <label for="gen1">Second Lecturer of the course</label>
+            <select class="form-control" @bind="courseModel.SecondLecturerId">
+                <option value="">Select Second Lecturer</option>
+                @foreach (var row in lecturers)
+                {
+                    <option value="@row.Id">@row.Firstname @row.Lastname</option>
+                }
+            </select>
+            <label for="gen2">Lab Lecturer of the course</label>
+            <select class="form-control" @bind="courseModel.LabLecturerId">
+                <option value="">Select Lab Lecturer</option>
+                @foreach (var row in lecturers)
+                {
+                    <option value="@row.Id">@row.Firstname @row.Lastname</option>
+                }
+            </select>
+            <label for="name">Course Subject</label>
+            <input disabled class="form-control" value="@CourseSubject" />
+        
+
+
+            <br />
+            <button type="submit" class="btn btn-primary" style="margin-right: 10px;">Save</button>
+            <!--Delete button-->
+            @if (!string.IsNullOrEmpty(Id))
+            {
+                <button type="button" class="btn btn-danger" @onclick="Delete">Deactivate Course</button>
+            }
+
+
+            <div class="form-group">
+                <p>@Message</p>
+            </div>
+        </div>
+    </EditForm>
+</div>
+<br />
+<br />
+<h2>Student Course Attendances</h2>
+<!--Show all the students in this course that are loaded into courseattendances-->
+@if (courseAttendances != null)
+{
+    <AlertCard @ref="alertCard" />
+    <div style="text-align: right;">
+        <a @onclick="SaveCourseAttendances" class="btn btn-warning" style="float: right; margin-left: 10px;">Save changes</a>
+        <a @onclick="CalculateCourseAttendance" class="btn btn-dark" style="float: right; ">Calculate attendance</a>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Group Name</th>
+                <th>Seminar Hours attended</th>
+                <th>Lab Hours attended</th>
+                <th>Course is attended</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var row in courseAttendances)
+            {
+                <tr>
+                    <td>@row.StudentName</td>
+                    <td>@row.StudentLastName</td>
+                    <td>@row.groupName</td>
+                    <td><input disabled="@row.isAttended" type="number" class="form-control" @bind="@row.SeminarHoursAttended" /></td>
+                    <td><input disabled="@row.isAttended" type="number" class="form-control" @bind="@row.LabHoursAttended" /></td>
+                    <td style="text-align: center;"> <input disabled type="checkbox" style="width: 2vw; height: 2vw; margin: auto;" @bind="@row.isAttended" /> </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+    
+}

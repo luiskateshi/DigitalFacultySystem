@@ -1,0 +1,29 @@
+﻿@page "/AcademicYears"
+<h3>Academic Years</h3>
+
+<a href="@("AcademicYear")" class="btn btn-success"> Add new</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Start date</th>
+            <th>End date</th>
+            <th>Actions</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var row in _academicYears)
+        {
+            <tr>
+                <td>@row.Id</td>
+                <td>@row.Name</td>
+                <td>@row.StartDate</td>
+                <td>@row.EndDate</td>
+                <td><a href="@("AcademicYear/" + row.Id)" class="btn btn-warning">Edit</a></td>
+            </tr>
+        }
+    </tbody>
+
+</table>
