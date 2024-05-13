@@ -1,14 +1,12 @@
 ﻿using DigitalFacultySystem.Domain.Entities;
+using DigitalFacultySystem.Entities.DbSet;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace DigitalFacultySystem.DataService.Data
 {
-    public class AppDbContext : IdentityDbContext
+    public class AppDbContext(DbContextOptions options) : IdentityDbContext<ApplicationUser>(options)
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
-        {
-        }
 
         public virtual DbSet<AcademicYear> AcademicYears { get; set; }
 

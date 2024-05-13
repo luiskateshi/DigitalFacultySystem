@@ -3,6 +3,7 @@ using DigitalFacultySystem.DataService.Data;
 using DigitalFacultySystem.DataService.Repositories.Interfaces;
 using DigitalFacultySystem.Domain.Entities;
 using DigitalFacultySystem.Entities.Dtos.RequestResponse;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +19,7 @@ namespace DigitalFacultySystem.Api.Controllers
         }
 
         [HttpGet("all")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllAcademicYears()
         {
             var years = await _unitOfWork.AcademicYears.All();
