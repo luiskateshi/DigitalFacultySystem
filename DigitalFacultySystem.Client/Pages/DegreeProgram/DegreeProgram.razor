@@ -1,5 +1,7 @@
 ﻿@page "/DegreeProgram"
 @page "/DegreeProgram/{id}"
+@attribute [Authorize(Roles = "Admin, Staff")]
+
 <h3>Degree Program - @degreeModel.Name</h3>
 
 @if (string.IsNullOrEmpty(Id))

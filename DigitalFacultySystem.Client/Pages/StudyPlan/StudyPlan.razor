@@ -1,5 +1,7 @@
 ﻿@page "/StudyPlan"
 @page "/StudyPlan/{id}"
+@attribute [Authorize(Roles = "Admin, Staff")]
+
 
 <h3>Study Plan - @studyPlanModel.Name</h3>
 

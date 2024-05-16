@@ -1,4 +1,6 @@
 ﻿@page "/DegreePrograms"
+@attribute [Authorize(Roles = "Admin, Staff")]
+
 <h3><h3>Degree Programs List</h3></h3>
 
 <a href="@("DegreeProgram")" class="btn btn-success"> Add new</a>

@@ -1,5 +1,7 @@
 ﻿@page "/ExamSession"
 @page "/ExamSession/{id}"
+@attribute [Authorize(Roles = "Admin, Staff")]
+
 
 
 @if (string.IsNullOrEmpty(Id))
@@ -46,9 +48,7 @@ else
             }
 
 
-            <div class="form-group">
-                <p>@Message</p>
-            </div>
+            <AlertCard @ref="alertCard" />
         </div>
     </EditForm>
 </div>

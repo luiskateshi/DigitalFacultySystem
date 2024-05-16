@@ -1,0 +1,59 @@
+﻿@page "/studentGrades"
+
+<AuthorizeView Roles="admin, staff">
+     <Authorized>
+        <PageTitle>Student Grades</PageTitle>
+        <h3>Student Grades</h3>
+        <p>Only courses that were passed will be shown</p>
+
+        <!--Input for student Id-->
+        <div class="form-group">
+            <label for="studentId">Student Id</label>
+            <InputText stly="width:50%" class="form-control" @bind-Value="StudentId" />
+            <br />
+            <button style="margin-btm:10px" type="submit" class="btn btn-warning" @onclick="GetStudentGrades">Search</button>
+        </div>
+    </Authorized>
+</AuthorizeView>
+
+<AuthorizeView Roles="student">
+    <Authorized>
+        <PageTitle>My Grades</PageTitle>
+        <h3>My Grades</h3>
+        <p>Only courses that were passed will be shown</p>
+    </Authorized>
+</AuthorizeView>
+<br />
+<br />
+
+<AlertCard @ref="alertCard" />
+
+<br />
+@if (studentExamGradesDtos.Count > 0)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Course</th>
+                <th>Semester</th>
+                <th>Credits No.</th>
+                <th>Grade</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var row in studentExamGradesDtos)
+            {
+                <tr>
+                    <td>@row.SubjectName</td>
+                    <td>@row.Semester</td>
+                    <td>@row.CreditsNumber</td>
+                    <td class="fw-bold ">@row.Grade</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    Message = "No grades were found for this student";
+}

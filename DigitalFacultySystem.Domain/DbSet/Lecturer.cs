@@ -16,8 +16,4 @@ public class Lecturer : BaseEntity
     public string? Tel { get; set; }
 
     public string? Grade { get; set; }
-
-    public Guid? UserId { get; set; }
-
-    public virtual User? User { get; set; }
 }

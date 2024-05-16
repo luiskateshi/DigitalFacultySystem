@@ -1,4 +1,6 @@
 ﻿@page "/examSessions"
+@attribute [Authorize(Roles = "Admin, Staff")]
+
 <h3>Exam Seasons</h3>
 
 @if (examSessions == null)

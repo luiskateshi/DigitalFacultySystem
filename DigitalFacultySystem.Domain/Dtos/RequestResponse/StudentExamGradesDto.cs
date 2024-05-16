@@ -8,10 +8,10 @@ namespace DigitalFacultySystem.Entities.Dtos.RequestResponse
 {
     public class StudentExamGradesDto
     {
-        public String SubjectName { get; set; }
-        public int CreditsNumber { get; set; }
-        public int Grade { get; set; }
-        public int Semester { get; set; }
+        public String? SubjectName { get; set; }
+        public int? CreditsNumber { get; set; }
+        public int? Grade { get; set; }
+        public int? Semester { get; set; }
     }
 
 

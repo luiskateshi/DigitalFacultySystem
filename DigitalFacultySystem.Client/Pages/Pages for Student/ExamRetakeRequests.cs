@@ -1,9 +1,11 @@
 ﻿using DigitalFacultySystem.Client.Services.Interfaces;
 using DigitalFacultySystem.Entities.Dtos.RequestResponse;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using System;
+using System.Security.Claims;
 
-namespace DigitalFacultySystem.Client.Pages.ExamRetakeRequest
+namespace DigitalFacultySystem.Client.Pages.Pages_for_Student
 {
     public partial class ExamRetakeRequests
     {
@@ -11,6 +13,8 @@ namespace DigitalFacultySystem.Client.Pages.ExamRetakeRequest
         private IGenericService<ExamRetakeRequestDto> _examRetakeRequestService { get; set; }
         [Inject]
         private IGenericService<PossibleExamRetakesDto> _possibleExamRetakesService { get; set; }
+        [Inject]
+        public AuthenticationStateProvider AuthenticationStateProvider { get; set; }
         private ExamRetakeRequestDto requestModel = new ExamRetakeRequestDto();
         private List<ExamRetakeRequestDto> requests = new List<ExamRetakeRequestDto>();
         private List<PossibleExamRetakesDto> possibleExamRetakes = new List<PossibleExamRetakesDto>();
@@ -22,9 +26,16 @@ namespace DigitalFacultySystem.Client.Pages.ExamRetakeRequest
 
         protected override async Task OnInitializedAsync()
         {
-            StudentId = Guid.Parse("D01B4F5C-9867-4DF0-81C6-1A6FE77FDABE");
-            requests = await _examRetakeRequestService.GetAllById(StudentId, "api/examRetakeRequest/GetRequestsByStudent");
-            possibleExamRetakes = await _possibleExamRetakesService.GetAllById(StudentId, "api/examRetakeRequest/GetPossibleExamRetakes");
+            //get the userId of the current authenticated user
+            var authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authenticationState.User;
+            var userIdClaim = user.FindFirst(ClaimTypes.NameIdentifier);
+            var UserId = Guid.Parse(userIdClaim?.Value);
+
+            //get the studentId connected to the id of current authenticated user
+            StudentId = await _examRetakeRequestService.GetStudentIdByUserId(UserId, "api/Student/GetStudentByUserId");
+
+            await RefreshRequests();
         }
 
 
@@ -42,6 +53,7 @@ namespace DigitalFacultySystem.Client.Pages.ExamRetakeRequest
                 ShowAlertCardDanger(Message);
                 return;
             }
+            requestModel.StudentId = StudentId;
             var result = await _examRetakeRequestService.Add(requestModel, "api/examRetakeRequest");
             if (result)
             {

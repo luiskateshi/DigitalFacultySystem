@@ -44,7 +44,7 @@ namespace DigitalFacultySystem.DataService.Data
 
         public virtual DbSet<Subject> Subjects { get; set; }
 
-        public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -92,15 +92,9 @@ namespace DigitalFacultySystem.DataService.Data
                     .IsUnique();
             });
 
-            modelBuilder.Entity<Lecturer>(entity =>
-            {
-                entity.HasIndex(e => e.UserId, "IX_Lecturers_UserId")
-                    .IsUnique();
-            });
-
             modelBuilder.Entity<Student>(entity =>
             {
-                entity.HasIndex(e => e.UserId, "IX_Students_UserId")
+                entity.HasIndex(e => e.ApplicationUserId, "IX_Students_UserId")
                     .IsUnique();
             });
 
@@ -116,9 +110,9 @@ namespace DigitalFacultySystem.DataService.Data
                     .IsUnique();
             });
 
-            modelBuilder.Entity<User>(entity =>
+            modelBuilder.Entity<ApplicationUser>(entity =>
             {
-                entity.HasIndex(e => e.Username, "IX_Users_Username")
+                entity.HasIndex(e => e.Email, "IX_ApplicationUsers_Email")
                     .IsUnique();
             });
 

@@ -2,7 +2,9 @@
 using DigitalFacultySystem.DataService.Data;
 using DigitalFacultySystem.DataService.Repositories.Interfaces;
 using DigitalFacultySystem.Domain.Entities;
+using DigitalFacultySystem.Entities.DbSet;
 using DigitalFacultySystem.Entities.Dtos.RequestResponse;
+using DigitalFacultySystem.Entities.Dtos.SecurityDtos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,8 +15,10 @@ namespace DigitalFacultySystem.Api.Controllers
     [ApiController]
     public class StudentController : BaseController
     {
-        public StudentController(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
+        private readonly IUserAccount _userAccount;
+        public StudentController(IUnitOfWork unitOfWork, IMapper mapper, IUserAccount userAccount) : base(unitOfWork, mapper)
         {
+            _userAccount = userAccount;
         }
 
         [HttpGet]
@@ -42,10 +46,24 @@ namespace DigitalFacultySystem.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> AddStudent([FromBody] StudentDto createStudent)
         {
+
+            //firstly create a user account for this student
+            var user = new UserDto
+            {
+                Name = createStudent.Firstname + " " + createStudent.Lastname,
+                Email = createStudent.Email,
+                Role = "student",
+                Password = "Student@123" //default password for student
+            };
+            var userResult = await _userAccount.CreateAccount(user);
+            if (!userResult.Flag)
+            {
+                return BadRequest(userResult.Message);
+            }
+            createStudent.ApplicationUserId = Guid.Parse(userResult.Message);
             var student = _mapper.Map<Student>(createStudent);
             await _unitOfWork.Students.Add(student);
             await _unitOfWork.CompleteAsync();
-
             return Ok();
         }
 
@@ -74,6 +92,41 @@ namespace DigitalFacultySystem.Api.Controllers
             await _unitOfWork.CompleteAsync();
             return Ok();
         }
+
+        [HttpGet("GetStudentByUserId")]
+        public async Task<IActionResult> GetStudentByUserId(Guid Id)
+        {
+            var student = await _unitOfWork.Students.GetStudentByUserId(Id);
+            if (student == null)
+            {
+                return NotFound("Student not found");
+            }
+            var result = student.Id;
+            return Ok(result);
+        }
+
+        [HttpGet("GetAllStudentGrades")]
+        public async Task<IActionResult> GetAllStudentGrades(Guid Id)
+        {
+            var student = await _unitOfWork.Students.GetById(Id);
+            if (student == null)
+            {
+                return NotFound("Student not found");
+            }
+
+            var grades = await _unitOfWork.Students.GetStudentExamGrades(Id);
+            return Ok(grades);
+        }
+
+        [HttpGet("GetAllMyGrades")]
+        public async Task<IActionResult> GetAllMytGrades(Guid Id)
+        {
+            var student = await _unitOfWork.Students.GetStudentByUserId(Id);
+            var grades = await _unitOfWork.Students.GetStudentExamGrades(student.Id);
+            return Ok(grades);
+        }
+
+
 
 
     }

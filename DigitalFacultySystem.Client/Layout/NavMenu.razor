@@ -21,67 +21,86 @@
             </NavLink>
         </div>
         -->
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="weather">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
-            </NavLink>
-        </div>
+        <AuthorizeView Roles="admin, staff">
+            <Authorized>
+
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="departments">
+                        <span class="bi bi-departments" aria-hidden="true"></span> Departments
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="degreePrograms">
+                        <span class="bi bi-degreePrograms" aria-hidden="true"></span> Degree Programs
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="academicYears">
+                        <span class="bi bi-lightbulb-fill-nav-menu" aria-hidden="true"></span> Academic Years
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="generations">
+                        <span class="bi bi-generations" aria-hidden="true"></span> Generations
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="groups">
+                        <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Groups
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="students">
+                        <span class="bi bi-people-fill-nav-menu" aria-hidden="true"></span> Students
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="lecturers">
+                        <span class="bi bi-lecturers" aria-hidden="true"></span> Lecturers
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="studyPlans">
+                        <span class="bi bi-studyPlan" aria-hidden="true"></span> Study Plans
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="subjects">
+                        <span class="bi bi-subject" aria-hidden="true"></span> Subjects
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="courses">
+                        <span class="bi bi-courses" aria-hidden="true"></span> Courses
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="examSessions">
+                        <span class="bi bi-examSession" aria-hidden="true"></span> Exam Sessions
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="studentGrades">
+                        <span class="bi bi-journal" aria-hidden="true"></span> Student Grades
+                    </NavLink>
+                </div>
+            </Authorized>
+        </AuthorizeView>
+        <AuthorizeView Roles="student">
+            <Authorized>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="studentGrades">
+                        <span class="bi bi-journal" aria-hidden="true"></span> My Grades
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="ExamRetakeRequests">
+                        <span class="bi bi-journal" aria-hidden="true"></span> Exam Retakes
+                    </NavLink>
+                </div>
+            </Authorized>
+        </AuthorizeView>
         
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="departments">
-                <span class="bi bi-departments" aria-hidden="true"></span> Departments
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="degreePrograms">
-                <span class="bi bi-degreePrograms" aria-hidden="true"></span> Degree Programs
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="academicYears">
-                <span class="bi bi-lightbulb-fill-nav-menu" aria-hidden="true"></span> Academic Years
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="generations">
-                <span class="bi bi-generations" aria-hidden="true"></span> Generations
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="groups">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Groups
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="students">
-                <span class="bi bi-people-fill-nav-menu" aria-hidden="true"></span> Students
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="lecturers">
-                <span class="bi bi-lecturers" aria-hidden="true"></span> Lecturers
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="studyPlans">
-                <span class="bi bi-studyPlan" aria-hidden="true"></span> Study Plans
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="subjects">
-                <span class="bi bi-subject" aria-hidden="true"></span> Subjects
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="courses">
-                <span class="bi bi-courses" aria-hidden="true"></span> Courses
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="examSessions">
-                <span class="bi bi-examSession" aria-hidden="true"></span> Exam Sessions
-            </NavLink>
-        </div>
 
 
 

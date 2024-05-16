@@ -13,7 +13,7 @@
             <label for="name">Select the exam you want to retake</label>
             <br />
             <!--Choose from dropdown-->
-            <select class="form-control" @bind="requestModel.PlanSubjectId">
+            <select class="form-control" @bind="requestModel.ExamId">
                 <option value="">Exam you want to retake</option>
                 @foreach (var exam in possibleExamRetakes)
                 {
@@ -41,7 +41,7 @@
                 @foreach (var row in requests)
                 {
                     <tr>
-                        <td>@row.PlanSubjectId</td>
+                        <td>@row.ExamName</td>
                         <td>@row.DateOfRequest</td>
                         <td>Approved</td>
                     </tr>

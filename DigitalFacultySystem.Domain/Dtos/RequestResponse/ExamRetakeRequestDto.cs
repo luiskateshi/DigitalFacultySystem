@@ -10,11 +10,8 @@ namespace DigitalFacultySystem.Entities.Dtos.RequestResponse
     {
         public Guid Id { get; set; }
         public Guid? StudentId { get; set; }
-
-        public Guid? PlanSubjectId { get; set; }
-
         public DateOnly? DateOfRequest { get; set; }
-
-        public Guid? ExamSessionId { get; set; }
+        public Guid? ExamId { get; set; }
+        public String? ExamName { get; set; }
     }
 }

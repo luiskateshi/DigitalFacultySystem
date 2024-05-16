@@ -27,14 +27,14 @@ namespace DigitalFacultySystem.DataService.Repositories
                 {
                     Id = Guid.NewGuid(),
                     StudentId = request.StudentId,
-                    PlanSubjectId = request.PlanSubjectId,
+                    ExamId = request.ExamId,
                     DateOfRequest = DateOnly.FromDateTime(DateTime.Today),
-                    isActive = true,
-                    ExamSessionId = request.ExamSessionId
+                    isActive = true
+                    
                 };
 
                 await _dbSet.AddAsync(newRequest);
-                await _context.SaveChangesAsync();
+                //await _context.SaveChangesAsync();
 
                 return true;
             }
@@ -51,39 +51,43 @@ namespace DigitalFacultySystem.DataService.Repositories
             var result = await _dbSet
                 .AsNoTracking()
                 .AsSplitQuery()
-                .Where(x => x.StudentId == studentId)
+                .Include(x => x.Exam)
+                .Where(x => x.StudentId == studentId && x.isActive == true)
                 .Select(x => new ExamRetakeRequestDto
                 {
                     Id = x.Id,
                     StudentId = x.StudentId,
-                    PlanSubjectId = x.PlanSubjectId,
                     DateOfRequest = x.DateOfRequest,
-                    ExamSessionId = x.ExamSessionId
+                    ExamId = x.ExamId,
+                    ExamName = x.Exam.Name
                 })
                 .ToListAsync();
 
             return result;
         }
 
-        
+
         public async Task<IEnumerable<PossibleExamRetakesDto>> GetPossibleExamRetakes(Guid studentId)
         {
-            var result = (from e in _context.Exams
-                          join es in _context.ExamsSessions on e.ExamSessionId equals es.Id
-                          join a in _context.AcademicYears on es.AcademicYearId equals a.Id
-                          join sie in _context.StudentsInExams on e.Id equals sie.ExamId
-                          join s in _context.Students on sie.StudentId equals s.Id
-                          where s.Id == studentId && a.isActive == true
-                          && !_context.ExamRetakeRequests.Any(err =>
-                                    err.StudentId == studentId && err.PlanSubjectId == e.PlanSubjectId)
-                          select new PossibleExamRetakesDto
-                          {
-                              ExamId = e.Id,
-                              ExamName = e.Name
-                          }).ToList();
+            var result = await (from e in _context.Exams
+                                    join es in _context.ExamsSessions on e.ExamSessionId equals es.Id
+                                    join a in _context.AcademicYears on es.AcademicYearId equals a.Id
+                                    join sie in _context.StudentsInExams on e.Id equals sie.ExamId
+                                    join s in _context.Students on sie.StudentId equals s.Id
+                                    where s.Id == studentId
+                                        && a.isActive == true
+                                        && !(from err in _context.ExamRetakeRequests
+                                             where err.StudentId == studentId
+                                             select err.ExamId).Contains(e.Id)
+                                    select new PossibleExamRetakesDto
+                                    {
+                                        ExamId = e.Id,
+                                        ExamName = e.Name
+                                    }).ToListAsync();
 
             return result;
         }
+
 
     }
 }

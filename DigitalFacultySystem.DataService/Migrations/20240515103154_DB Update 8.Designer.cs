@@ -4,6 +4,7 @@ using DigitalFacultySystem.DataService.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DigitalFacultySystem.DataService.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240515103154_DB Update 8")]
+    partial class DBUpdate8
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -80,12 +83,6 @@ namespace DigitalFacultySystem.DataService.Migrations
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("LabLecturerId");
-
-                    b.HasIndex("MainLecturerId");
-
-                    b.HasIndex("SecondLecturerId");
 
                     b.HasIndex("StudyPlanSubjectId");
 
@@ -235,13 +232,16 @@ namespace DigitalFacultySystem.DataService.Migrations
                     b.Property<DateOnly?>("DateOfRequest")
                         .HasColumnType("date");
 
-                    b.Property<Guid?>("ExamId")
+                    b.Property<Guid?>("ExamSessionId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("ExamsSessionId")
+                    b.Property<Guid?>("PlanSubjectId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("StudentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("StudyPlanSubjectId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("isActive")
@@ -251,11 +251,11 @@ namespace DigitalFacultySystem.DataService.Migrations
 
                     b.HasIndex("CourseId");
 
-                    b.HasIndex("ExamId");
-
-                    b.HasIndex("ExamsSessionId");
+                    b.HasIndex("ExamSessionId");
 
                     b.HasIndex("StudentId");
+
+                    b.HasIndex("StudyPlanSubjectId");
 
                     b.ToTable("ExamRetakeRequests");
                 });
@@ -871,27 +871,9 @@ namespace DigitalFacultySystem.DataService.Migrations
 
             modelBuilder.Entity("DigitalFacultySystem.Domain.Entities.Course", b =>
                 {
-                    b.HasOne("DigitalFacultySystem.Domain.Entities.Lecturer", "LabLecturer")
-                        .WithMany()
-                        .HasForeignKey("LabLecturerId");
-
-                    b.HasOne("DigitalFacultySystem.Domain.Entities.Lecturer", "MainLecturer")
-                        .WithMany()
-                        .HasForeignKey("MainLecturerId");
-
-                    b.HasOne("DigitalFacultySystem.Domain.Entities.Lecturer", "SecondLecturer")
-                        .WithMany()
-                        .HasForeignKey("SecondLecturerId");
-
                     b.HasOne("DigitalFacultySystem.Domain.Entities.StudyPlanSubject", "StudyPlanSubject")
                         .WithMany("Courses")
                         .HasForeignKey("StudyPlanSubjectId");
-
-                    b.Navigation("LabLecturer");
-
-                    b.Navigation("MainLecturer");
-
-                    b.Navigation("SecondLecturer");
 
                     b.Navigation("StudyPlanSubject");
                 });
@@ -935,21 +917,23 @@ namespace DigitalFacultySystem.DataService.Migrations
                         .WithMany("ExamRetakeRequests")
                         .HasForeignKey("CourseId");
 
-                    b.HasOne("DigitalFacultySystem.Domain.Entities.Exam", "Exam")
-                        .WithMany()
-                        .HasForeignKey("ExamId");
-
-                    b.HasOne("DigitalFacultySystem.Domain.Entities.ExamsSession", null)
+                    b.HasOne("DigitalFacultySystem.Domain.Entities.ExamsSession", "ExamSession")
                         .WithMany("ExamRetakeRequests")
-                        .HasForeignKey("ExamsSessionId");
+                        .HasForeignKey("ExamSessionId");
 
                     b.HasOne("DigitalFacultySystem.Domain.Entities.Student", "Student")
                         .WithMany("ExamRetakeRequests")
                         .HasForeignKey("StudentId");
 
-                    b.Navigation("Exam");
+                    b.HasOne("DigitalFacultySystem.Domain.Entities.StudyPlanSubject", "StudyPlanSubject")
+                        .WithMany()
+                        .HasForeignKey("StudyPlanSubjectId");
+
+                    b.Navigation("ExamSession");
 
                     b.Navigation("Student");
+
+                    b.Navigation("StudyPlanSubject");
                 });
 
             modelBuilder.Entity("DigitalFacultySystem.Domain.Entities.ExamsSession", b =>

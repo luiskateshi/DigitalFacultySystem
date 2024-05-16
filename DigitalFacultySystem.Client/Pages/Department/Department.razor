@@ -1,5 +1,8 @@
 ﻿@page "/Department"
 @page "/Department/{id}"
+@attribute [Authorize(Roles = "Admin, Staff")]
+
+
 @using DigitalFacultySystem.Client.Pages.DegreeProgram
 <h3>Department - @departmentModel.Name</h3>
 

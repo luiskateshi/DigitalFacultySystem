@@ -1,5 +1,7 @@
 ﻿@page "/Student"
 @page "/Student/{studentId}"
+@attribute [Authorize(Roles = "Admin, Staff")]
+
 <h3>Student</h3>
 
 @if(string.IsNullOrEmpty(studentId))

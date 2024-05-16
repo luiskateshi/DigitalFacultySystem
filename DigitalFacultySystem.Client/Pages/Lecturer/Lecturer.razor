@@ -1,5 +1,7 @@
 ﻿@page "/Lecturer"
 @page "/Lecturer/{id}"
+@attribute [Authorize(Roles = "Admin, Staff")]
+
 <h3>Lecturer - @lecturerModel.Grade @lecturerModel.Firstname @lecturerModel.Lastname</h3>
 
 @if (string.IsNullOrEmpty(Id))

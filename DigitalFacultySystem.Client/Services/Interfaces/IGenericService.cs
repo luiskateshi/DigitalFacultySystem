@@ -11,8 +11,6 @@
         Task<bool> UpdateList(IEnumerable<T> entities, string apiUrl);
         Task<bool> ExecuteProcess(string apiUrl);
         Task<bool> ExecuteProcessById(Guid Id, string apiUrl);
-
-
-
+        Task<Guid> GetStudentIdByUserId(Guid Id, string apiUrl);
     }
 }

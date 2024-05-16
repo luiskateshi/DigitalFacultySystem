@@ -13,6 +13,7 @@ namespace DigitalFacultySystem.Entities.Dtos.RequestResponse
         public Guid AcademicYearId { get; set; }
 
 
+
         /*
          * This is a list exams that a student can apply to retake.
          

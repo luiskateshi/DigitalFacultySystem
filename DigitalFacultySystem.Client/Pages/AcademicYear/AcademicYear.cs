@@ -3,6 +3,7 @@ using DigitalFacultySystem.Entities;
 using DigitalFacultySystem.Entities.Dtos.RequestResponse;
 using Microsoft.AspNetCore.Components;
 
+
 namespace DigitalFacultySystem.Client.Pages.AcademicYear
 {
     public partial class AcademicYear

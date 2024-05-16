@@ -20,7 +20,13 @@ namespace DigitalFacultySystem.DataService.Repositories
 
         public async Task<GeneralResponse> CreateAccount(UserDto userDTO)
         {
-            if (userDTO is null) return new GeneralResponse(false, "Model is empty");
+            if (userDTO is null)
+                return new GeneralResponse(false, "Model is empty");
+
+            // Control if role is what is expected
+            if (userDTO.Role != "admin" && userDTO.Role != "staff" && userDTO.Role != "student")
+                return new GeneralResponse(false, "Role is not valid");
+
             var newUser = new ApplicationUser()
             {
                 Name = userDTO.Name,
@@ -28,30 +34,31 @@ namespace DigitalFacultySystem.DataService.Repositories
                 PasswordHash = userDTO.Password,
                 UserName = userDTO.Email
             };
+
             var user = await userManager.FindByEmailAsync(newUser.Email);
-            if (user is not null) return new GeneralResponse(false, "User registered already");
+            if (user != null)
+                return new GeneralResponse(false, "User already registered");
 
-            var createUser = await userManager.CreateAsync(newUser!, userDTO.Password);
-            if (!createUser.Succeeded) return new GeneralResponse(false, "Error occured.. please try again");
+            var createUserResult = await userManager.CreateAsync(newUser, userDTO.Password);
+            if (!createUserResult.Succeeded)
+                return new GeneralResponse(false, "Error occurred. Please try again");
 
-            //Assign Default Role : Admin to first registrar; rest is user
-            var checkAdmin = await roleManager.FindByNameAsync("Admin");
-            if (checkAdmin is null)
+            // Get the ID of the newly created user
+            var userId = newUser.Id;
+
+            // Check if the role specified in UserDto exists, if not, create it
+            var roleExists = await roleManager.RoleExistsAsync(userDTO.Role);
+            if (!roleExists)
             {
-                await roleManager.CreateAsync(new IdentityRole() { Name = "Admin" });
-                await userManager.AddToRoleAsync(newUser, "Admin");
-                return new GeneralResponse(true, "Account Created");
+                await roleManager.CreateAsync(new IdentityRole() { Name = userDTO.Role });
             }
-            else
-            {
-                var checkUser = await roleManager.FindByNameAsync("User");
-                if (checkUser is null)
-                    await roleManager.CreateAsync(new IdentityRole() { Name = "User" });
 
-                await userManager.AddToRoleAsync(newUser, "User");
-                return new GeneralResponse(true, "Account Created");
-            }
+            // Assign the role specified in UserDto to the user
+            await userManager.AddToRoleAsync(newUser, userDTO.Role);
+
+            return new GeneralResponse(true, userId);
         }
+
 
         public async Task<LoginResponse> LoginAccount(LoginDto loginDTO)
         {
@@ -91,6 +98,23 @@ namespace DigitalFacultySystem.DataService.Repositories
                 signingCredentials: credentials
                 );
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        public async Task<GeneralResponse> ChangePassword(string userId, string currentPassword, string newPassword)
+        {
+            var Id = userId.ToString();
+            var user = await userManager.FindByIdAsync(Id);
+            if (user == null)
+                return new GeneralResponse(false, "User not found");
+
+            var passwordChangeResult = await userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+            if (!passwordChangeResult.Succeeded)
+            {
+                var errors = string.Join(", ", passwordChangeResult.Errors.Select(e => e.Description));
+                return new GeneralResponse(false, $"Password change failed: {errors}");
+            }
+
+            return new GeneralResponse(true, "Password changed successfully");
         }
     }
 }

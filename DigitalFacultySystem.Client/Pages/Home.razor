@@ -1,7 +1,65 @@
 ﻿@page "/"
+@using System.Security.Claims
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavManager
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<div class="container">
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h1 class="display-4 text-center mb-4">Welcome to Digital Faculty Platform</h1>
+                    <p class="lead text-center mb-5">Today is @DateTime.Now.ToString("dddd, MMMM dd, yyyy")</p>
 
-Welcome to your new app.
+                    <!--Check if user is authenticated-->
+                    <AuthorizeView>
+                        <Authorized>
+                            <h2 class="text-center">Hello, @context.User.Identity!.Name!</h2>
+                            <p class="text-center">Your ID is @UserId</p>
+                            <p class="text-center">Your Role is @UserRole</p>
+                            <!-- Option to go to change password page -->
+                            <div class="text-center mt-3">
+                                <button class="btn btn-primary" @onclick="GoToChangePassword">Change Password</button>
+                            </div>
+                        </Authorized>
+                        <NotAuthorized>
+                            <h2 class="text-center">Hello, Guest!</h2>
+                            <p class="text-center">Please log in to access more features.</p>
+                        </NotAuthorized>
+                    </AuthorizeView>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    // Define properties to store user ID and role
+    private string UserId { get; set; }
+    private string UserRole { get; set; }
+
+    // Override the OnInitializedAsync lifecycle method
+    protected override async Task OnInitializedAsync()
+    {
+        // Retrieve the authentication state
+        var authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+
+        // Get the claims principal from the authentication state
+        var user = authenticationState.User;
+
+        // Find the claim representing the user ID
+        var userIdClaim = user.FindFirst(ClaimTypes.NameIdentifier);
+        UserId = userIdClaim?.Value;
+
+        // Find the claim representing the user role
+        UserRole = user.FindFirst(ClaimTypes.Role)?.Value;
+    }
+
+    // Method to navigate to the change password page
+    private void GoToChangePassword()
+    {
+        NavManager.NavigateTo("/changePassword");
+    }
+}

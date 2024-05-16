@@ -1,5 +1,7 @@
 ﻿@page "/AcademicYears"
 <h3>Academic Years</h3>
+@attribute [Authorize(Roles = "Admin, Staff")]
+
 
 <a href="@("AcademicYear")" class="btn btn-success"> Add new</a>
 <table class="table">

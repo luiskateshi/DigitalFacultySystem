@@ -21,5 +21,8 @@ namespace DigitalFacultySystem.Entities.Dtos.SecurityDtos
         [DataType(DataType.Password)]
         [Compare(nameof(Password))]
         public string ConfirmPassword { get; set; } = string.Empty;
+
+       
+        public string? Role { get; set; } = string.Empty;
     }
 }

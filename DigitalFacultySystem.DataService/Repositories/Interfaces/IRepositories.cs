@@ -8,7 +8,12 @@ using System.Threading.Tasks;
 
 namespace DigitalFacultySystem.DataService.Repositories.Interfaces
 {
-    public interface IStudentRepository : IGenericRepository<Student>{ }
+    public interface IStudentRepository : IGenericRepository<Student>{
+
+        Task<IEnumerable<StudentExamGradesDto>> GetStudentExamGrades(Guid studentId);
+        Task<Student> GetStudentByUserId(Guid userId);
+
+    }
 
     public interface IAcademicYearRepository : IGenericRepository<AcademicYear>{ }
 
@@ -61,6 +66,7 @@ namespace DigitalFacultySystem.DataService.Repositories.Interfaces
 
     public interface IExamRetakeRequestRepository : IGenericRepository<ExamRetakeRequest>
     {
+        Task<bool> AddRequest(ExamRetakeRequestDto request);
         Task<IEnumerable<ExamRetakeRequestDto>> GetRequestsByStudent(Guid studentId);
         Task<IEnumerable<PossibleExamRetakesDto>> GetPossibleExamRetakes(Guid studentId);
     }

@@ -1,4 +1,6 @@
 ﻿@page "/groups"
+@attribute [Authorize(Roles = "Admin, Staff")]
+
 <h3>Groups</h3>
 
 @if (groups == null)

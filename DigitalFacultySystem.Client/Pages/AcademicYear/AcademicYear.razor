@@ -1,5 +1,6 @@
 ﻿@page "/AcademicYear"
 @page "/AcademicYear/{id}"
+@attribute [Authorize(Roles = "Admin, Staff")]
 
 
 @if (string.IsNullOrEmpty(Id))

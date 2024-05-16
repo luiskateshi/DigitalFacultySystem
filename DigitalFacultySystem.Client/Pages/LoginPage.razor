@@ -1,100 +1,76 @@
 ﻿@page "/login"
+@inject AuthenticationStateProvider AuthStateProvider
+@inject NavigationManager NavManager
 @using DigitalFacultySystem.Client.Authentication
+@using DigitalFacultySystem.DataService.Repositories.Interfaces
 @using DigitalFacultySystem.Entities.Dtos.SecurityDtos
-@inject AuthenticationStateProvider authStateProvider
-@inject NavigationManager navigationManager
-@inject HttpClient httpClient
+@inject IUserAccount AccountService
+@inject IJSRuntime js
 
-
-<div class="container">
-    <div class="col-md-6">
-        <EditForm Model="@LoginUser" OnValidSubmit="HandleLogin">
-            <DataAnnotationsValidator />
-            <ValidationSummary />
-
-            @if(!String.IsNullOrEmpty(Message))
-            {
-                <div class="alert alert-warning">
-                    <p>@Message</p>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg">
+                <!-- Added shadow-lg for nice shadow effect -->
+                <div class="card-header text-center bg-primary text-white">
+                    <h3>Login to Your Account</h3>
                 </div>
-            }
-
-            <div class="card">
-                <div class="card-header">Please Login</div>
                 <div class="card-body">
+                    <EditForm Model="User" OnValidSubmit="HandleLogin">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary />
 
-                    <div class="form-group">
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email Address</label>
+                            <input @bind="User.Email" id="email" class="form-control" type="email" placeholder="Enter your email" required />
+                        </div>
 
-                        <label class="form-label">Email Address</label>
-                        <InputText @bind-Value="LoginUser.Email" class="form-control"></InputText>
-                    </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <div class="input-group">
+                                <input @bind="User.Password" id="password" class="form-control" type="@passwordInputType" placeholder="Enter your password" required />
+                                <button class="btn btn-outline-secondary" type="button" @onclick="TogglePasswordVisibility">
+                                    @passwordButtonText
+                                </button>
+                            </div>
+                        </div>
 
-
-                    <div class="form-group mt-3">
-                        <label class="form-label">Password</label>
-                        <InputText @bind-Value="LoginUser.Password" class="form-control"></InputText>
-                    </div>
-                </div>
-                <div class="card-footer">
-                    <button type="submit" class="btn btn-primary">Login</button>
-
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary">Login</button>
+                        </div>
+                    </EditForm>
                 </div>
             </div>
-
-       </EditForm>
-            
-            
-
+        </div>
     </div>
-
 </div>
 
-
-
 @code {
-    private LoginUser LoginUser { get; set; } = new();
-    private string? Message;
+    public LoginDto User { get; set; } = new();
 
-    private async Task HandleLogin()
+    private bool isPasswordVisible = false;
+    private string passwordInputType => isPasswordVisible ? "text" : "password";
+    private string passwordButtonText => isPasswordVisible ? "Hide" : "Show";
+
+    async Task HandleLogin()
     {
-        Message = String.Empty;
-        var response = await httpClient.PostAsJsonAsync("login", LoginUser);
-        if (!response.IsSuccessStatusCode)
+        var (flag, token, message) = await AccountService.LoginAccount(User);
+        if (flag)
         {
-            Message = "Invalid login attempt";
-            return;
+            string customMessage = $"{message}{Environment.NewLine}{token}";
+            await js.InvokeVoidAsync("alert", customMessage);
+            User = new();
+
+            var customAuthStateProvider = (CustomAuthenticationStateProvider)AuthStateProvider;
+            await customAuthStateProvider.UpdateAuthenticationState(token);
+            NavManager.NavigateTo("/", forceLoad: true);
         }
 
-        var result = await response.Content.ReadFromJsonAsync<LoginResponse>();
-        if (string.IsNullOrEmpty(result!.AccessToken))
-        {
-            Message = "Invalid login attempt";
-            return;
-        }
+        await js.InvokeVoidAsync("alert", message);
+    }
 
-        httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", result.AccessToken);
-        var getUserClaims = await httpClient.GetAsync("manage/info");
-        if (!getUserClaims.IsSuccessStatusCode)
-        {
-            Message = "Invalid login attempt";
-            return;
-        }
-
-        var userDetails = await getUserClaims.Content.ReadFromJsonAsync<UserDetails>();
-        var authenticationModel = new AuthenticationModel()
-            {
-                Token = result.AccessToken,
-                RefreshToken = result.RefreshToken,
-                Username = userDetails!.Email
-            };
-
-        var customAuthStateProvider = (CustomAuthenticationStateProvider)authStateProvider;
-        await customAuthStateProvider.UpdateAuthenticationState(authenticationModel);
-        navigationManager.NavigateTo("/");
-
-
-
-
+    void TogglePasswordVisibility()
+    {
+        isPasswordVisible = !isPasswordVisible;
     }
 }
-

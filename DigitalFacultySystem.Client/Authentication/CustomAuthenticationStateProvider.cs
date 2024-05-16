@@ -5,66 +5,44 @@ using System.Text.Json;
 
 namespace DigitalFacultySystem.Client.Authentication
 {
-    public class CustomAuthenticationStateProvider : AuthenticationStateProvider
+    public class CustomAuthenticationStateProvider(ILocalStorageService localStorageService) : AuthenticationStateProvider
     {
-        private  readonly ILocalStorageService _localStorageService;
-        private ClaimsPrincipal anynomus = new ClaimsPrincipal(new ClaimsIdentity());
-        
-        public CustomAuthenticationStateProvider(ILocalStorageService localStorageService)
-        {
-            _localStorageService = localStorageService;
-        }
-
-        //gets the authentication state from the local storage
-        public override async Task<AuthenticationState> GetAuthenticationStateAsync()
+        private ClaimsPrincipal anonymous = new(new ClaimsIdentity());
+        public async override Task<AuthenticationState> GetAuthenticationStateAsync()
         {
             try
             {
-                var authenticationModel = await _localStorageService.GetItemAsStringAsync("Authentication");
-                if (authenticationModel == null)
-                {
-                    return await Task.FromResult(new AuthenticationState(anynomus));
-                }
-                return await Task.FromResult(new AuthenticationState(SetClaims(Deserialize(authenticationModel).Username!)));
-            }
-            catch 
-            {
-                return await Task.FromResult(new AuthenticationState(anynomus));
-            }
-        }
+                string stringToken = await localStorageService.GetItemAsStringAsync("token");
 
-        //sets the token and username in the local storage (login)
-        public async Task UpdateAuthenticationState(AuthenticationModel authenticationModel)
-        {
-            try
-            {
-                ClaimsPrincipal claimsPrincipal = new();
-                if (authenticationModel != null)
-                {
-                    claimsPrincipal = SetClaims(authenticationModel.Username!);
-                    await _localStorageService.SetItemAsync("Authentication", Serialize(authenticationModel));
-                }
-                else
-                {                    
-                    await _localStorageService.RemoveItemAsync("Authentication");
-                    claimsPrincipal = anynomus;
-                }
-                NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(claimsPrincipal)));
+                if (string.IsNullOrWhiteSpace(stringToken))
+                    return await Task.FromResult(new AuthenticationState(anonymous));
+
+                var claims = Generics.GetClaimsFromToken(stringToken);
+
+                var claimsPrincipal = Generics.SetClaimPrincipal(claims);
+                return await Task.FromResult(new AuthenticationState(claimsPrincipal));
             }
             catch
             {
-                await Task.FromResult(new AuthenticationState(anynomus));
+                return await Task.FromResult(new AuthenticationState(anonymous));
             }
         }
 
-        private ClaimsPrincipal SetClaims(string email) => new ClaimsPrincipal(new ClaimsIdentity(new List<Claim> 
-        { 
-            new Claim(ClaimTypes.Name, email) 
-        }, "CustomAuth"));
-
-        private AuthenticationModel Deserialize(string serializeString) => JsonSerializer.Deserialize<AuthenticationModel>(serializeString)!;
-        private string Serialize(AuthenticationModel model) => JsonSerializer.Serialize(model);
-
-
+        public async Task UpdateAuthenticationState(string? token)
+        {
+            ClaimsPrincipal claimsPrincipal = new();
+            if (!string.IsNullOrWhiteSpace(token))
+            {
+                var userSession = Generics.GetClaimsFromToken(token);
+                claimsPrincipal = Generics.SetClaimPrincipal(userSession);
+                await localStorageService.SetItemAsStringAsync("token", token);
+            }
+            else
+            {
+                claimsPrincipal = anonymous;
+                await localStorageService.RemoveItemAsync("token");
+            }
+            NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(claimsPrincipal)));
+        }
     }
 }

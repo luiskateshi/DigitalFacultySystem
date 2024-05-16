@@ -17,7 +17,7 @@ public class Student : BaseEntity
 
     public string? Tel { get; set; }
 
-    public Guid? UserId { get; set; }
+    public Guid? ApplicationUserId { get; set; }
 
     //aspiringDegree field 
     public Guid? DegreeProgramId { get; set; }
@@ -30,7 +30,7 @@ public class Student : BaseEntity
 
     public StudentsInGroup? StudentsInGroup { get; set; } // Assuming each student belongs to only one group
 
-    public virtual User? User { get; set; }
+    public virtual ApplicationUser? User { get; set; }
 
     public virtual DegreeProgram? DegreeProgram { get; set; }
 }

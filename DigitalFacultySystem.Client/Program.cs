@@ -2,6 +2,7 @@ using Blazored.LocalStorage;
 using DigitalFacultySystem.Client.Authentication;
 using DigitalFacultySystem.Client.Services;
 using DigitalFacultySystem.Client.Services.Interfaces;
+using DigitalFacultySystem.DataService.Repositories.Interfaces;
 using DigitalFacultySystem.Entities.Dtos.RequestResponse;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
@@ -38,6 +39,7 @@ namespace DigitalFacultySystem.Client
             builder.Services.AddScoped<IGenericService<StudentsInExamDto>, GenericService<StudentsInExamDto>>();
             builder.Services.AddScoped<IGenericService<ExamRetakeRequestDto>, GenericService<ExamRetakeRequestDto>>();
             builder.Services.AddScoped<IGenericService<PossibleExamRetakesDto>, GenericService<PossibleExamRetakesDto>>();
+            builder.Services.AddScoped<IGenericService<StudentExamGradesDto>, GenericService<StudentExamGradesDto>>();
 
 
             builder.Services.AddScoped(hc => new HttpClient
@@ -45,9 +47,14 @@ namespace DigitalFacultySystem.Client
                 BaseAddress = new Uri("http://localhost:5010/")
             });
 
+            //authentication & authorization
             builder.Services.AddAuthorizationCore();
             builder.Services.AddBlazoredLocalStorage();
             builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
+
+            builder.Services.AddScoped<IUserAccount, AccountService>();
+
+
             await builder.Build().RunAsync();
         }
     }

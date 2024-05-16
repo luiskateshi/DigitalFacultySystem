@@ -1,4 +1,6 @@
 ﻿@page "/StudyPlanSubject/{id}"
+@attribute [Authorize(Roles = "Admin, Staff")]
+
 
 <h3>Study Plan Subject - @planSubjectModel.Name</h3>
 <PageTitle>Study Plan Subject Update</PageTitle>

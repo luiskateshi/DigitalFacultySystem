@@ -18,4 +18,10 @@ public class Course : BaseEntity
     public virtual ICollection<StudentInCourse> StudentInCourses { get; set; } = new List<StudentInCourse>();
 
     public virtual StudyPlanSubject? StudyPlanSubject { get; set; }
+
+    public virtual Lecturer? MainLecturer { get; set; }
+
+    public virtual Lecturer? SecondLecturer { get; set; }
+
+    public virtual Lecturer? LabLecturer { get; set; }
 }
