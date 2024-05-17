@@ -64,7 +64,7 @@ namespace DigitalFacultySystem.DataService.Repositories.Interfaces
         Task<bool> UpdateStudentsInExam(IEnumerable<StudentsInExamDto> studentsInExam);
     }
 
-    public interface IExamRetakeRequestRepository : IGenericRepository<ExamRetakeRequest>
+    public interface IExamRetakeRequestRepository : IGenericRepository<studyPlan>
     {
         Task<bool> AddRequest(ExamRetakeRequestDto request);
         Task<IEnumerable<ExamRetakeRequestDto>> GetRequestsByStudent(Guid studentId);

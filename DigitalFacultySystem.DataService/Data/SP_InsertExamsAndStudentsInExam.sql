@@ -1,11 +1,4 @@
-﻿USE [uniDb]
-GO
-/****** Object:  StoredProcedure [dbo].[SP_InsertExamsAndStudentsInExam]    Script Date: 10/05/2024 17:36:53 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-ALTER PROCEDURE [dbo].[SP_InsertExamsAndStudentsInExam]
+﻿CREATE PROCEDURE [dbo].[SP_InsertExamsAndStudentsInExam]
     @examSessionId uniqueidentifier
 AS
 BEGIN
@@ -35,8 +28,9 @@ BEGIN
 		AND ca.isAttended = 1 AND (sic.isActive = 1 OR EXISTS (
 														SELECT 1
 														FROM ExamRetakeRequests err 
+                                                        JOIN Exams e ON e.PlanSubjectId = sps.Id
 														WHERE err.StudentId = sic.StudentId
-														AND err.planSubjectId = sps.id))		
+														AND err.ExamId = e.id))		
     );
 
     -- Insert students in exams only if they attended the course and (still haven't passed the exam of that subject or passed it once but made a request to improve the examGrade)
@@ -53,7 +47,7 @@ BEGIN
 								SELECT 1
 								FROM ExamRetakeRequests err 
 								WHERE err.StudentId = sic.StudentId
-								AND err.planSubjectId = sps.id))
+								AND err.ExamId = e.id))
     AND NOT EXISTS (   --to not insert records twice just in case the generate button is clicked twice
         SELECT 1
         FROM StudentsInExams sie

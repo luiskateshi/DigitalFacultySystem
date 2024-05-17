@@ -11,26 +11,24 @@ namespace DigitalFacultySystem.Client.Pages.ExamSession
         [Inject]
         public IGenericService<StudentsInExamDto> _studentInExamService { get; set; }
 
-        public List<StudentsInExamDto> studentsInExam = new ();
+        public List<StudentsInExamDto> studentsInExam = new();
 
         public ExamDto examModel { get; set; } = new();
 
         [Parameter]
         public string Id { get; set; } = string.Empty;
 
-        public String Message { get; set; } = string.Empty;
-
-        private string url = "api/exam";
+        [Inject]
+        public NavigationManager _navi { get; set; }
 
         private AlertCard alertCard;
-
 
         protected override async Task OnInitializedAsync()
         {
             if (!string.IsNullOrEmpty(Id))
             {
                 var Id = Guid.Parse(this.Id);
-                var exam = await _examService.GetById(Id, url);
+                var exam = await _examService.GetById(Id, "api/exam");
 
                 if (exam != null)
                     examModel = exam;
@@ -38,7 +36,7 @@ namespace DigitalFacultySystem.Client.Pages.ExamSession
                 await RefreshStudentsInExam();
             }
         }
-        //refresh students in exam
+
         protected async Task RefreshStudentsInExam()
         {
             var Id = Guid.Parse(this.Id);
@@ -47,39 +45,33 @@ namespace DigitalFacultySystem.Client.Pages.ExamSession
 
         protected void HandleInValidSumbit()
         {
-            Message = "There are validation errors. Please try again.";
+            alertCard.ShowAlert("Ka disa gabime në validim. Ju lutemi provoni përsëri.", "alert-danger");
         }
 
         protected async Task HandleValidSumbit()
         {
-            var result = await _examService.Update(examModel, url);
+            var result = await _examService.Update(examModel, "api/exam");
             if (result)
             {
-                Message = "Exam updated successfully.";
-                alertCard.ShowAlert(Message, "alert-success");
+                alertCard.ShowAlert("Provimi u përditësua me sukses.", "alert-success");
             }
             else
             {
-                Message = "There was an error updating the exam. Please try again.";
-                alertCard.ShowAlert(Message, "alert-danger");
+                alertCard.ShowAlert("Pati një gabim gjatë përditësimit të provimit. Ju lutemi provoni përsëri.", "alert-danger");
             }
         }
 
-        //update students in exam
         protected async Task UpdateStudentsInExam()
         {
             var result = await _studentInExamService.UpdateList(studentsInExam, "api/exam/UpdateStudentsInExam");
             if (result)
             {
-                Message = "Students grades and their attendance for this exam was updated successfully.";
-                alertCard.ShowAlert(Message, "alert-success");
+                alertCard.ShowAlert("Notat dhe prezenca e studentëve në këtë provim u përditësuan me sukses.", "alert-success");
             }
             else
             {
-                Message = "There was an error updating the students in exam. Please try again.";
-                alertCard.ShowAlert(Message, "alert-danger");
+                alertCard.ShowAlert("Pati një gabim gjatë përditësimit të studentëve në provim. Ju lutemi provoni përsëri.", "alert-danger");
             }
         }
-
     }
 }

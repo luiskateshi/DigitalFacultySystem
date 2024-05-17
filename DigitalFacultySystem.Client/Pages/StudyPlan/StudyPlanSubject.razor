@@ -1,41 +1,71 @@
-﻿@page "/StudyPlanSubject/{id}"
-@attribute [Authorize(Roles = "Admin, Staff")]
+﻿@page "/StudyPlanSubject/{Id}"
+@attribute [Authorize(Roles = "admin, staff")]
 
+<PageTitle>Subjekti i Planit të Studimit</PageTitle>
 
-<h3>Study Plan Subject - @planSubjectModel.Name</h3>
-<PageTitle>Study Plan Subject Update</PageTitle>
-<p>Update Study Plan Subject</p>
-        
-<div class="row card">
-    <EditForm Model="@planSubjectModel" OnValidSubmit="@HandleValidSubmit" OnInvalidSubmit="@HandleInvalidSubmit" FormName="sampleForm">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
+<div class="container p-4 bg-light rounded border shadow-lg mb-4">
+    <h3>Subjekti i Planit të Studimit - @planSubjectModel.Name</h3>
+    <p class="text-muted">Përditëso Subjektin e Planit të Studimit</p>
+</div>
 
-        <div class="form-group">
-            <label>Plan Subject Name</label>
-            <InputText class="form-control" @bind-Value="planSubjectModel.Name" />
-            <label>Credits (ECTS)</label>
-            <InputNumber class="form-control" @bind-Value="planSubjectModel.CreditsNo" />
-            <label>Total Hours Lectures</label>
-            <InputNumber class="form-control" @bind-Value="planSubjectModel.TotalHoursLectures" />
-            <label>Total Hours Seminars</label>
-            <InputNumber class="form-control" @bind-Value="planSubjectModel.TotalHoursSeminars" />
-            <label>Total Hours Labs</label>
-            <InputNumber class="form-control" @bind-Value="planSubjectModel.TotalHoursLab" />
-            <label>Semester No.</label>
-            <InputNumber class="form-control" @bind-Value="planSubjectModel.Semester" />
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <button class="btn btn-secondary" @onclick="GoBack">Kthehu</button>
+                <div>
+                    <h4>Përditëso Subjektin e Planit të Studimit</h4>
+                </div>
+            </div>
+            <div class="card shadow-lg">
+                <div class="card-body">
+                    <EditForm Model="@planSubjectModel" OnValidSubmit="@HandleValidSubmit" OnInvalidSubmit="@HandleInvalidSubmit" class="needs-validation" novalidate>
+                        <DataAnnotationsValidator />
+                        <ValidationSummary class="text-danger" />
 
+                        <div class="form-group mb-3">
+                            <label for="name" class="form-label">Emri i Subjektit të Planit</label>
+                            <InputText id="name" class="form-control" @bind-Value="planSubjectModel.Name" required />
+                            <ValidationMessage For="@(() => planSubjectModel.Name)" class="text-danger" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="credits">Kreditet (ECTS)</label>
+                            <InputNumber id="credits" class="form-control" @bind-Value="planSubjectModel.CreditsNo" required />
+                            <ValidationMessage For="@(() => planSubjectModel.CreditsNo)" class="text-danger" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="totalHoursLectures">Totali i Orëve të Ligjërimeve</label>
+                            <InputNumber id="totalHoursLectures" class="form-control" @bind-Value="planSubjectModel.TotalHoursLectures" required />
+                            <ValidationMessage For="@(() => planSubjectModel.TotalHoursLectures)" class="text-danger" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="totalHoursSeminars">Totali i Orëve të Seminareve</label>
+                            <InputNumber id="totalHoursSeminars" class="form-control" @bind-Value="planSubjectModel.TotalHoursSeminars" required />
+                            <ValidationMessage For="@(() => planSubjectModel.TotalHoursSeminars)" class="text-danger" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="totalHoursLab">Totali i Orëve të Lab</label>
+                            <InputNumber id="totalHoursLab" class="form-control" @bind-Value="planSubjectModel.TotalHoursLab" required />
+                            <ValidationMessage For="@(() => planSubjectModel.TotalHoursLab)" class="text-danger" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="semester">Numri i Semestrit</label>
+                            <InputNumber id="semester" class="form-control" @bind-Value="planSubjectModel.Semester" required />
+                            <ValidationMessage For="@(() => planSubjectModel.Semester)" class="text-danger" />
+                        </div>
 
-            <br />
-            <button type="submit" class="btn btn-primary">Save</button>
-            <!-- Delete-->
-            <button type="button" class="btn btn-danger" @onclick="Delete">Remove from Study Plan</button>
-            <!--Autogenerate course-->
-            <button type="button" class="btn btn-dark" @onclick="GenerateCourse">Generate Course</button>
-
-            <div class="form-group">
-                <p>@Message</p>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button type="submit" class="btn btn-success me-md-2">Ruaj</button>
+                            <button type="button" class="btn btn-danger me-md-2" @onclick="Delete">Hiq nga Plan i Studimit</button>
+                            <button type="button" class="btn btn-dark" @onclick="GenerateCourse">Gjenero Kursin</button>
+                        </div>
+                    </EditForm>
+                </div>
             </div>
         </div>
-    </EditForm>
+    </div>
+    <div class="form-group mt-3">
+
+        <AlertCard @ref="_alertCard" />
+    </div>
 </div>

@@ -7,39 +7,58 @@
 @inject IUserAccount AccountService
 @inject IJSRuntime js
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card shadow-lg">
-                <!-- Added shadow-lg for nice shadow effect -->
-                <div class="card-header text-center bg-primary text-white">
-                    <h3>Login to Your Account</h3>
-                </div>
-                <div class="card-body">
-                    <EditForm Model="User" OnValidSubmit="HandleLogin">
-                        <DataAnnotationsValidator />
-                        <ValidationSummary />
+<style>
+    .login-container {
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: url('/images/background.jpg') no-repeat center center;
+        background-size: cover;
+    }
+    .login-card {
+        animation: fadeIn 0.5s ease-in-out;
+    }
+    .card-header {
+        background-color: #343a40; /* Dark background color to match Blazor's default theme */
+        color: white;
+    }
+    .btn-primary {
+        background-color: #343a40; /* Match the button color with Blazor's default theme */
+        border-color: #343a40;
+    }
+</style>
 
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email Address</label>
-                            <input @bind="User.Email" id="email" class="form-control" type="email" placeholder="Enter your email" required />
-                        </div>
+<div class="login-container">
+    <div class="col-md-6">
+        <div class="card shadow-lg login-card">
+            <div class="card-header text-center">
+                <h3>Identifikohu në platformë</h3>
+            </div>
+            <div class="card-body">
+                <EditForm Model="User" OnValidSubmit="HandleLogin">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
 
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Password</label>
-                            <div class="input-group">
-                                <input @bind="User.Password" id="password" class="form-control" type="@passwordInputType" placeholder="Enter your password" required />
-                                <button class="btn btn-outline-secondary" type="button" @onclick="TogglePasswordVisibility">
-                                    @passwordButtonText
-                                </button>
-                            </div>
-                        </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Adresa Email</label>
+                        <input @bind="User.Email" id="email" class="form-control" type="email" placeholder="Shkruani email-in tuaj" required />
+                    </div>
 
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-primary">Login</button>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Fjalëkalimi</label>
+                        <div class="input-group">
+                            <input @bind="User.Password" id="password" class="form-control" type="@passwordInputType" placeholder="Shkruani fjalëkalimin tuaj" required />
+                            <button class="btn btn-outline-secondary" type="button" @onclick="TogglePasswordVisibility">
+                                @passwordButtonText
+                            </button>
                         </div>
-                    </EditForm>
-                </div>
+                    </div>
+
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary btn-lg">Kyçu</button>
+                    </div>
+                </EditForm>
             </div>
         </div>
     </div>
@@ -50,7 +69,7 @@
 
     private bool isPasswordVisible = false;
     private string passwordInputType => isPasswordVisible ? "text" : "password";
-    private string passwordButtonText => isPasswordVisible ? "Hide" : "Show";
+    private string passwordButtonText => isPasswordVisible ? "Fshih" : "Shfaq";
 
     async Task HandleLogin()
     {
@@ -65,8 +84,10 @@
             await customAuthStateProvider.UpdateAuthenticationState(token);
             NavManager.NavigateTo("/", forceLoad: true);
         }
-
-        await js.InvokeVoidAsync("alert", message);
+        else
+        {
+            await js.InvokeVoidAsync("alert", message);
+        }
     }
 
     void TogglePasswordVisibility()

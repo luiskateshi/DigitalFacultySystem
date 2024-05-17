@@ -22,7 +22,7 @@ public class Student : BaseEntity
     //aspiringDegree field 
     public Guid? DegreeProgramId { get; set; }
 
-    public List<ExamRetakeRequest> ExamRetakeRequests { get; set; } = new List<ExamRetakeRequest>();
+    public List<studyPlan> ExamRetakeRequests { get; set; } = new List<studyPlan>();
 
     public List<StudentInCourse> StudentInCourses { get; set; } = new List<StudentInCourse>();
 

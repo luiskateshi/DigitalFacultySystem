@@ -1,50 +1,91 @@
 ﻿@page "/Lecturer"
-@page "/Lecturer/{id}"
-@attribute [Authorize(Roles = "Admin, Staff")]
+@page "/Lecturer/{Id}"
+@attribute [Authorize(Roles = "admin, staff")]
 
-<h3>Lecturer - @lecturerModel.Grade @lecturerModel.Firstname @lecturerModel.Lastname</h3>
+<PageTitle>Ligjëruesi</PageTitle>
 
-@if (string.IsNullOrEmpty(Id))
-{
-    <PageTitle>Lecturer Add</PageTitle>
-    <h3>Add a new Lecturer</h3>
-}
-else
-{
-    <PageTitle>Lecturer Update</PageTitle>
-    <p>Update Lecturer</p>
-}
+<div class="container p-4 bg-light rounded border shadow-lg mb-4">
+    @if (string.IsNullOrEmpty(Id))
+    {
+        <h3>Shto Pedagog</h3>
+    }
+    else
+    {
+        <h3>Pedagog - @lecturerModel.Grade @lecturerModel.Firstname @lecturerModel.Lastname</h3>
+        <p class="text-muted">Përditëso të dhënat e Pedagogut</p>
+    }
+</div>
 
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <button class="btn btn-secondary" @onclick="@(() => _navi.NavigateTo("lecturers"))">Kthehu</button>
+                <div>
+                    @if (string.IsNullOrEmpty(Id))
+                    {
+                        <h4>Shto Pedagog</h4>
+                    }
+                    else
+                    {
+                        <h4>Përditëso Pedagogun</h4>
+                    }
+                </div>
+            </div>
+            <div class="card shadow-lg">
+                <div class="card-body">
+                    <EditForm Model="@lecturerModel" OnValidSubmit="@HandleValidSumbit" OnInvalidSubmit="@HandleInValidSumbit" class="needs-validation" novalidate>
+                        <DataAnnotationsValidator />
+                        <ValidationSummary class="text-danger" />
 
-<div class="row card">
-    <EditForm Model="@lecturerModel" OnValidSubmit="@HandleValidSumbit" OnInvalidSubmit="@HandleInValidSumbit" FormName="sampleForm">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
-
-        <div class="form-group">
-            <label for="name">Firstname</label>
-            <InputText class="form-control" @bind-Value="lecturerModel.Firstname" />
-            <label for="lastname">Lastname</label>
-            <InputText class="form-control" @bind-Value="lecturerModel.Lastname" />
-            <label for="birthdate">Birthdate</label>
-            <InputDate class="form-control" @bind-Value="lecturerModel.Birthdate" />
-            <label for="grade">Grade</label>
-            <InputText class="form-control" @bind-Value="lecturerModel.Grade" />
-            <label for="email">Email</label>
-            <InputText class="form-control" @bind-Value="lecturerModel.Email" />
-            <label for="phone">Phone</label>
-            <InputText class="form-control" @bind-Value="lecturerModel.Tel" />
-            <label for="idCard">Identity Card</label>
-            <InputText class="form-control" @bind-Value="lecturerModel.IdCard" />
-
-
-            <br />
-            <button type="submit" class="btn btn-primary">Save</button>
-
-
-            <div class="form-group">
-                <p>@Message</p>
+                        <div class="form-group mb-3">
+                            <label for="firstname" class="form-label">Emri</label>
+                            <InputText id="firstname" class="form-control" @bind-Value="lecturerModel.Firstname" required />
+                            <ValidationMessage For="@(() => lecturerModel.Firstname)" class="text-danger" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="lastname" class="form-label">Mbiemri</label>
+                            <InputText id="lastname" class="form-control" @bind-Value="lecturerModel.Lastname" required />
+                            <ValidationMessage For="@(() => lecturerModel.Lastname)" class="text-danger" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="birthdate" class="form-label">Data e Lindjes</label>
+                            <InputDate id="birthdate" class="form-control" @bind-Value="lecturerModel.Birthdate" required />
+                            <ValidationMessage For="@(() => lecturerModel.Birthdate)" class="text-danger" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="grade" class="form-label">Grada</label>
+                            <InputText id="grade" class="form-control" @bind-Value="lecturerModel.Grade" required />
+                            <ValidationMessage For="@(() => lecturerModel.Grade)" class="text-danger" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <InputText id="email" class="form-control" @bind-Value="lecturerModel.Email" required />
+                            <ValidationMessage For="@(() => lecturerModel.Email)" class="text-danger" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="tel" class="form-label">Telefoni</label>
+                            <InputText id="tel" class="form-control" @bind-Value="lecturerModel.Tel" required />
+                            <ValidationMessage For="@(() => lecturerModel.Tel)" class="text-danger" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="idCard" class="form-label">Nr. i kartës së Identitetit</label>
+                            <InputText id="idCard" class="form-control" @bind-Value="lecturerModel.IdCard" required />
+                            <ValidationMessage For="@(() => lecturerModel.IdCard)" class="text-danger" />
+                        </div>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button type="submit" class="btn btn-success me-md-2">Ruaj</button>
+                            @if (!string.IsNullOrEmpty(Id))
+                            {
+                                <button type="button" class="btn btn-danger">Fshi</button>
+                            }
+                        </div>
+                    </EditForm>
+                </div>
             </div>
         </div>
-    </EditForm>
+    </div>
 </div>
+
+<br />
+<AlertCard @ref="_alertCard" />

@@ -1,71 +1,99 @@
 ﻿@page "/ExamSession"
-@page "/ExamSession/{id}"
-@attribute [Authorize(Roles = "Admin, Staff")]
+@page "/ExamSession/{Id}"
+@attribute [Authorize(Roles = "admin, staff")]
 
+<PageTitle>Sezoni i Provimeve</PageTitle>
 
-
-@if (string.IsNullOrEmpty(Id))
-{
-    <PageTitle>Exam Season Add</PageTitle>
-    <h3>Add a new Exam Season</h3>
-}
-else
-{
-    <PageTitle>Exam Season</PageTitle>
-    <h3>Exam Season - @examSessionModel.Name</h3>
-    <p>Update Exam Season</p>
-}
-
-
-<div class="row card">
-    <EditForm Model="@examSessionModel" OnValidSubmit="@HandleValidSumbit" OnInvalidSubmit="@HandleInValidSumbit" FormName="sampleForm">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
-
-        <div class="form-group">
-            <label for="name">Name</label>
-            <InputText class="form-control" @bind-Value="examSessionModel.Name" />
-            <label for="startDate">Start Date</label>
-            <InputDate class="col-md-8 form-control" @bind-Value="examSessionModel.StartDate" />
-            <label for="endDate">End Date</label>
-            <InputDate class="col-md-8 form-control" @bind-Value="examSessionModel.EndDate" />
-            <label for="academicYear">AcademicYear</label>
-            <select class="form-control" @bind="examSessionModel.AcademicYearId">
-                <option value="">Select Academic Year</option>
-                @foreach (var row in academicYears)
-                {
-                    <option value="@row.Id">@row.Name</option>
-                }
-            </select>
-            <br />
-            <button type="submit" class="btn btn-warning">Save</button>
-
-            @if (!string.IsNullOrEmpty(Id))
-            {
-                <button style="margin-left: 20px" type="button" class="btn btn-dark" @onclick="GenerateStudentsInCourses">Autogenerate exams</button>
-                <button style="margin-left: 20px" type="button" class="btn btn-dark" @onclick="EndExamSession">End this exam Session</button>
-
-            }
-
-
-            <AlertCard @ref="alertCard" />
-        </div>
-    </EditForm>
+<div class="container p-4 bg-light rounded border shadow-lg mb-4">
+    @if (string.IsNullOrEmpty(Id))
+    {
+        <h3>Shto Sezon Provimesh</h3>
+    }
+    else
+    {
+        <h3>Sezoni i Provimeve - @examSessionModel.Name</h3>
+        <p class="text-muted">Përditëso Sezonin e Provimeve</p>
+    }
 </div>
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <button class="btn btn-secondary" @onclick="@(() => _navi.NavigateTo("examSessions"))">Kthehu</button>
+                <div>
+                    @if (string.IsNullOrEmpty(Id))
+                    {
+                        <h4>Shto Sezon Provimesh</h4>
+                    }
+                    else
+                    {
+                        <h4>Përditëso Sezonin e Provimeve</h4>
+                    }
+                </div>
+            </div>
+            <div class="card shadow-lg">
+                <div class="card-body">
+                    <EditForm Model="@examSessionModel" OnValidSubmit="@HandleValidSumbit" OnInvalidSubmit="@HandleInValidSumbit" class="needs-validation" novalidate>
+                        <DataAnnotationsValidator />
+                        <ValidationSummary class="text-danger" />
+
+                        <div class="form-group mb-3">
+                            <label for="name" class="form-label">Emri</label>
+                            <InputText id="name" class="form-control" @bind-Value="examSessionModel.Name" required />
+                            <ValidationMessage For="@(() => examSessionModel.Name)" class="text-danger" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="startDate" class="form-label">Data e Fillimit</label>
+                            <InputDate id="startDate" class="form-control" @bind-Value="examSessionModel.StartDate" required />
+                            <ValidationMessage For="@(() => examSessionModel.StartDate)" class="text-danger" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="endDate" class="form-label">Data e Mbarimit</label>
+                            <InputDate id="endDate" class="form-control" @bind-Value="examSessionModel.EndDate" required />
+                            <ValidationMessage For="@(() => examSessionModel.EndDate)" class="text-danger" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="academicYear" class="form-label">Viti Akademik</label>
+                            <select id="academicYear" class="form-control" @bind="examSessionModel.AcademicYearId" required>
+                                <option value="">Zgjidh Vitin Akademik</option>
+                                @foreach (var row in academicYears)
+                                {
+                                    <option value="@row.Id">@row.Name</option>
+                                }
+                            </select>
+                            <ValidationMessage For="@(() => examSessionModel.AcademicYearId)" class="text-danger" />
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button type="submit" class="btn btn-success me-md-2">Ruaj</button>
+                            @if (!string.IsNullOrEmpty(Id))
+                            {
+                                <button type="button" class="btn btn-dark me-md-2" @onclick="GenerateStudentsInCourses">Gjenero automatikisht provimet</button>
+                                <button type="button" class="btn btn-danger" @onclick="EndExamSession">Përfundo këtë sezon provimesh</button>
+                            }
+                        </div>
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <br />
-<br />
-<!--Show all exams in a table-->
+<AlertCard @ref="alertCard" />
+
 @if (exams.Count > 0)
 {
-    <h4>Exams in this exam season</h4>
-    <table class="table">
-        <thead>
+    <h4>Provimet në këtë sezon provimesh</h4>
+    <table class="table table-striped table-hover">
+        <thead class="table-light">
             <tr>
-                <th>Exam Id</th>
-                <th>Exam Name</th>
-                <th>Exam Date</th>
-                <th>No. of Students</th>
-                <th>Actions</th>
+                <th>Provimi Id</th>
+                <th>Emri i Provimit</th>
+                <th>Data e Provimit</th>
+                <th>Numri i Studentëve</th>
+                <th>Veprimet</th>
             </tr>
         </thead>
         <tbody>
@@ -77,13 +105,10 @@ else
                     <td>@exam.Date</td>
                     <td>@exam.NumberOfStudents</td>
                     <td>
-                    <td><a href="@("exam/" + exam.Id)" class="btn btn-warning">Edit</a></td>
+                        <a href="@("exam/" + exam.Id)" class="btn btn-warning">Përditëso</a>
                     </td>
                 </tr>
             }
         </tbody>
     </table>
 }
-
-
-

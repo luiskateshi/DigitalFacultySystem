@@ -13,16 +13,16 @@
             <AuthorizeView>
                 <Authorized>
                     <div class="hstack gap-1">
-                        <span class="fw-bold text-black">Welcome, @context.User.Identity!.Name</span>
-                        <button class="btn btn-link" @onclick="Logout">Logout</button>
+                        <span class="fw-bold text-black">Përshëndetje, @context.User.Identity!.Name</span>
+                        <button class="btn btn-link text-decoration-none text-primary fw-bold" @onclick="Logout">Dil</button>
                     </div>
                 </Authorized>
                 <NotAuthorized>
-                    <a class="btn btn-link text-decoration-none text-primary fw-bold" href="/login">Login</a>
+                    <a class="btn btn-link text-decoration-none text-primary fw-bold" href="/login">Identifikohu</a>
                 </NotAuthorized>
             </AuthorizeView>
 
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">Politikat e privatësisë</a>
         </div>
 
         <article class="content px-4">

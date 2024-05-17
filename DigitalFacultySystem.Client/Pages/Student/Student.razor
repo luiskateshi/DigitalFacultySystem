@@ -1,61 +1,92 @@
 ﻿@page "/Student"
 @page "/Student/{studentId}"
-@attribute [Authorize(Roles = "Admin, Staff")]
+@attribute [Authorize(Roles = "admin, staff")]
 
-<h3>Student</h3>
+<PageTitle>Studenti</PageTitle>
 
-@if(string.IsNullOrEmpty(studentId))
-{
-    <PageTitle>Student Add</PageTitle>
-    <h3>Add a new Student</h3>
-}
-else
-{
-    <PageTitle>Student Update</PageTitle>
-    <p>Update Student Data</p>
-}
+<div class="container p-4 bg-light rounded border shadow-lg mb-4">
+    @if (string.IsNullOrEmpty(studentId))
+    {
+        <h3>Shto Student</h3>
+    }
+    else
+    {
+        <h3>Student - @studentModel.Firstname @studentModel.Lastname</h3>
+        <p class="text-muted">Përditëso të dhënat e Studentit</p>
+    }
+</div>
 
-<div class="row">
-    <EditForm Model="@studentModel" OnValidSubmit="@HandleValidSumbit" OnInvalidSubmit="@HandleInValidSumbit" FormName="sampleForm">
-        <DataAnnotationsValidator/>
-        <ValidationSummary/>
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <button class="btn btn-secondary" @onclick="@(() => _navi.NavigateTo("/students"))">Kthehu</button>
+                <div>
+                    @if (string.IsNullOrEmpty(studentId))
+                    {
+                        <h4>Shto Student</h4>
+                    }
+                    else
+                    {
+                        <h4>Përditëso Studentin</h4>
+                    }
+                </div>
+            </div>
+            <div class="card shadow-lg">
+                <div class="card-body">
+                    <EditForm Model="@studentModel" OnValidSubmit="@HandleValidSumbit" OnInvalidSubmit="@HandleInValidSumbit" class="needs-validation" novalidate>
+                        <DataAnnotationsValidator />
+                        <ValidationSummary class="text-danger" />
 
-        <div class="form-group">
-            <label for="firstname">Firstname</label>
-            <InputText class="form-control" @bind-Value="studentModel.Firstname" />
-            <label for="firstname">Lastname</label>
-            <InputText class="form-control" @bind-Value="studentModel.Lastname" />
-            <label for="birthdate">Birthdate</label>
-            <InputDate class="col-md-8 form-control" @bind-Value="studentModel.Birthdate" />
-            <label for="email">Email</label>
-            <InputText class="form-control" @bind-Value="studentModel.Email" />
-            <label for="tel">Phone</label>
-            <InputText class="form-control" @bind-Value="studentModel.Tel" />
-
-            <label for="degreeProgram">Degree Program</label>
-            <InputSelect class="form-control" @bind-Value="studentModel.DegreeProgramId">
-                <option value="">Select Degree Program</option>
-                @foreach (var degreeProgram in degreePrograms)
-                {
-                    <option value="@degreeProgram.Id">@degreeProgram.Name</option>
-                }
-            </InputSelect>
-            <br />
-            <button type="submit" class="btn btn-primary">Save</button>
-
-            @if(!string.IsNullOrEmpty(studentId))
-            {
-                <!--Margin left-->
-                <button style="margin-left: 10px" type="button" class="btn btn-danger" @onclick="DeleteStudent">Delete Student</button>
-            }
-
-            <div class="form-group">
-                <p>@Message</p>
+                        <div class="form-group mb-3">
+                            <label for="firstname" class="form-label">Emri</label>
+                            <InputText id="firstname" class="form-control" @bind-Value="studentModel.Firstname" required />
+                            <ValidationMessage For="@(() => studentModel.Firstname)" class="text-danger" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="lastname" class="form-label">Mbiemri</label>
+                            <InputText id="lastname" class="form-control" @bind-Value="studentModel.Lastname" required />
+                            <ValidationMessage For="@(() => studentModel.Lastname)" class="text-danger" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="birthdate" class="form-label">Data e Lindjes</label>
+                            <InputDate id="birthdate" class="form-control" @bind-Value="studentModel.Birthdate" required />
+                            <ValidationMessage For="@(() => studentModel.Birthdate)" class="text-danger" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <InputText id="email" class="form-control" @bind-Value="studentModel.Email" required />
+                            <ValidationMessage For="@(() => studentModel.Email)" class="text-danger" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="tel" class="form-label">Telefoni</label>
+                            <InputText id="tel" class="form-control" @bind-Value="studentModel.Tel" required />
+                            <ValidationMessage For="@(() => studentModel.Tel)" class="text-danger" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="degreeProgram" class="form-label">Programi i Diplomës</label>
+                            <InputSelect id="degreeProgram" class="form-control" @bind-Value="studentModel.DegreeProgramId" required>
+                                <option value="">Zgjidh Programin e Diplomës</option>
+                                @foreach (var degreeProgram in degreePrograms)
+                                {
+                                    <option value="@degreeProgram.Id">@degreeProgram.Name</option>
+                                }
+                            </InputSelect>
+                            <ValidationMessage For="@(() => studentModel.DegreeProgramId)" class="text-danger" />
+                        </div>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button type="submit" class="btn btn-success me-md-2">Ruaj</button>
+                            @if (!string.IsNullOrEmpty(studentId))
+                            {
+                                <button type="button" class="btn btn-danger" @onclick="DeleteStudent">Fshi Studentin</button>
+                            }
+                        </div>
+                    </EditForm>
+                </div>
             </div>
         </div>
-    </EditForm>
-    <br />
-
-
-
+    </div>
 </div>
+
+<br />
+<AlertCard @ref="_alertCard" />

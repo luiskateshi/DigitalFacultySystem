@@ -1,40 +1,74 @@
 ﻿@page "/AcademicYear"
 @page "/AcademicYear/{id}"
-@attribute [Authorize(Roles = "Admin, Staff")]
+@attribute [Authorize(Roles = "admin, staff")]
+
+@inject NavigationManager NavManager
+
+<PageTitle>Viti Akademik</PageTitle>
+
+<div class="container p-4 bg-light rounded border shadow-lg mb-4">
+    @if (string.IsNullOrEmpty(Id))
+    {
+        <h3 >Viti Akademik</h3>
+    }
+    else
+    {
+        <h3>Viti Akademik - @academicYearModel.Name</h3>
+        <p class="text-muted">Përditëso Vitin Akademik</p>
+    }
+</div>
 
 
-@if (string.IsNullOrEmpty(Id))
-{
-    <PageTitle>Academic Year Add</PageTitle>
-    <h3>Add a new Academic Year</h3>
-}
-else
-{
-    <PageTitle>Academic Year</PageTitle>
-    <h3>Academic Year - @academicYearModel.Name</h3>
-    <p>Update Academic Year</p>
-}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <button class="btn btn-secondary" @onclick="GoBack">Kthehu</button>
+                <div>
+                    @if (string.IsNullOrEmpty(Id))
+                    {
+                        <h4>Shto Vitin Akademik</h4>
+                    }
+                    else
+                    {
+                        <h4>Përditëso Vitin Akademik</h4>
+                    }
+                </div>
+            </div>
+            <div class="card shadow-lg">
+                <div class="card-body">
+                    <EditForm Model="@academicYearModel" OnValidSubmit="@HandleValidSumbit" OnInvalidSubmit="@HandleInValidSumbit" class="needs-validation" novalidate>
+                        <DataAnnotationsValidator />
+                        <ValidationSummary class="text-danger" />
+                        <div class="form-group mb-3">
+                            <label for="name" class="form-label">Emri</label>
+                            <InputText id="name" class="form-control" @bind-Value="academicYearModel.Name" required />
+                            <ValidationMessage For="@(() => academicYearModel.Name)" class="text-danger" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="startDate" class="form-label">Data e Fillimit</label>
+                            <InputDate id="startDate" class="form-control" @bind-Value="academicYearModel.StartDate" required />
+                            <ValidationMessage For="@(() => academicYearModel.StartDate)" class="text-danger" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="endDate" class="form-label">Data e Përfundimit</label>
+                            <InputDate id="endDate" class="form-control" @bind-Value="academicYearModel.EndDate" required />
+                            <ValidationMessage For="@(() => academicYearModel.EndDate)" class="text-danger" />
+                        </div>
 
-
-<div class="row card">
-    <EditForm Model="@academicYearModel" OnValidSubmit="@HandleValidSumbit" OnInvalidSubmit="@HandleInValidSumbit" FormName="sampleForm">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
-
-        <div class="form-group">
-            <label for="name">Name</label>
-            <InputText class="form-control" @bind-Value="academicYearModel.Name" />
-            <label for="startDate">Start Date</label>
-            <InputDate class="col-md-8 form-control" @bind-Value="academicYearModel.StartDate" />
-            <label for="endDate">End Date</label>
-            <InputDate class="col-md-8 form-control" @bind-Value="academicYearModel.EndDate" />
-            <br />
-            <button type="submit" class="btn btn-primary">Save</button>
-
-
-            <div class="form-group">
-                <p>@Message</p>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button type="submit" class="btn btn-success me-md-2">Ruaj</button>
+                            @if (!string.IsNullOrEmpty(Id))
+                            {
+                                <button type="button" class="btn btn-danger">Fshi</button>
+                            }
+                        </div>
+                    </EditForm>
+                </div>
             </div>
         </div>
-    </EditForm>
+    </div>
 </div>
+
+<br />
+<AlertCard @ref="alertCard" />

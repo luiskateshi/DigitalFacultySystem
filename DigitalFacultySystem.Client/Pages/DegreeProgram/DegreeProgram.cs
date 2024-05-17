@@ -7,6 +7,7 @@ namespace DigitalFacultySystem.Client.Pages.DegreeProgram
 {
     public partial class DegreeProgram
     {
+        private AlertCard alertCard;
         [Inject]
         public IGenericService<DegreeProgramDto> _degreeService { get; set; }
 
@@ -44,7 +45,7 @@ namespace DigitalFacultySystem.Client.Pages.DegreeProgram
 
         protected void HandleInValidSumbit()
         {
-            Message = "There are validation errors. Please try again.";
+            alertCard.ShowAlert("Gabime ne validimin e formes!", "alert-danger");
         }
 
         protected async Task HandleValidSumbit()
@@ -56,10 +57,9 @@ namespace DigitalFacultySystem.Client.Pages.DegreeProgram
                 
                 var result = await _degreeService.Add(newDegree, url);
                 if (result != null)
-                    _navi.NavigateTo("/degreePrograms");
-
-                Message = "Failed to add degree program";
-
+                    alertCard.ShowAlert("Programi i studimit u shtua me sukses!", "alert-success");
+                else
+                    alertCard.ShowAlert("Programi i studimit nuk u shtua!", "alert-danger");
             }
             else
             {
@@ -68,10 +68,14 @@ namespace DigitalFacultySystem.Client.Pages.DegreeProgram
 
                 var result = await _degreeService.Update(updateDegree, url);
                 if (result != null)
-                    _navi.NavigateTo("/degreePrograms");
-
-                Message = "Failed to update degree program";
+                    alertCard.ShowAlert("Programi i studimit u përditësua me sukses!", "alert-success");
+                else
+                    alertCard.ShowAlert("Programi i studimit nuk u përditësua!", "alert-danger");
             }
+        }
+        private void GoBack()
+        {
+            NavManager.NavigateTo("/DegreePrograms");
         }
     }
 }

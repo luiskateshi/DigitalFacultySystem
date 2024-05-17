@@ -1,29 +1,40 @@
 ﻿@page "/StudyPlans"
-@attribute [Authorize(Roles = "Admin, Staff")]
+@attribute [Authorize(Roles = "admin, staff")]
 
-<h3>Study Plans</h3>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>Planet e Studimit</h3>
+        <a href="StudyPlan" class="btn btn-primary mb-3">Shto Plan Studimi</a>
+    </div>
 
-<a href="@("StudyPlan")" class="btn btn-success"> Add new</a>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>Study Plan Name</th>
-            <th>Start Date</th>
-            <th>End Date</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var row in studyPlans)
-        {
-            <tr>
-                <td>@row.Id</td>
-                <td>@row.Name</td>
-                <td>@row.StartDate</td>
-                <td>@row.EndDate</td>
-                <td><a href="@("StudyPlan/" + row.Id)" class="btn btn-warning">Edit</a></td>
-            </tr>
-        }
-    </tbody>
-</table> 
+    @if (studyPlans == null)
+    {
+        <p><em>Duke ngarkuar...</em></p>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col">Emri i Planit të Studimit</th>
+                        <th scope="col">Data e Fillimit</th>
+                        <th scope="col">Data e Mbarimit</th>
+                        <th scope="col" class="text-end pe-3">Veprimet</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var row in studyPlans)
+                    {
+                        <tr>
+                            <td>@row.Name</td>
+                            <td>@row.StartDate</td>
+                            <td>@row.EndDate</td>
+                            <td class="text-end pe-3"><a href="@("StudyPlan/" + row.Id)" class="btn btn-warning">Edito</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

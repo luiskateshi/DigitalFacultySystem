@@ -25,4 +25,8 @@
     <ProjectReference Include="..\DigitalFacultySystem.Domain\DigitalFacultySystem.Entities.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

@@ -7,6 +7,8 @@ namespace DigitalFacultySystem.Client.Pages.Course
 {
     public partial class CoursesList
     {
+
+        private AlertCard alertCard;
         [Inject]
         public IGenericService<CourseDto> _coursService { get; set; }
 
@@ -17,44 +19,20 @@ namespace DigitalFacultySystem.Client.Pages.Course
         {
             courses = await _coursService.GetAll(apiUrl);
         }
-        object message = "Students have been generated in courses";
 
-        private AlertCard alertCard;
         protected async Task GenerateStudentsInCourses()
         {
             var response = await _coursService.ExecuteProcess(apiUrl + "/generateStudentsInCourses");
             if (response)
             {
-                ShowSuccessAlert();
+                alertCard.ShowAlert("Studentët u gjeneruan me sukses!", "alert-success");
             }
             else
             {
-                ShowDangerAlert();
+                alertCard.ShowAlert("Gjenerimi i studentëve dështoi!", "alert-danger");
             }
 
-            
         }
-
-        public void ShowSuccessAlert()
-        {
-            // Assuming you have an instance of AlertCard named alertCard
-            alertCard.ShowAlert("A stored procedure executed successfully. All upcoming students will now be part of the courses that the study plan of their generation is connected to.", "alert-success");
-        }
-
-        public void ShowWarningAlert()
-        {
-            // Assuming you have an instance of AlertCard named alertCard
-            alertCard.ShowAlert("Warning message goes here.", "alert-warning");
-        }
-
-        public void ShowDangerAlert()
-        {
-            // Assuming you have an instance of AlertCard named alertCard
-            alertCard.ShowAlert("Danger message goes here.", "alert-danger");
-        }
-
-
-
 
     }
 }

@@ -8,35 +8,38 @@ namespace DigitalFacultySystem.Client.Pages.Lecturer
     public partial class Lecturer
     {
         [Inject]
-        public IGenericService<LecturerDto> _lecturerService { get; set; }
-
-        [Parameter]
-        public String Id { get; set; } = string.Empty;
-
-        [Inject]
         public NavigationManager _navi { get; set; }
 
-        public LecturerDto lecturerModel { get; set; } = new();
+        [Inject]
+        public IGenericService<LecturerDto> _lecturerService { get; set; }
 
-        public String Message { get; set; } = string.Empty;
+        public LecturerDto lecturerModel { get; set; } = new LecturerDto();
 
-        private string url = "api/Lecturer";
+        [Parameter]
+        public string Id { get; set; } = string.Empty;
+
+        private AlertCard _alertCard;
 
         protected override async Task OnInitializedAsync()
         {
             if (!string.IsNullOrEmpty(Id))
             {
                 var Id = Guid.Parse(this.Id);
-                var result = await _lecturerService.GetById(Id, url);
-
+                var result = await _lecturerService.GetById(Id, "api/Lecturer");
                 if (result != null)
+                {
                     lecturerModel = result;
+                }
+                else
+                {
+                    _alertCard.ShowAlert("Ligjëruesi nuk u gjet", "alert-danger");
+                }
             }
         }
 
         protected void HandleInValidSumbit()
         {
-            Message = "There are validation errors. Please try again.";
+            _alertCard.ShowAlert("Ka disa gabime në validim. Ju lutemi provoni përsëri.", "alert-danger");
         }
 
         protected async Task HandleValidSumbit()
@@ -45,24 +48,30 @@ namespace DigitalFacultySystem.Client.Pages.Lecturer
             {
                 var newlecturer = new LecturerDto();
                 MyFieldsMapper.MapFields(lecturerModel, newlecturer);
-                var result = await _lecturerService.Add(newlecturer, url);
+                var result = await _lecturerService.Add(newlecturer, "api/Lecturer");
                 if (result != null)
-                    _navi.NavigateTo("/lecturers");
-
-                Message = "Failed to add lecturer";
-
+                {
+                    _alertCard.ShowAlert("Pedagogu u shtua me sukses!", "alert-success");
+                }
+                else
+                {
+                    _alertCard.ShowAlert("Shtimi i pedagogut dështoi.", "alert-danger");
+                }
             }
             else
             {
                 var updateLecturer = new LecturerDto();
                 MyFieldsMapper.MapFields(lecturerModel, updateLecturer);
-                var result = await _lecturerService.Update(updateLecturer, url);
-                if (result != null)
-                    _navi.NavigateTo("/lecturers");
-
-                Message = "Failed to update lecturer";
+                var result = await _lecturerService.Update(updateLecturer, "api/Lecturer");
+                if (result)
+                {
+                    _alertCard.ShowAlert("Pedagogu u përditësua me sukses!", "alert-success");
+                }
+                else
+                {
+                    _alertCard.ShowAlert("Përditësimi i pedagogut dështoi.", "alert-danger");
+                }
             }
         }
     }
 }
-

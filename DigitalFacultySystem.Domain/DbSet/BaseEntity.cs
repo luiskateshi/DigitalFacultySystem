@@ -12,7 +12,7 @@ namespace DigitalFacultySystem.Entities.DbSet
 
         public bool isActive { get; set; } = true;
 
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public DateTime? CreatedAt { get; set; } = DateTime.Now;
 
     }
 }

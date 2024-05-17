@@ -28,18 +28,15 @@ namespace DigitalFacultySystem.Client.Pages.ExamSession
 
         public ExamSessionDto examSessionModel { get; set; } = new();
 
-        public String Message { get; set; } = string.Empty;
-
-        private string url = "api/examsSession";
-
         private AlertCard alertCard;
+
         protected override async Task OnInitializedAsync()
         {
             academicYears = await _academicYearService.GetAll("api/academicYear");
             if (!string.IsNullOrEmpty(Id))
             {
                 var Id = Guid.Parse(this.Id);
-                var examSession = await _examSessionService.GetById(Id, url);
+                var examSession = await _examSessionService.GetById(Id, "api/examsSession");
 
                 if (examSession != null)
                     examSessionModel = examSession;
@@ -47,7 +44,7 @@ namespace DigitalFacultySystem.Client.Pages.ExamSession
                 await RefreshExams();
             }
         }
-        //refresh exams
+
         protected async Task RefreshExams()
         {
             var Id = Guid.Parse(this.Id);
@@ -56,70 +53,66 @@ namespace DigitalFacultySystem.Client.Pages.ExamSession
 
         protected void HandleInValidSumbit()
         {
-            Message = "There are validation errors. Please try again.";
+            alertCard.ShowAlert("Ka disa gabime në validim. Ju lutemi provoni përsëri.", "alert-danger");
         }
 
         protected async Task HandleValidSumbit()
         {
             if (string.IsNullOrEmpty(Id))
             {
-                var result = await _examSessionService.Add(examSessionModel, url);
+                var result = await _examSessionService.Add(examSessionModel, "api/examsSession");
                 if (result != null)
+                {
+                    alertCard.ShowAlert("Sezoni i provimeve u shtua me sukses!", "alert-success");
                     _navi.NavigateTo("/examSessions");
-
-                Message = "Failed to add exam Sessions";
+                }
+                else
+                {
+                    alertCard.ShowAlert("Shtimi i sezonit të provimeve dështoi.", "alert-danger");
+                }
             }
             else
             {
-                var result = await _examSessionService.Update(examSessionModel, url);
+                var result = await _examSessionService.Update(examSessionModel, "api/examsSession");
                 if (result != null)
+                {
+                    alertCard.ShowAlert("Sezoni i provimeve u përditësua me sukses!", "alert-success");
                     _navi.NavigateTo("/examSessions");
-
-                Message = "Failed to update exam Sessions";
+                }
+                else
+                {
+                    alertCard.ShowAlert("Përditësimi i sezonit të provimeve dështoi.", "alert-danger");
+                }
             }
         }
 
-        //call stored procedure to auto generate exams for this exams session
         protected async Task GenerateStudentsInCourses()
         {
             var Id = Guid.Parse(this.Id);
-            var response = await _examSessionService.ExecuteProcessById(Id, url + "/GenerateExamsAndStudentsInExams");
+            var response = await _examSessionService.ExecuteProcessById(Id, "api/examsSession/GenerateExamsAndStudentsInExams");
             if (response)
             {
                 await RefreshExams();
-                ShowSuccessAlert(Message = "The stored procedure has been executed successfully. All exams have been generated for this exam session based on the courses that have at least one student who has attended the course but has not yet passed the exam. Additionally, all exams have been populated with students eligible to take the exam.");
+                alertCard.ShowAlert("Procesi u ekzekutua me sukses. Të gjitha provimet u gjeneruan automatikisht për këtë sezon provimesh. Si dhe studentët që duhet të ndjekin provimin përkatës", "alert-success");
             }
             else
             {
-                ShowDangerAlert();
+                alertCard.ShowAlert("Procedura e ruajtur nuk u ekzekutua me sukses.", "alert-danger");
             }
         }
 
-        //call stored procedure to end exam session
         protected async Task EndExamSession()
         {
             var Id = Guid.Parse(this.Id);
-            var response = await _examSessionService.ExecuteProcessById(Id, url + "/EndExamSession");
+            var response = await _examSessionService.ExecuteProcessById(Id, "api/examsSession/EndExamSession");
             if (response)
             {
-                ShowSuccessAlert(Message = "Exam session ended successfully.");
+                alertCard.ShowAlert("Sezoni i provimeve përfundoi me sukses.", "alert-success");
             }
             else
             {
-                ShowDangerAlert();
+                alertCard.ShowAlert("Procedura e ruajtur nuk u ekzekutua me sukses.", "alert-danger");
             }
-        }
-
-        public void ShowSuccessAlert(String message)
-        {
-            // Assuming you have an instance of AlertCard named alertCard
-            alertCard.ShowAlert(message, "alert-success");
-        }
-
-        public void ShowDangerAlert()
-        {
-            // Assuming you have an instance of AlertCard named alertCard
-            alertCard.ShowAlert("The stored procedure encountered an error and could not execute successfully.", "alert-danger");
         }
     }
 }

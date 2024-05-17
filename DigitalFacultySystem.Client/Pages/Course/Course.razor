@@ -1,108 +1,134 @@
-﻿@page "/Course"
-@page "/Course/{id}"
-@attribute [Authorize(Roles = "Admin, Staff")]
+﻿@page "/Course/{Id?}"
+@page "/Course"
+<PageTitle>Kursi</PageTitle>
 
+<div class="container p-4 bg-light rounded border shadow-lg mb-4">
+    @if (string.IsNullOrEmpty(Id))
+    {
+        <h3>Kursi</h3>
+    }
+    else
+    {
+        <h3>Kursi i Studimit - @CourseModel.Name</h3>
+        <p class="text-muted">Përditëso Kursin</p>
+    }
+</div>
 
-@if (string.IsNullOrEmpty(Id))
-{
-    <PageTitle>Course Add</PageTitle>
-    <h3>Add a Course</h3>
-}
-else
-{
-    <h3>Course - @courseModel.Name</h3>
-    <PageTitle>Course Update</PageTitle>
-    <p>Update Course</p>
-}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <button class="btn btn-secondary" @onclick="@(() => _navigationManager.NavigateTo("courses"))">Kthehu</button>
+                <div>
+                    @if (string.IsNullOrEmpty(Id))
+                    {
+                        <h4>Shto Kursin</h4>
+                    }
+                    else
+                    {
+                        <h4>Përditëso Kursin</h4>
+                    }
+                </div>
+            </div>
+            <div class="card shadow-lg">
+                <div class="card-body">
 
-<div class="row card">
-    <EditForm Model="@courseModel" OnValidSubmit="@HandleValidSubmit" OnInvalidSubmit="@HandleInvalidSubmit" FormName="sampleForm">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
-
-        <div class="form-group">
-            <label for="name">Name</label>
-            <input class="form-control" @binnd="courseModel.Name" />
-            <label for="gen0">Main Lecturer of the course</label>
-            <select class="form-control" @bind="courseModel.MainLecturerId">
-                <option value="">Select Main Lecturer</option>
-                @foreach (var row in lecturers)
-                {
-                    <option value="@row.Id">@row.Firstname @row.Lastname</option>
-                }
-            </select>
-            <label for="gen1">Second Lecturer of the course</label>
-            <select class="form-control" @bind="courseModel.SecondLecturerId">
-                <option value="">Select Second Lecturer</option>
-                @foreach (var row in lecturers)
-                {
-                    <option value="@row.Id">@row.Firstname @row.Lastname</option>
-                }
-            </select>
-            <label for="gen2">Lab Lecturer of the course</label>
-            <select class="form-control" @bind="courseModel.LabLecturerId">
-                <option value="">Select Lab Lecturer</option>
-                @foreach (var row in lecturers)
-                {
-                    <option value="@row.Id">@row.Firstname @row.Lastname</option>
-                }
-            </select>
-            <label for="name">Course Subject</label>
-            <input disabled class="form-control" value="@CourseSubject" />
-        
-
-
-            <br />
-            <button type="submit" class="btn btn-primary" style="margin-right: 10px;">Save</button>
-            <!--Delete button-->
-            @if (!string.IsNullOrEmpty(Id))
-            {
-                <button type="button" class="btn btn-danger" @onclick="Delete">Deactivate Course</button>
-            }
-
-
-            <div class="form-group">
-                <p>@Message</p>
+                    <EditForm Model="@CourseModel" OnValidSubmit="@HandleValidSubmit" OnInvalidSubmit="@HandleInvalidSubmit" class="needs-validation" novalidate>
+                        <DataAnnotationsValidator />
+                        <ValidationSummary class="text-danger" />
+                        <div class="form-group mb-3">
+                            <label for="name" class="form-label">Emri</label>
+                            <InputText id="name" class="form-control" @bind-Value="CourseModel.Name" required />
+                            <ValidationMessage For="@(() => CourseModel.Name)" class="text-danger" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="mainLecturer" class="form-label">Ligjëruesi Kryesor i Kursit</label>
+                            <select id="mainLecturer" class="form-control" @bind="CourseModel.MainLecturerId" required>
+                                <option value="">Zgjidh Ligjëruesin Kryesor</option>
+                                @foreach (var row in Lecturers)
+                                {
+                                    <option value="@row.Id">@row.Firstname @row.Lastname</option>
+                                }
+                            </select>
+                            <ValidationMessage For="@(() => CourseModel.MainLecturerId)" class="text-danger" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="secondLecturer" class="form-label">Ligjëruesi i Dytë i Kursit</label>
+                            <select id="secondLecturer" class="form-control" @bind="CourseModel.SecondLecturerId">
+                                <option value="">Zgjidh Ligjëruesin e Dytë</option>
+                                @foreach (var row in Lecturers)
+                                {
+                                    <option value="@row.Id">@row.Firstname @row.Lastname</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="labLecturer" class="form-label">Ligjëruesi i Lab i Kursit</label>
+                            <select id="labLecturer" class="form-control" @bind="CourseModel.LabLecturerId">
+                                <option value="">Zgjidh Ligjëruesin e Lab</option>
+                                @foreach (var row in Lecturers)
+                                {
+                                    <option value="@row.Id">@row.Firstname @row.Lastname</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="subject" class="form-label">Lënda e Kursit</label>
+                            <InputText id="subject" class="form-control" @bind-Value="CourseSubject" disabled />
+                        </div>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button type="submit" class="btn btn-success me-md-2">Ruaj</button>
+                        </div>
+                    </EditForm>
+                </div>
             </div>
         </div>
-    </EditForm>
-</div>
-<br />
-<br />
-<h2>Student Course Attendances</h2>
-<!--Show all the students in this course that are loaded into courseattendances-->
-@if (courseAttendances != null)
-{
-    <AlertCard @ref="alertCard" />
-    <div style="text-align: right;">
-        <a @onclick="SaveCourseAttendances" class="btn btn-warning" style="float: right; margin-left: 10px;">Save changes</a>
-        <a @onclick="CalculateCourseAttendance" class="btn btn-dark" style="float: right; ">Calculate attendance</a>
-    </div>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Group Name</th>
-                <th>Seminar Hours attended</th>
-                <th>Lab Hours attended</th>
-                <th>Course is attended</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var row in courseAttendances)
-            {
-                <tr>
-                    <td>@row.StudentName</td>
-                    <td>@row.StudentLastName</td>
-                    <td>@row.groupName</td>
-                    <td><input disabled="@row.isAttended" type="number" class="form-control" @bind="@row.SeminarHoursAttended" /></td>
-                    <td><input disabled="@row.isAttended" type="number" class="form-control" @bind="@row.LabHoursAttended" /></td>
-                    <td style="text-align: center;"> <input disabled type="checkbox" style="width: 2vw; height: 2vw; margin: auto;" @bind="@row.isAttended" /> </td>
 
-                </tr>
+
+        <div class="container mt-4">
+            <AlertCard @ref="_alertCard" />
+            @if (!string.IsNullOrEmpty(Id))
+            {
+                <br />
+                <h4>Frekuentimi i Studentëve në Kurs</h4>
+                @if (CourseAttendances != null)
+                {
+
+                    <div class="d-flex justify-content-end mb-3">
+                        <button @onclick="SaveCourseAttendances" class="btn btn-warning me-2">Ruaj Ndryshimet</button>
+                        <button @onclick="CalculateCourseAttendance" class="btn btn-dark">Kalkulo Frekuentimin</button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Emri</th>
+                                    <th>Mbiemri</th>
+                                    <th>Emri i Grupit</th>
+                                    <th>Orët e Seminarit të Frekuentuara</th>
+                                    <th>Orët e Lab të Frekuentuara</th>
+                                    <th>Kursi është Frekuentuar</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var row in CourseAttendances)
+                                {
+                                    <tr>
+                                        <td>@row.StudentName</td>
+                                        <td>@row.StudentLastName</td>
+                                        <td>@row.groupName</td>
+                                        <td><InputNumber class="form-control" @bind-Value="row.SeminarHoursAttended" disabled="@row.isAttended" /></td>
+                                        <td><InputNumber class="form-control" @bind-Value="row.LabHoursAttended" disabled="@row.LabHoursAttended" /></td>
+                                        <td style="text-align: center;">
+                                            <InputCheckbox class="form-check-input" @bind-Value="row.isAttended" disabled />
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
             }
-        </tbody>
-    </table>
-    
-}
+        </div>
+    </div>
+</div>

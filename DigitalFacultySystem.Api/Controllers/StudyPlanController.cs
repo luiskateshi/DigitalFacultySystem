@@ -43,14 +43,21 @@ namespace DigitalFacultySystem.Api.Controllers
         [HttpPut]
         public async Task<IActionResult> Update(StudyPlanDto studyPlanDto)
         {
-            var studyPlan = _mapper.Map<StudyPlan>(studyPlanDto);
-            var result = await _unitOfWork.StudyPlans.Update(studyPlan);
-            if (!result)
+            try
             {
-                return NotFound();
+                var studyPlan = _mapper.Map<StudyPlan>(studyPlanDto);
+                var result = await _unitOfWork.StudyPlans.Update(studyPlan);
+                if (!result)
+                {
+                    return NotFound();
+                }
+                await _unitOfWork.CompleteAsync();
+                return Ok();
             }
-            await _unitOfWork.CompleteAsync();
-            return Ok();
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
     }
 }

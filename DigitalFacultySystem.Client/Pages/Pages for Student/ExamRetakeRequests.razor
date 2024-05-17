@@ -1,56 +1,66 @@
 ﻿@page "/ExamRetakeRequests"
 
-<PageTitle>Exam Retake Requests</PageTitle>
-<h3>Exam Retake Requests</h3>
+<PageTitle>Kërkesat për Ridhënie të Provimeve</PageTitle>
 
-<p>Add a new exam retake request for this Academic Year</p>
-<div class="row card">
-    <EditForm Model="@requestModel" OnValidSubmit="@HandleValidSumbit" OnInvalidSubmit="@HandleInValidSumbit" FormName="sampleForm">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
+<div class="container p-4 bg-light rounded border shadow-lg mb-4">
+    <h3>Kërkesat për Ridhënie të Provimeve</h3>
+    <p class="text-muted">Shtoni një kërkesë të re për ridhënie provimi për këtë Vit Akademik</p>
+</div>
 
-        <div class="form-group">
-            <label for="name">Select the exam you want to retake</label>
-            <br />
-            <!--Choose from dropdown-->
-            <select class="form-control" @bind="requestModel.ExamId">
-                <option value="">Exam you want to retake</option>
-                @foreach (var exam in possibleExamRetakes)
-                {
-                    <option value="@exam.ExamId">@exam.ExamName</option>
-                }
-            </select>
-            <br />
-            <AlertCard @ref="alertCard" />
-            <!--button to submit-->
-            <button type="submit" class="btn btn-warning">Submit</button>
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg">
+                <div class="card-body">
+                    <EditForm Model="@requestModel" OnValidSubmit="@HandleValidSumbit" OnInvalidSubmit="@HandleInValidSumbit" class="needs-validation" novalidate>
+                        <DataAnnotationsValidator />
+                        <ValidationSummary class="text-danger" />
+                        <div class="form-group mb-3">
+                            <label for="exam" class="form-label">Zgjidhni provimin që dëshironi të rijepni</label>
+                            <select id="exam" class="form-control" @bind="requestModel.ExamId" required>
+                                <option value="">Zgjidhni provimin që dëshironi të rijepni</option>
+                                @foreach (var exam in possibleExamRetakes)
+                                {
+                                    <option value="@exam.ExamId">@exam.ExamName</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button type="submit" class="btn btn-warning">Dërgo</button>
+                        </div>
+                        <AlertCard @ref="alertCard" />
+                    </EditForm>
+                </div>
+            </div>
         </div>
-    </EditForm>
-    <h2>Your Exam Retake Requests</h2>
-    @if (requests.Count > 0)
-    {
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Exam Name</th>
-                    <th>Request Date</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var row in requests)
-                {
+    </div>
+    <div class="container-fluid mt-4">
+        <h4>Kërkesat për ridhënie të provimeve për këtë vit akademik</h4>
+        @if (requests.Count > 0)
+        {
+            <table class="table table-striped table-hover">
+                <thead class="table-light">
                     <tr>
-                        <td>@row.ExamName</td>
-                        <td>@row.DateOfRequest</td>
-                        <td>Approved</td>
+                        <th>Emri i Provimit</th>
+                        <th>Data e Kërkesës</th>
+                        <th>Statusi i aprovimit</th>
                     </tr>
-                }
-            </tbody>
-        </table>
-    }
-    else{
-        <h5>No exam retake requests were made for this academic year</h5>
-
-    }
+                </thead>
+                <tbody>
+                    @foreach (var row in requests)
+                    {
+                        <tr>
+                            <td>@row.ExamName</td>
+                            <td>@row.DateOfRequest</td>
+                            <td>Aprovuar</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>Nuk janë bërë kërkesa për ridhënie provimesh për këtë vit akademik</p>
+        }
+    </div>
 </div>

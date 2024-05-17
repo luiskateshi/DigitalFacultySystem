@@ -1,11 +1,13 @@
 ﻿using DigitalFacultySystem.Client.Services.Interfaces;
 using DigitalFacultySystem.Entities.Dtos.RequestResponse;
 using Microsoft.AspNetCore.Components;
+using System;
 
 namespace DigitalFacultySystem.Client.Pages.StudyPlan
 {
     public partial class StudyPlanSubject
     {
+        private AlertCard _alertCard;
         [Inject]
         public IGenericService<StudyPlanSubjectDto> _planSubjectService { get; set; }
         public StudyPlanSubjectDto planSubjectModel { get; set; } = new StudyPlanSubjectDto();
@@ -13,42 +15,46 @@ namespace DigitalFacultySystem.Client.Pages.StudyPlan
         [Inject]
         public NavigationManager _navigationManager { get; set; }
 
-
         [Parameter]
         public string Id { get; set; }
-        private String Message { get; set; }
+        private string Message { get; set; }
 
         private string apiUrl = "api/studyPlanSubject";
-
 
         protected override async Task OnInitializedAsync()
         {
             if (!string.IsNullOrEmpty(Id))
             {
-                var Id = Guid.Parse(this.Id);
-                var response = await _planSubjectService.GetById(Id, apiUrl);
+                var id = Guid.Parse(this.Id);
+                var response = await _planSubjectService.GetById(id, apiUrl);
                 if (response != null)
                 {
                     planSubjectModel = response;
                 }
-
             }
         }
 
         protected void HandleInvalidSubmit()
         {
-            Message = "There are some validation errors. Please try again.";
+            Message = "Ka disa gabime validimi. Ju lutem provoni përsëri.";
+            _alertCard.ShowAlert(Message, "alert-danger");
         }
 
         protected async Task HandleValidSubmit()
         {
-            //only update
-            var response = await _planSubjectService.Update(planSubjectModel, apiUrl);
-            if (response != null)
+            try
             {
-                //get back
-                _navigationManager.NavigateTo("/studyPlan/" + planSubjectModel.StudyPlanId);
 
+                var response = await _planSubjectService.Update(planSubjectModel, apiUrl);
+                if (response != null)
+                {
+                    _alertCard.ShowAlert("Ndryshimet u ruajtën me sukses!", "alert-success");
+                }
+            }
+            catch (Exception ex)
+            {
+                Message = ex.Message;
+                _alertCard.ShowAlert(Message, "alert-danger");
             }
         }
 
@@ -57,25 +63,28 @@ namespace DigitalFacultySystem.Client.Pages.StudyPlan
             var response = await _planSubjectService.Delete(planSubjectModel.Id, apiUrl);
             if (response)
             {
-                //get back
-                _navigationManager.NavigateTo("/studyPlan/" + planSubjectModel.StudyPlanId);
+                _alertCard.ShowAlert("Lënda u fshi me sukses!", "alert-success");
             }
         }
-        //generate course from study plan button click
+
         protected async Task GenerateCourse()
         {
             var response = await _planSubjectService.Add(planSubjectModel, "api/course/fromStudyPlanSubject");
-            //check if bad request
             if (response)
             {
-                Message = "Course generated successfully!";
+                Message = "Kursi u gjenerua me sukses!";
+                _alertCard.ShowAlert(Message, "alert-success");
             }
             else
             {
-                Message = "Course was already generated for this study plan subject!";
+                Message = "Kursi është gjeneruar tashmë për këtë lëndë të planit të studimit!";
+                _alertCard.ShowAlert(Message, "alert-danger");
             }
-
         }
 
+        private void GoBack()
+        {
+            _navigationManager.NavigateTo("/StudyPlan/"+planSubjectModel.StudyPlanId);
+        }
     }
 }

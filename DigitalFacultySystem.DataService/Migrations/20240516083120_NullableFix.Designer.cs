@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DigitalFacultySystem.DataService.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240507143817_DB Update 2")]
-    partial class DBUpdate2
+    [Migration("20240516083120_NullableFix")]
+    partial class NullableFix
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -31,7 +31,7 @@ namespace DigitalFacultySystem.DataService.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<DateOnly?>("EndDate")
@@ -61,7 +61,7 @@ namespace DigitalFacultySystem.DataService.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid?>("LabLecturerId")
@@ -84,6 +84,12 @@ namespace DigitalFacultySystem.DataService.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("LabLecturerId");
+
+                    b.HasIndex("MainLecturerId");
+
+                    b.HasIndex("SecondLecturerId");
+
                     b.HasIndex("StudyPlanSubjectId");
 
                     b.HasIndex(new[] { "Name" }, "IX_Courses_Name")
@@ -99,7 +105,7 @@ namespace DigitalFacultySystem.DataService.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<int?>("LabHoursAttended")
@@ -130,7 +136,7 @@ namespace DigitalFacultySystem.DataService.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid?>("DepartmentId")
@@ -165,7 +171,7 @@ namespace DigitalFacultySystem.DataService.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
@@ -189,7 +195,7 @@ namespace DigitalFacultySystem.DataService.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<DateOnly?>("Date")
@@ -217,41 +223,6 @@ namespace DigitalFacultySystem.DataService.Migrations
                     b.ToTable("Exams");
                 });
 
-            modelBuilder.Entity("DigitalFacultySystem.Domain.Entities.ExamRetakeRequest", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("CourseId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateOnly?>("DateOfRequest")
-                        .HasColumnType("date");
-
-                    b.Property<Guid?>("ExamSessionId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("StudentId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("isActive")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CourseId");
-
-                    b.HasIndex("ExamSessionId");
-
-                    b.HasIndex("StudentId");
-
-                    b.ToTable("ExamRetakeRequests");
-                });
-
             modelBuilder.Entity("DigitalFacultySystem.Domain.Entities.ExamsSession", b =>
                 {
                     b.Property<Guid>("Id")
@@ -261,7 +232,7 @@ namespace DigitalFacultySystem.DataService.Migrations
                     b.Property<Guid?>("AcademicYearId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<DateOnly?>("EndDate")
@@ -293,7 +264,7 @@ namespace DigitalFacultySystem.DataService.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<int?>("CurrentSemesterOfStudies")
@@ -335,7 +306,7 @@ namespace DigitalFacultySystem.DataService.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid?>("GenerationId")
@@ -367,7 +338,7 @@ namespace DigitalFacultySystem.DataService.Migrations
                     b.Property<DateOnly?>("Birthdate")
                         .HasColumnType("date");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
@@ -388,17 +359,10 @@ namespace DigitalFacultySystem.DataService.Migrations
                     b.Property<string>("Tel")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<bool>("isActive")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
-
-                    b.HasIndex(new[] { "UserId" }, "IX_Lecturers_UserId")
-                        .IsUnique()
-                        .HasFilter("[UserId] IS NOT NULL");
 
                     b.ToTable("Lecturers");
                 });
@@ -409,10 +373,13 @@ namespace DigitalFacultySystem.DataService.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("ApplicationUserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateOnly?>("Birthdate")
                         .HasColumnType("date");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid?>("DegreeProgramId")
@@ -433,8 +400,8 @@ namespace DigitalFacultySystem.DataService.Migrations
                     b.Property<string>("Tel")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<bool>("isActive")
                         .HasColumnType("bit");
@@ -443,9 +410,12 @@ namespace DigitalFacultySystem.DataService.Migrations
 
                     b.HasIndex("DegreeProgramId");
 
-                    b.HasIndex(new[] { "UserId" }, "IX_Students_UserId")
+                    b.HasIndex("UserId");
+
+                    b.HasIndex(new[] { "ApplicationUserId" }, "IX_Students_UserId")
                         .IsUnique()
-                        .HasFilter("[UserId] IS NOT NULL");
+                        .HasDatabaseName("IX_Students_UserId1")
+                        .HasFilter("[ApplicationUserId] IS NOT NULL");
 
                     b.ToTable("Students");
                 });
@@ -462,7 +432,7 @@ namespace DigitalFacultySystem.DataService.Migrations
                     b.Property<Guid?>("CourseId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid?>("StudentId")
@@ -488,10 +458,10 @@ namespace DigitalFacultySystem.DataService.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<short?>("Attended")
-                        .HasColumnType("smallint");
+                    b.Property<bool?>("Attended")
+                        .HasColumnType("bit");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<int?>("ExamGrade")
@@ -521,7 +491,7 @@ namespace DigitalFacultySystem.DataService.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid?>("GroupId")
@@ -553,7 +523,7 @@ namespace DigitalFacultySystem.DataService.Migrations
                     b.Property<string>("Code")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid?>("DegreeProgId")
@@ -588,7 +558,7 @@ namespace DigitalFacultySystem.DataService.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<int?>("CreditsNo")
@@ -633,7 +603,7 @@ namespace DigitalFacultySystem.DataService.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
@@ -657,44 +627,264 @@ namespace DigitalFacultySystem.DataService.Migrations
                     b.ToTable("Subjects");
                 });
 
-            modelBuilder.Entity("DigitalFacultySystem.Domain.Entities.User", b =>
+            modelBuilder.Entity("DigitalFacultySystem.Domain.Entities.studyPlan", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateOnly?>("CreatedOn")
+                    b.Property<DateOnly?>("DateOfRequest")
                         .HasColumnType("date");
 
-                    b.Property<string>("Password")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid?>("ExamId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Username")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid?>("StudentId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("isActive")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
 
-                    b.HasIndex(new[] { "Username" }, "IX_Users_Username")
-                        .IsUnique()
-                        .HasFilter("[Username] IS NOT NULL");
+                    b.HasIndex("ExamId");
 
-                    b.ToTable("Users");
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("ExamRetakeRequests");
+                });
+
+            modelBuilder.Entity("DigitalFacultySystem.Entities.DbSet.ApplicationUser", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.HasIndex(new[] { "Email" }, "IX_ApplicationUsers_Email")
+                        .IsUnique()
+                        .HasFilter("[Email] IS NOT NULL");
+
+                    b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex")
+                        .HasFilter("[NormalizedName] IS NOT NULL");
+
+                    b.ToTable("AspNetRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RoleId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetRoleClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProviderKey")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProviderDisplayName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("LoginProvider", "ProviderKey");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserLogins", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("RoleId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetUserRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserId", "LoginProvider", "Name");
+
+                    b.ToTable("AspNetUserTokens", (string)null);
                 });
 
             modelBuilder.Entity("DigitalFacultySystem.Domain.Entities.Course", b =>
                 {
+                    b.HasOne("DigitalFacultySystem.Domain.Entities.Lecturer", "LabLecturer")
+                        .WithMany()
+                        .HasForeignKey("LabLecturerId");
+
+                    b.HasOne("DigitalFacultySystem.Domain.Entities.Lecturer", "MainLecturer")
+                        .WithMany()
+                        .HasForeignKey("MainLecturerId");
+
+                    b.HasOne("DigitalFacultySystem.Domain.Entities.Lecturer", "SecondLecturer")
+                        .WithMany()
+                        .HasForeignKey("SecondLecturerId");
+
                     b.HasOne("DigitalFacultySystem.Domain.Entities.StudyPlanSubject", "StudyPlanSubject")
                         .WithMany("Courses")
                         .HasForeignKey("StudyPlanSubjectId");
+
+                    b.Navigation("LabLecturer");
+
+                    b.Navigation("MainLecturer");
+
+                    b.Navigation("SecondLecturer");
 
                     b.Navigation("StudyPlanSubject");
                 });
@@ -730,27 +920,6 @@ namespace DigitalFacultySystem.DataService.Migrations
                     b.Navigation("ExamSession");
 
                     b.Navigation("PlanSubject");
-                });
-
-            modelBuilder.Entity("DigitalFacultySystem.Domain.Entities.ExamRetakeRequest", b =>
-                {
-                    b.HasOne("DigitalFacultySystem.Domain.Entities.Course", "Course")
-                        .WithMany("ExamRetakeRequests")
-                        .HasForeignKey("CourseId");
-
-                    b.HasOne("DigitalFacultySystem.Domain.Entities.ExamsSession", "ExamSession")
-                        .WithMany("ExamRetakeRequests")
-                        .HasForeignKey("ExamSessionId");
-
-                    b.HasOne("DigitalFacultySystem.Domain.Entities.Student", "Student")
-                        .WithMany("ExamRetakeRequests")
-                        .HasForeignKey("StudentId");
-
-                    b.Navigation("Course");
-
-                    b.Navigation("ExamSession");
-
-                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("DigitalFacultySystem.Domain.Entities.ExamsSession", b =>
@@ -792,23 +961,14 @@ namespace DigitalFacultySystem.DataService.Migrations
                     b.Navigation("Generation");
                 });
 
-            modelBuilder.Entity("DigitalFacultySystem.Domain.Entities.Lecturer", b =>
-                {
-                    b.HasOne("DigitalFacultySystem.Domain.Entities.User", "User")
-                        .WithMany("Lecturers")
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("DigitalFacultySystem.Domain.Entities.Student", b =>
                 {
                     b.HasOne("DigitalFacultySystem.Domain.Entities.DegreeProgram", "DegreeProgram")
                         .WithMany()
                         .HasForeignKey("DegreeProgramId");
 
-                    b.HasOne("DigitalFacultySystem.Domain.Entities.User", "User")
-                        .WithMany("Students")
+                    b.HasOne("DigitalFacultySystem.Entities.DbSet.ApplicationUser", "User")
+                        .WithMany()
                         .HasForeignKey("UserId");
 
                     b.Navigation("DegreeProgram");
@@ -891,6 +1051,72 @@ namespace DigitalFacultySystem.DataService.Migrations
                     b.Navigation("Subject");
                 });
 
+            modelBuilder.Entity("DigitalFacultySystem.Domain.Entities.studyPlan", b =>
+                {
+                    b.HasOne("DigitalFacultySystem.Domain.Entities.Exam", "Exam")
+                        .WithMany()
+                        .HasForeignKey("ExamId");
+
+                    b.HasOne("DigitalFacultySystem.Domain.Entities.Student", "Student")
+                        .WithMany("ExamRetakeRequests")
+                        .HasForeignKey("StudentId");
+
+                    b.Navigation("Exam");
+
+                    b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.HasOne("DigitalFacultySystem.Entities.DbSet.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.HasOne("DigitalFacultySystem.Entities.DbSet.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DigitalFacultySystem.Entities.DbSet.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.HasOne("DigitalFacultySystem.Entities.DbSet.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("DigitalFacultySystem.Domain.Entities.AcademicYear", b =>
                 {
                     b.Navigation("ExamsSessions");
@@ -902,8 +1128,6 @@ namespace DigitalFacultySystem.DataService.Migrations
 
             modelBuilder.Entity("DigitalFacultySystem.Domain.Entities.Course", b =>
                 {
-                    b.Navigation("ExamRetakeRequests");
-
                     b.Navigation("StudentInCourses");
                 });
 
@@ -926,8 +1150,6 @@ namespace DigitalFacultySystem.DataService.Migrations
 
             modelBuilder.Entity("DigitalFacultySystem.Domain.Entities.ExamsSession", b =>
                 {
-                    b.Navigation("ExamRetakeRequests");
-
                     b.Navigation("Exams");
                 });
 
@@ -974,13 +1196,6 @@ namespace DigitalFacultySystem.DataService.Migrations
             modelBuilder.Entity("DigitalFacultySystem.Domain.Entities.Subject", b =>
                 {
                     b.Navigation("StudyPlanSubjects");
-                });
-
-            modelBuilder.Entity("DigitalFacultySystem.Domain.Entities.User", b =>
-                {
-                    b.Navigation("Lecturers");
-
-                    b.Navigation("Students");
                 });
 #pragma warning restore 612, 618
         }

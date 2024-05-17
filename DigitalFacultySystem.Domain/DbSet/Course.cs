@@ -13,8 +13,6 @@ public class Course : BaseEntity
 
     public Guid? StudyPlanSubjectId { get; set; }
 
-    public virtual ICollection<ExamRetakeRequest> ExamRetakeRequests { get; set; } = new List<ExamRetakeRequest>();
-
     public virtual ICollection<StudentInCourse> StudentInCourses { get; set; } = new List<StudentInCourse>();
 
     public virtual StudyPlanSubject? StudyPlanSubject { get; set; }

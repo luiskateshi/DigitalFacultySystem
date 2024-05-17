@@ -1,32 +1,35 @@
 ﻿@page "/DegreePrograms"
-@attribute [Authorize(Roles = "Admin, Staff")]
+@attribute [Authorize(Roles = "admin, staff")]
 
-<h3><h3>Degree Programs List</h3></h3>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
 
-<a href="@("DegreeProgram")" class="btn btn-success"> Add new</a>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th>Grade</th>  
-            <th>Length of studies (in semesters)</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var row in degreePrograms)
-        {
-            <tr>
-                <td>@row.Id</td>
-                <td>@row.Name</td>
-                <td>@row.Grade</td>
-                <td>@row.StudyLength</td>
+        <h3>Lista e Programeve të Studimit</h3>
 
+        <a href="@("DegreeProgram")" class="btn btn-primary mb-3">Shto program studimi</a>
+    </div>
 
-                <td><a href="@("DegreeProgram/" + row.Id)" class="btn btn-warning">Edit</a></td>
-            </tr>
-        }
-    </tbody>
-
-</table>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col">Emri</th>
+                    <th scope="col">Grada</th>
+                    <th scope="col">Gjatësia e Studimeve (në semestra)</th>
+                    <th scope="col" class="text-end pe-3">Veprimet</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var row in degreePrograms)
+                {
+                    <tr>
+                        <td>@row.Name</td>
+                        <td>@row.Grade</td>
+                        <td>@row.StudyLength</td>
+                        <td class="text-end pe-3"><a href="@("DegreeProgram/" + row.Id)" class="btn btn-warning">Përditëso</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

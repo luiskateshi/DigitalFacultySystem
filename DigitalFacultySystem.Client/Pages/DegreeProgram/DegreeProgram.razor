@@ -1,48 +1,80 @@
 ﻿@page "/DegreeProgram"
 @page "/DegreeProgram/{id}"
-@attribute [Authorize(Roles = "Admin, Staff")]
+@attribute [Authorize(Roles = "admin, staff")]
 
-<h3>Degree Program - @degreeModel.Name</h3>
+@inject NavigationManager NavManager
 
-@if (string.IsNullOrEmpty(Id))
-{
-    <PageTitle>Degree Program Add</PageTitle>
-    <h3>Add a new Degree Program</h3>
-}
-else
-{
-    <PageTitle>Degree Program Update</PageTitle>
-    <p>Update Degree Program</p>
-}
+<PageTitle>Programi i Studimit</PageTitle>
 
+<div class="container p-4 bg-light rounded border shadow-lg mb-4">
+    @if (string.IsNullOrEmpty(Id))
+    {
+        <h3>Programi i Studimit</h3>
+    }
+    else
+    {
+        <h3>Programi i Studimit - @degreeModel.Name</h3>
+        <p class="text-muted">Përditëso Programin e Studimit</p>
+    }
+</div>
 
-<div class="row card">
-    <EditForm Model="@degreeModel" OnValidSubmit="@HandleValidSumbit" OnInvalidSubmit="@HandleInValidSumbit" FormName="sampleForm">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <button class="btn btn-secondary" @onclick="GoBack">Kthehu</button>
+                <div>
+                    @if (string.IsNullOrEmpty(Id))
+                    {
+                        <h4>Shto Programin e Studimit</h4>
+                    }
+                </div>
+            </div>
+            <div class="card shadow-lg">
+                <div class="card-body">
+                    <EditForm Model="@degreeModel" OnValidSubmit="@HandleValidSumbit" OnInvalidSubmit="@HandleInValidSumbit" class="needs-validation" novalidate>
+                        <DataAnnotationsValidator />
+                        <ValidationSummary class="text-danger" />
+                        <div class="form-group mb-3">
+                            <label for="name" class="form-label">Emri</label>
+                            <InputText id="name" class="form-control" @bind-Value="degreeModel.Name" required />
+                            <ValidationMessage For="@(() => degreeModel.Name)" class="text-danger" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="grade" class="form-label">Nota</label>
+                            <InputText id="grade" class="form-control" @bind-Value="degreeModel.Grade" required />
+                            <ValidationMessage For="@(() => degreeModel.Grade)" class="text-danger" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="studyLength" class="form-label">Gjatësia e studimeve (në semestra)</label>
+                            <InputNumber id="studyLength" class="form-control" @bind-Value="degreeModel.StudyLength" required />
+                            <ValidationMessage For="@(() => degreeModel.StudyLength)" class="text-danger" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="department" class="form-label">Departamenti</label>
+                            <select id="department" class="form-control" @bind="degreeModel.DepartmentId" required>
+                                <option value="">Zgjidh Departamentin</option>
+                                @foreach (var department in departments)
+                                {
+                                    <option value="@department.Id">@department.Name</option>
+                                }
+                            </select>
+                            <ValidationMessage For="@(() => degreeModel.DepartmentId)" class="text-danger" />
+                        </div>
 
-        <div class="form-group">
-            <label for="name">Name</label>
-            <InputText class="form-control" @bind-Value="degreeModel.Name" />
-            <label for="grade">Grade</label>
-            <InputText class="form-control" @bind-Value="degreeModel.Grade" />
-            <label for="studyLength">Length of studies (in semesters)</label>
-            <InputNumber class="form-control" @bind-Value="degreeModel.StudyLength" />
-            <label for="department">Department</label>
-            <select class="form-control" @bind="degreeModel.DepartmentId">
-                <option value="">Select Department</option>
-                @foreach (var department in departments)
-                {
-                    <option value="@department.Id">@department.Name</option>
-                }
-            </select>
-            <br />
-            <button type="submit" class="btn btn-primary">Save</button>
-
-
-            <div class="form-group">
-                <p>@Message</p>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button type="submit" class="btn btn-success me-md-2">Ruaj</button>
+                            @if (!string.IsNullOrEmpty(Id))
+                            {
+                                <button type="button" class="btn btn-danger">Fshi</button>
+                            }
+                        </div>
+                    </EditForm>
+                </div>
             </div>
         </div>
-    </EditForm>
+    </div>
 </div>
+
+<br />
+<AlertCard @ref="alertCard" />

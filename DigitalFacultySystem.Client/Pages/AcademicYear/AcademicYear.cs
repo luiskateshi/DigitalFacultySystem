@@ -8,6 +8,9 @@ namespace DigitalFacultySystem.Client.Pages.AcademicYear
 {
     public partial class AcademicYear
     {
+        //alert card
+        private AlertCard alertCard;
+
         [Inject]
         public IGenericService<AcademicYearDto> _academicYearService { get; set; }
 
@@ -49,9 +52,9 @@ namespace DigitalFacultySystem.Client.Pages.AcademicYear
 
                 var result = await _academicYearService.Add(newAcademicYear, url);
                 if(result != null)
-                    _navi.NavigateTo("/academicYears");
-
-                Message = "Failed to add academic year";
+                    alertCard.ShowAlert("Viti akademik u ruajt me sukses!", "alert-success");
+                else
+                    alertCard.ShowAlert("Viti akademik nuk u ruajt!", "alert-danger");
 
             }
             else
@@ -60,10 +63,18 @@ namespace DigitalFacultySystem.Client.Pages.AcademicYear
                 MyFieldsMapper.MapFields(academicYearModel, updateAcademicYear);
                 var result = await _academicYearService.Update(updateAcademicYear, url);
                 if(result != null)
-                    _navi.NavigateTo("/academicYears");
-
-                Message = "Failed to update academic year";
+                    alertCard.ShowAlert("Viti akademik u ndryshua me sukses!", "alert-success");
+                else
+                    alertCard.ShowAlert("Viti akademik nuk u ndryshua!", "alert-danger");
+                    
             }
         }
+
+        private void GoBack()
+        {
+            NavManager.NavigateTo("/academicYears");
+        }
+
+
     }
 }

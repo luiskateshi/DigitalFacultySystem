@@ -9,47 +9,46 @@ namespace DigitalFacultySystem.Client.Pages.Pages_for_Student
 {
     public partial class ExamRetakeRequests
     {
-        [Inject]
-        private IGenericService<ExamRetakeRequestDto> _examRetakeRequestService { get; set; }
-        [Inject]
-        private IGenericService<PossibleExamRetakesDto> _possibleExamRetakesService { get; set; }
-        [Inject]
-        public AuthenticationStateProvider AuthenticationStateProvider { get; set; }
-        private ExamRetakeRequestDto requestModel = new ExamRetakeRequestDto();
-        private List<ExamRetakeRequestDto> requests = new List<ExamRetakeRequestDto>();
-        private List<PossibleExamRetakesDto> possibleExamRetakes = new List<PossibleExamRetakesDto>();
-
+        public ExamRetakeRequestDto requestModel { get; set; } = new();
+        public List<ExamRetakeRequestDto> requests { get; set; } = new();
+        public List<PossibleExamRetakesDto> possibleExamRetakes { get; set; } = new();
         private AlertCard alertCard;
         private Guid StudentId { get; set; }
-        private String Message { get; set; } = string.Empty;
+        public String Message { get; set; } = string.Empty;
 
+        [Inject] private IGenericService<ExamRetakeRequestDto> _examRetakeRequestService { get; set; }
+        [Inject] private IGenericService<PossibleExamRetakesDto> _possibleExamRetakesService { get; set; }
+        [Inject] public AuthenticationStateProvider AuthenticationStateProvider { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
-            //get the userId of the current authenticated user
             var authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
             var user = authenticationState.User;
             var userIdClaim = user.FindFirst(ClaimTypes.NameIdentifier);
             var UserId = Guid.Parse(userIdClaim?.Value);
 
-            //get the studentId connected to the id of current authenticated user
             StudentId = await _examRetakeRequestService.GetStudentIdByUserId(UserId, "api/Student/GetStudentByUserId");
 
             await RefreshRequests();
         }
 
-
         protected void HandleInValidSumbit()
         {
-            Message = "There are validation errors. Please try again.";
+            Message = "Ka disa gabime në validim. Ju lutemi provoni përsëri.";
             ShowAlertCardDanger(Message);
         }
 
         protected async Task HandleValidSumbit()
         {
+            if(requestModel.ExamId == null)
+            {
+                Message = "Zgjidhni një provim.";
+                ShowAlertCardDanger(Message);
+                return;
+            }
             if (requests.Count >= 2)
             {
-                Message = "The maxiaml number of requests for this academic year has been reached.";
+                Message = "Numri maksimal i kërkesave për këtë vit akademik është arritur.";
                 ShowAlertCardDanger(Message);
                 return;
             }
@@ -57,29 +56,26 @@ namespace DigitalFacultySystem.Client.Pages.Pages_for_Student
             var result = await _examRetakeRequestService.Add(requestModel, "api/examRetakeRequest");
             if (result)
             {
-
-                Message = "Request added successfully.";
+                Message = "Kërkesa u shtua me sukses.";
                 ShowAlertCardSuccess(Message);
                 await RefreshRequests();
             }
         }
 
-        //refresh exam retake requests and possible exam retakes
         protected async Task RefreshRequests()
         {
             requests = await _examRetakeRequestService.GetAllById(StudentId, "api/examRetakeRequest/GetRequestsByStudent");
             possibleExamRetakes = await _possibleExamRetakesService.GetAllById(StudentId, "api/examRetakeRequest/GetPossibleExamRetakes");
         }
 
-        //show alert card success
-        protected void ShowAlertCardSuccess(String Message)
+        protected void ShowAlertCardSuccess(String message)
         {
-            alertCard.ShowAlert(Message, "alert-success");
+            alertCard.ShowAlert(message, "alert-success");
         }
-        //show alert card danger
-        protected void ShowAlertCardDanger(String Message)
+
+        protected void ShowAlertCardDanger(String message)
         {
-            alertCard.ShowAlert(Message, "alert-danger");
+            alertCard.ShowAlert(message, "alert-danger");
         }
     }
 }

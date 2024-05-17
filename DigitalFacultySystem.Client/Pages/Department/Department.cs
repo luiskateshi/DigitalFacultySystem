@@ -7,6 +7,7 @@ namespace DigitalFacultySystem.Client.Pages.Department
 {
     public partial class Department
     {
+        private AlertCard alertCard;
         [Inject]
         public IGenericService<DepartmentDto> _departmentService { get; set; }
 
@@ -16,7 +17,7 @@ namespace DigitalFacultySystem.Client.Pages.Department
         [Inject]
         public NavigationManager _navi { get; set; }
 
-        public DepartmentDto departmentModel { get; set; } = new ();
+        public DepartmentDto departmentModel { get; set; } = new();
 
         public ICollection<DegreeProgramDto> degreePrograms { get; set; } = new List<DegreeProgramDto>();
 
@@ -26,7 +27,7 @@ namespace DigitalFacultySystem.Client.Pages.Department
 
         protected override async Task OnInitializedAsync()
         {
-            if(!string.IsNullOrEmpty(Id))
+            if (!string.IsNullOrEmpty(Id))
             {
                 var Id = Guid.Parse(this.Id);
                 var department = await _departmentService.GetById(Id, url);
@@ -37,33 +38,45 @@ namespace DigitalFacultySystem.Client.Pages.Department
             }
         }
 
-        protected void HandleInValidSumbit()
+        protected void HandleInvalidSubmit()
         {
-            Message = "There are validation errors. Please try again.";
+            alertCard.ShowAlert("Ka gabime validimi. Ju lutemi, provoni përsëri.", "alert-danger");
         }
 
-        protected async Task HandleValidSumbit()
+        //go back to the departments page
+        protected void GoBack()
         {
-            if(string.IsNullOrEmpty(Id))
+            _navi.NavigateTo("/departments");
+        }
+        protected async Task HandleValidSubmit()
+        {
+            if (string.IsNullOrEmpty(Id))
             {
                 var newDepartment = new DepartmentDto();
                 MyFieldsMapper.MapFields(departmentModel, newDepartment);
                 var result = await _departmentService.Add(newDepartment, url);
-                if(result != null)
-                    _navi.NavigateTo("/departments");
-
-                Message = "Failed to add department";
-
+                if (result != null)
+                {
+                    alertCard.ShowAlert("Departamenti u shtua me sukses!", "alert-success");
+                }
+                else
+                {
+                    alertCard.ShowAlert("Shtimi i departamentit dështoi!", "alert-danger");
+                }
             }
             else
             {
                 var updateDepartment = new DepartmentDto();
                 MyFieldsMapper.MapFields(departmentModel, updateDepartment);
                 var result = await _departmentService.Update(updateDepartment, url);
-                if(result != null)
-                    _navi.NavigateTo("/departments");
-
-                Message = "Failed to update department";
+                if (result != null)
+                {
+                    alertCard.ShowAlert("Departamenti u përditësua me sukses!", "alert-success");
+                }
+                else
+                {
+                    alertCard.ShowAlert("Përditësimi i departamentit dështoi!", "alert-danger");
+                }
             }
         }
     }

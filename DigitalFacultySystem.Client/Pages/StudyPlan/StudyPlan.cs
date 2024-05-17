@@ -1,8 +1,10 @@
 ﻿using DigitalFacultySystem.Client.Services.Interfaces;
-using DigitalFacultySystem.Domain.Entities;
 using DigitalFacultySystem.Entities;
 using DigitalFacultySystem.Entities.Dtos.RequestResponse;
 using Microsoft.AspNetCore.Components;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DigitalFacultySystem.Client.Pages.StudyPlan
 {
@@ -27,17 +29,15 @@ namespace DigitalFacultySystem.Client.Pages.StudyPlan
         public List<StudyPlanSubjectDto> planSubjects = new List<StudyPlanSubjectDto>();
 
         [Parameter]
-        public String Id { get; set; } = string.Empty;
+        public string Id { get; set; } = string.Empty;
         public StudyPlanDto studyPlanModel { get; set; } = new();
-        public String Message { get; set; } = string.Empty;
-        public String url = "api/StudyPlan";
+        public string url = "api/StudyPlan";
         public IEnumerable<DepartmentDto> degreePrograms { get; set; } = new List<DepartmentDto>();
 
-        
+        private AlertCard _alertCard;
 
         protected override async Task OnInitializedAsync()
         {
-            //get all degree progs for dropdown
             degreePrograms = await _degreeProgService.GetAll("api/DegreeProgram");
 
             if (!string.IsNullOrEmpty(Id))
@@ -49,14 +49,15 @@ namespace DigitalFacultySystem.Client.Pages.StudyPlan
                     studyPlanModel = result;
             }
 
-            await refreshSubjects();
+            await RefreshSubjects();
         }
 
-        protected void HandleInValidSumbit()
+        protected void HandleInvalidSubmit()
         {
-            Message = "There are validation errors. Please try again.";
+            _alertCard.ShowAlert("Ka disa gabime në validim. Ju lutemi provoni përsëri.", "alert-danger");
         }
-        protected async Task HandleValidSumbit()
+
+        protected async Task HandleValidSubmit()
         {
             if (string.IsNullOrEmpty(Id))
             {
@@ -64,9 +65,13 @@ namespace DigitalFacultySystem.Client.Pages.StudyPlan
                 MyFieldsMapper.MapFields(studyPlanModel, newStudyPlan);
                 var result = await _studyPlanService.Add(newStudyPlan, url);
                 if (result != null)
-                    _navi.NavigateTo("/studyPlans");
-
-                Message = "Failed to add study plan";
+                {
+                    _alertCard.ShowAlert("Plani i studimit u shtua me sukses!", "alert-success");
+                }
+                else
+                {
+                    _alertCard.ShowAlert("Shtimi i planit të studimit dështoi!", "alert-danger");
+                }
             }
             else
             {
@@ -74,15 +79,19 @@ namespace DigitalFacultySystem.Client.Pages.StudyPlan
                 MyFieldsMapper.MapFields(studyPlanModel, updateStudyPlan);
                 var result = await _studyPlanService.Update(updateStudyPlan, url);
                 if (result != null)
-                    _navi.NavigateTo("/studyPlans");
-
-                Message = "Failed to update study plan";
+                {
+                    _alertCard.ShowAlert("Plani i studimit u përditësua me sukses!", "alert-success");
+                }
+                else
+                {
+                    _alertCard.ShowAlert("Përditësimi i planit të studimit dështoi!", "alert-danger");
+                }
             }
         }
 
-        protected async Task refreshSubjects()
+        protected async Task RefreshSubjects()
         {
-            if (studyPlanModel.Id != Guid.Empty)
+            if (!string.IsNullOrEmpty(Id))
             {
                 planSubjects = await _studyPlanSubjectService.GetAllById(studyPlanModel.Id, "api/StudyPlanSubject/byStudyPlan");
                 subjectsNotIn = await _subjectService.GetAllById(studyPlanModel.Id, "api/StudyPlanSubject/notInStudyPlan");
@@ -99,10 +108,7 @@ namespace DigitalFacultySystem.Client.Pages.StudyPlan
 
             var result = await _studyPlanSubjectService.Add(studyPlanSubject, "api/StudyPlanSubject");
             if (result != null)
-                await refreshSubjects();
+                await RefreshSubjects();
         }
-
-        
-
     }
 }

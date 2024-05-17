@@ -1,74 +1,95 @@
-﻿@page "/Department"
-@page "/Department/{id}"
-@attribute [Authorize(Roles = "Admin, Staff")]
+﻿@page "/Department/{Id?}"
+@page "/Department"
+<PageTitle>Departamenti</PageTitle>
 
-
-@using DigitalFacultySystem.Client.Pages.DegreeProgram
-<h3>Department - @departmentModel.Name</h3>
-
-@if (string.IsNullOrEmpty(Id))
-{
-    <PageTitle>Department Add</PageTitle>
-    <h3>Add a new Department</h3>
-}
-else
-{
-    <PageTitle>Department Update</PageTitle>
-    <p>Update Department</p>
-}
-
-
-<div class="row card">
-    <EditForm Model="@departmentModel" OnValidSubmit="@HandleValidSumbit" OnInvalidSubmit="@HandleInValidSumbit" FormName="sampleForm">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
-
-        <div class="form-group">
-            <label for="name">Name</label>
-            <InputText class="form-control" @bind-Value="departmentModel.Name" />
-            <br />
-            <button type="submit" class="btn btn-primary">Save</button>
-
-
-            <div class="form-group">
-                <p>@Message</p>
-            </div>
-        </div>
-    </EditForm>
+<div class="container p-4 bg-light rounded border shadow-lg mb-4">
+    @if (string.IsNullOrEmpty(Id))
+    {
+        <h3>Departamenti</h3>
+    }
+    else
+    {
+        <h3>Departamenti - @departmentModel.Name</h3>
+        <p class="text-muted">Përditëso Departamentin</p>
+    }
 </div>
 
-<br />
-<br />
-<h4>Degree Programs</h4>
-@if(@departmentModel.DegreePrograms != null && @departmentModel.DegreePrograms.Count > 0)
-{
-    // Degree Programs
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Grade</th>
-                <th>Length of studies (in semesters)</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var row in @departmentModel.DegreePrograms)
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <button class="btn btn-secondary" @onclick="@(() => _navi.NavigateTo("departments"))">Kthehu</button>
+                <div>
+                    @if (string.IsNullOrEmpty(Id))
+                    {
+                        <h4>Shto Departamentin</h4>
+                    }
+                    else
+                    {
+                        <h4>Përditëso Departamentin</h4>
+                    }
+                </div>
+            </div>
+            <div class="card shadow-lg">
+                <div class="card-body">
+
+                    <EditForm Model="@departmentModel" OnValidSubmit="@HandleValidSubmit" OnInvalidSubmit="@HandleInvalidSubmit" class="needs-validation" novalidate>
+                        <DataAnnotationsValidator />
+                        <ValidationSummary class="text-danger" />
+                        <div class="form-group mb-3">
+                            <label for="name" class="form-label">Emri</label>
+                            <InputText id="name" class="form-control" @bind-Value="departmentModel.Name" required />
+                            <ValidationMessage For="@(() => departmentModel.Name)" class="text-danger" />
+                        </div>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button type="submit" class="btn btn-success me-md-2">Ruaj</button>
+                            @if (!string.IsNullOrEmpty(Id))
+                            {
+                                <button type="button" class="btn btn-danger">Fshi</button>
+                            }
+                        </div>
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-4">
+        <AlertCard @ref="alertCard" />
+        @if (!string.IsNullOrEmpty(Id))
+        {
+            <br />
+            <h4>Programet e Studimit</h4>
+            @if (departmentModel.DegreePrograms != null && departmentModel.DegreePrograms.Count > 0)
             {
-                <tr>
-                    <td>@row.Id</td>
-                    <td>@row.Name</td>
-                    <td>@row.Grade</td>
-                    <td>@row.StudyLength</td>
-                    <td><a href="@("DegreeProgram/" + row.Id)" class="btn btn-warning">Edit</a></td>
-                </tr>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Emri</th>
+                                <th>Grada</th>
+                                <th>Gjatësia e Studimeve (në semestra)</th>
+                                <th>Veprimet</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var row in departmentModel.DegreePrograms)
+                            {
+                                <tr>
+                                    <td>@row.Name</td>
+                                    <td>@row.Grade</td>
+                                    <td>@row.StudyLength</td>
+                                    <td><a href="@("DegreeProgram/" + row.Id)" class="btn btn-warning">Përditëso</a></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             }
-        </tbody>
-    </table>
-    
-}
-else
-{
-    <p>No Degree Programs found</p>
-}
+            else
+            {
+                <p>Nuk u gjetën programe studimi</p>
+            }
+        }
+    </div>
+</div>

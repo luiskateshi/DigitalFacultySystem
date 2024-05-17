@@ -1,6 +1,4 @@
-﻿using Azure;
-using DigitalFacultySystem.Client.Services.Interfaces;
-using DigitalFacultySystem.Domain.Entities;
+﻿using DigitalFacultySystem.Client.Services.Interfaces;
 using DigitalFacultySystem.Entities.Dtos.RequestResponse;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -38,7 +36,6 @@ namespace DigitalFacultySystem.Client.Pages.Pages_for_Student
                 StudentUserId = userIdClaim?.Value;
                 await GetMyGrades();
             }
-            
         }
 
         protected async Task GetMyGrades()
@@ -48,7 +45,13 @@ namespace DigitalFacultySystem.Client.Pages.Pages_for_Student
                 var response = await _studentGradesService.GetAllById(Guid.Parse(StudentUserId), "api/Student/GetAllMyGrades");
                 studentExamGradesDtos = response;
                 studentExamGradesDtos = studentExamGradesDtos.OrderBy(x => x.Semester).ToList();
-            }//cath 404 exception
+
+                if (studentExamGradesDtos.Count == 0)
+                {
+                    Message = "Nuk u gjetën nota për këtë student";
+                    alertCard.ShowAlert(Message, "alert-warning");
+                }
+            }
             catch (Exception ex)
             {
                 Message = ex.Message;
@@ -63,18 +66,18 @@ namespace DigitalFacultySystem.Client.Pages.Pages_for_Student
                 var response = await _studentGradesService.GetAllById(Guid.Parse(StudentId), "api/Student/GetAllStudentGrades");
                 studentExamGradesDtos = response;
                 studentExamGradesDtos = studentExamGradesDtos.OrderBy(x => x.Semester).ToList();
-            }//cath 404 exception
+
+                if (studentExamGradesDtos.Count == 0)
+                {
+                    Message = "Nuk u gjetën nota për këtë student";
+                    alertCard.ShowAlert(Message, "alert-warning");
+                }
+            }
             catch (Exception ex)
             {
                 Message = ex.Message;
                 alertCard.ShowAlert(Message, "alert-danger");
             }
         }
-
-
-
-
-
-
     }
 }

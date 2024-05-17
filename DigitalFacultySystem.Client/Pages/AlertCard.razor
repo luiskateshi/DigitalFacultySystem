@@ -1,14 +1,16 @@
 ﻿@if (IsVisible)
 {
+    <br/>
     <div class="alert @AlertType alert-dismissible fade show" role="alert">
         @Message
-        <button type="button" class="btn-close" @onclick="HideAlert"></button>
+        <button type="button" class="btn-close" aria-label="Close" @onclick="HideAlert"></button>
     </div>
+    <br />
 }
 
 @code {
     [Parameter]
-    public string Message { get; set; }
+    public string Message { get; set; } = string.Empty;
 
     [Parameter]
     public string AlertType { get; set; } = "alert-success";

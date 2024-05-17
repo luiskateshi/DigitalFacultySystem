@@ -1,32 +1,34 @@
 ﻿@page "/"
+@using System.Globalization
 @using System.Security.Claims
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavManager
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Faqja Kryesore</PageTitle>
 
 <div class="container">
     <div class="row justify-content-center mt-5">
         <div class="col-md-6">
             <div class="card shadow">
                 <div class="card-body">
-                    <h1 class="display-4 text-center mb-4">Welcome to Digital Faculty Platform</h1>
-                    <p class="lead text-center mb-5">Today is @DateTime.Now.ToString("dddd, MMMM dd, yyyy")</p>
+                    <h1 class="display-4 text-center mb-4">Mirë se vini në Platformën e Fakultetit Digjital</h1>
+                    <p class="lead text-center mb-5">Sot është @GetAlbanianDate()</p>
 
-                    <!--Check if user is authenticated-->
+                    <!-- Kontrolloni nëse përdoruesi është autentifikuar -->
                     <AuthorizeView>
+
                         <Authorized>
-                            <h2 class="text-center">Hello, @context.User.Identity!.Name!</h2>
-                            <p class="text-center">Your ID is @UserId</p>
-                            <p class="text-center">Your Role is @UserRole</p>
-                            <!-- Option to go to change password page -->
+                            <h2 class="text-center">Përshëndetje, @context.User.Identity!.Name!</h2>
+                            <!--<p class="text-center">ID juaj është @UserId</p>-->
+                            <p class="text-center">Roli juaj është: @UserRole</p>
+                            <!-- Opsion për të shkuar te faqja e ndryshimit të fjalëkalimit -->
                             <div class="text-center mt-3">
-                                <button class="btn btn-primary" @onclick="GoToChangePassword">Change Password</button>
+                                <button class="btn btn-primary" @onclick="GoToChangePassword">Ndrysho Fjalëkalimin</button>
                             </div>
                         </Authorized>
                         <NotAuthorized>
-                            <h2 class="text-center">Hello, Guest!</h2>
-                            <p class="text-center">Please log in to access more features.</p>
+                            <h2 class="text-center">Përshëndetje, Vizitor!</h2>
+                            <p class="text-center">Ju lutemi identifikohuni për të aksesuar më shumë veçori.</p>
                         </NotAuthorized>
                     </AuthorizeView>
                 </div>
@@ -36,30 +38,60 @@
 </div>
 
 @code {
-    // Define properties to store user ID and role
     private string UserId { get; set; }
     private string UserRole { get; set; }
 
-    // Override the OnInitializedAsync lifecycle method
     protected override async Task OnInitializedAsync()
     {
-        // Retrieve the authentication state
         var authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
 
-        // Get the claims principal from the authentication state
         var user = authenticationState.User;
 
-        // Find the claim representing the user ID
         var userIdClaim = user.FindFirst(ClaimTypes.NameIdentifier);
         UserId = userIdClaim?.Value;
 
-        // Find the claim representing the user role
         UserRole = user.FindFirst(ClaimTypes.Role)?.Value;
     }
 
-    // Method to navigate to the change password page
     private void GoToChangePassword()
     {
         NavManager.NavigateTo("/changePassword");
+    }
+    private string GetAlbanianDate()
+    {
+        var date = DateTime.Now;
+        var dayOfWeek = date.ToString("dddd", new CultureInfo("en-US"));
+        var month = date.ToString("MMMM", new CultureInfo("en-US"));
+        var day = date.Day;
+        var year = date.Year;
+
+        var daysOfWeekAlbanian = new Dictionary<string, string>
+        {
+            { "Monday", "E hënë" },
+            { "Tuesday", "E martë" },
+            { "Wednesday", "E mërkurë" },
+            { "Thursday", "E enjte" },
+            { "Friday", "E premte" },
+            { "Saturday", "E shtunë" },
+            { "Sunday", "E diel" }
+        };
+
+        var monthsAlbanian = new Dictionary<string, string>
+        {
+            { "January", "Janar" },
+            { "February", "Shkurt" },
+            { "March", "Mars" },
+            { "April", "Prill" },
+            { "May", "Maj" },
+            { "June", "Qershor" },
+            { "July", "Korrik" },
+            { "August", "Gusht" },
+            { "September", "Shtator" },
+            { "October", "Tetor" },
+            { "November", "Nëntor" },
+            { "December", "Dhjetor" }
+        };
+
+        return $"{daysOfWeekAlbanian[dayOfWeek]}, {monthsAlbanian[month]} {day}, {year}";
     }
 }

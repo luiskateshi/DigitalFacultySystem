@@ -1,104 +1,136 @@
-﻿@page "/StudyPlan"
-@page "/StudyPlan/{id}"
-@attribute [Authorize(Roles = "Admin, Staff")]
+﻿@page "/StudyPlan/{Id?}"
+@page "/StudyPlan"
+<PageTitle>Plani i Studimit</PageTitle>
 
+<div class="container p-4 bg-light rounded border shadow-lg mb-4">
+    @if (string.IsNullOrEmpty(Id))
+    {
+        <h3>Plani i Studimit</h3>
+    }
+    else
+    {
+        <h3>Plani i Studimit - @studyPlanModel.Name</h3>
+        <p class="text-muted">Përditëso Planin e Studimit</p>
+    }
+</div>
 
-<h3>Study Plan - @studyPlanModel.Name</h3>
-
-@if (string.IsNullOrEmpty(Id))
-{
-    <PageTitle>Study Plan Add</PageTitle>
-    <h3>Add a new Study Plan</h3>
-}
-else
-{
-    <PageTitle>Study Plan Update</PageTitle>
-    <p>Update Study Plan</p>
-}
-
-<div class="row card">
-    <EditForm Model="@studyPlanModel" OnValidSubmit="@HandleValidSumbit" OnInvalidSubmit="@HandleInValidSumbit" FormName="sampleForm">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
-
-        <div class="form-group">
-            <label for="name">Name</label>
-            <InputText class="form-control" @bind-Value="studyPlanModel.Name" />
-            <label for="name">Code</label>
-            <InputText class="form-control" @bind-Value="studyPlanModel.Code" />
-            <label for="startDate">Start Date</label>
-            <InputDate class="form-control" @bind-Value="studyPlanModel.StartDate" />
-            <label for="endDate">End Date</label>
-            <InputDate class="form-control" @bind-Value="studyPlanModel.EndDate" />
-            <label for="degreeProgramId">Degree Program</label>
-            <InputSelect class="form-control" @bind-Value="studyPlanModel.DegreeProgId">
-                @foreach (var degreeProgram in degreePrograms)
-                {
-                    <option value="@degreeProgram.Id">@degreeProgram.Name</option>
-                }
-            </InputSelect>
-            <br />
-            <button type="submit" class="btn btn-primary">Save</button>
-
-
-            <div class="form-group">
-                <p>@Message</p>
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <button class="btn btn-secondary" @onclick="@(() => _navi.NavigateTo("studyPlans"))">Kthehu</button>
+                <div>
+                    @if (string.IsNullOrEmpty(Id))
+                    {
+                        <h4>Shto Planin e Studimit</h4>
+                    }
+                    else
+                    {
+                        <h4>Përditëso Planin e Studimit</h4>
+                    }
+                </div>
+            </div>
+            <div class="card shadow-lg">
+                <div class="card-body">
+                    <EditForm Model="@studyPlanModel" OnValidSubmit="@HandleValidSubmit" OnInvalidSubmit="@HandleInvalidSubmit" class="needs-validation" novalidate>
+                        <DataAnnotationsValidator />
+                        <ValidationSummary class="text-danger" />
+                        <div class="form-group mb-3">
+                            <label for="name" class="form-label">Emri</label>
+                            <InputText id="name" class="form-control" @bind-Value="studyPlanModel.Name" required />
+                            <ValidationMessage For="@(() => studyPlanModel.Name)" class="text-danger" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="code" class="form-label">Kodi</label>
+                            <InputText id="code" class="form-control" @bind-Value="studyPlanModel.Code" required />
+                            <ValidationMessage For="@(() => studyPlanModel.Code)" class="text-danger" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="startDate" class="form-label">Data e Fillimit</label>
+                            <InputDate id="startDate" class="form-control" @bind-Value="studyPlanModel.StartDate" required />
+                            <ValidationMessage For="@(() => studyPlanModel.StartDate)" class="text-danger" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="endDate" class="form-label">Data e Mbarimit</label>
+                            <InputDate id="endDate" class="form-control" @bind-Value="studyPlanModel.EndDate" required />
+                            <ValidationMessage For="@(() => studyPlanModel.EndDate)" class="text-danger" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="degreeProgramId" class="form-label">Programi i Diplomës</label>
+                            <InputSelect id="degreeProgramId" class="form-control" @bind-Value="studyPlanModel.DegreeProgId" required>
+                                <option value="">Zgjidh Programin e Diplomës</option>
+                                @foreach (var degreeProgram in degreePrograms)
+                                {
+                                    <option value="@degreeProgram.Id">@degreeProgram.Name</option>
+                                }
+                            </InputSelect>
+                            <ValidationMessage For="@(() => studyPlanModel.DegreeProgId)" class="text-danger" />
+                        </div>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button type="submit" class="btn btn-success me-md-2">Ruaj</button>
+                        </div>
+                    </EditForm>
+                </div>
             </div>
         </div>
-    </EditForm>
-
-    <!--Here will be displayed 2 tables one with all subjects that are not in this study plan and one with subjects thate are already in-->
-    <div class="row">
-        <div class="col-md-6">
-            <h4>Subjects</h4>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>Name</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var subject in subjectsNotIn)
-                    {
-                        <tr>
-                            <td>@subject.Id</td>
-                            <td>@subject.Name</td>
-                            <td>
-                                <button class="btn btn-primary" @onclick="() => AddSubjectToStudyPlan(subject.Id)">Add</button>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-        <div class="col-md-6">
-            <h4>Subjects in Study Plan</h4>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>ECTS Credits</th>
-                        <th>Semester</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var subject in planSubjects)
-                    {
-                        <tr>
-                            <td>@subject.Name</td>
-                            <td>@subject.CreditsNo</td>
-                            <td>@subject.Semester</td>
-                            <td>
-                                <a href="@("StudyPlanSubject/"+subject.Id)" class="btn btn-warning"> Edit</a>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-
     </div>
+    <AlertCard @ref="_alertCard" />
+    <div class="container-fluid mt-4">
+        @if (!string.IsNullOrEmpty(Id))
+        {
+            <br />
+            <div class="row">
+                <div class="col-md-6">
+
+                    <h4>Lëndët që nuk janë në Planin e Studimit</h4>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Emri</th>
+                                <th>Veprime</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var subject in subjectsNotIn)
+                            {
+                                <tr>
+                                    <td>@subject.Name</td>
+                                    <td>
+                                        <button class="btn btn-primary" @onclick="() => AddSubjectToStudyPlan(subject.Id)">Shto</button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-6">
+                    <h4>Lëndët në Planin e Studimit</h4>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Emri</th>
+                                <th>Kreditet ECTS</th>
+                                <th>Semestri</th>
+                                <th>Veprime</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var subject in planSubjects)
+                            {
+                                <tr>
+                                    <td>@subject.Name</td>
+                                    <td>@subject.CreditsNo</td>
+                                    <td>@subject.Semester</td>
+                                    <td>
+                                        <a href="@($"StudyPlanSubject/{subject.Id}")" class="btn btn-warning">Përditëso</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+    </div>
+
 </div>

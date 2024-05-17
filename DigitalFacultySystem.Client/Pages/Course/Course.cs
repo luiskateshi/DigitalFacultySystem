@@ -2,141 +2,141 @@
 using DigitalFacultySystem.Entities.Dtos.RequestResponse;
 using Microsoft.AspNetCore.Components;
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DigitalFacultySystem.Client.Pages.Course
 {
     public partial class Course
     {
         [Inject]
-        
-        public IGenericService<CourseDto> _courseService { get; set; }
-        public CourseDto courseModel { get; set; } = new CourseDto();
+        private IGenericService<CourseDto> _courseService { get; set; }
 
         [Inject]
-        public NavigationManager _navigationManager { get; set; }
-        [Inject]
-        public IGenericService<LecturerDto> _lecturerService { get; set; }
+        private NavigationManager _navigationManager { get; set; }
 
         [Inject]
-        public IGenericService<StudyPlanSubjectDto> _studyPlanSubjectService { get; set; }
+        private IGenericService<LecturerDto> _lecturerService { get; set; }
 
-        [Inject]//courseAttendance
-        public IGenericService<CourseAttendanceDto> _courseAttendanceService { get; set; }
+        [Inject]
+        private IGenericService<StudyPlanSubjectDto> _studyPlanSubjectService { get; set; }
 
+        [Inject]
+        private IGenericService<CourseAttendanceDto> _courseAttendanceService { get; set; }
 
-        public List<LecturerDto> lecturers { get; set; } = new ();
-
-        public IEnumerable<CourseAttendanceDto> courseAttendances { get; set; } = new List<CourseAttendanceDto>();
-
+        public CourseDto CourseModel { get; set; } = new CourseDto();
+        public List<LecturerDto> Lecturers { get; set; } = new List<LecturerDto>();
+        public IEnumerable<CourseAttendanceDto> CourseAttendances { get; set; } = new List<CourseAttendanceDto>();
 
         [Parameter]
         public string Id { get; set; }
-        private String Message { get; set; }
 
-        private string apiUrl = "api/course";
-        private String CourseSubject { get; set; }
-
-        private AlertCard alertCard;
+        private string Message { get; set; }
+        private const string ApiUrl = "api/course";
+        private string CourseSubject { get; set; }
+        private AlertCard _alertCard;
 
         protected override async Task OnInitializedAsync()
         {
-            lecturers = await _lecturerService.GetAll("api/lecturer");
+            Lecturers = await _lecturerService.GetAll("api/lecturer");
 
             if (!string.IsNullOrEmpty(Id))
             {
-                var Id = Guid.Parse(this.Id);
-                var response = await _courseService.GetById(Id, apiUrl);
-                courseAttendances = await _courseAttendanceService.GetAllById(Id, "api/course/GetStudentsInCourse");
-                if (response != null)
-                {
-                    courseModel = response;
-                    CourseSubject = courseModel.StudyPlanSubject.Name;
-                }
-                await RefreshStudentsInCourse();
+                var courseId = Guid.Parse(Id);
+                CourseModel = await _courseService.GetById(courseId, ApiUrl);
+                CourseAttendances = await _courseAttendanceService.GetAllById(courseId, "api/course/GetStudentsInCourse");
 
+                if (CourseModel != null)
+                {
+                    CourseSubject = CourseModel.StudyPlanSubject.Name;
+                }
+
+                await RefreshStudentsInCourse();
             }
         }
+
         protected async Task RefreshStudentsInCourse()
         {
-            var Id = Guid.Parse(this.Id);
-            courseAttendances = await _courseAttendanceService.GetAllById(Id, "api/course/GetStudentsInCourse");
+            if (!string.IsNullOrEmpty(Id))
+            {
+                var courseId = Guid.Parse(Id);
+                CourseAttendances = await _courseAttendanceService.GetAllById(courseId, "api/course/GetStudentsInCourse");
+            }
         }
 
         protected void HandleInvalidSubmit()
         {
-            Message = "There are some validation errors. Please try again.";
+            Message = "Ka disa gabime të validimit. Ju lutemi provoni përsëri.";
         }
 
-        //delete course
         protected async Task Delete()
         {
-            var response = await _courseService.Delete(courseModel.Id, apiUrl);
-            if (response)
+            if (CourseModel.Id != Guid.Empty)
             {
-                _navigationManager.NavigateTo("/courses");
+                var response = await _courseService.Delete(CourseModel.Id, ApiUrl);
+                if (response)
+                {
+                    _navigationManager.NavigateTo("/courses");
+                }
+                else
+                {
+                    _alertCard.ShowAlert("Fshirja e kursit dështoi.", "alert-danger");
+                }
             }
         }
 
         protected async Task HandleValidSubmit()
         {
-            if (courseModel.Id == Guid.Empty)
+            try
             {
-                try
+                if (CourseModel.Id == Guid.Empty)
                 {
-                    var response = await _courseService.Add(courseModel, apiUrl);
+                    var response = await _courseService.Add(CourseModel, ApiUrl);
                     if (response != null)
                     {
-                        _navigationManager.NavigateTo("/courses");
+                        _alertCard.ShowAlert("Kursi u shtua me sukses!", "alert-success");
                     }
                 }
-                catch (Exception ex)
+                else
                 {
-                    Message = "There are some validation errors. Please try again.";
+                    var response = await _courseService.Update(CourseModel, ApiUrl);
+                    if (response != null)
+                    {
+                        _alertCard.ShowAlert("Kursi u përditësua me sukses!", "alert-success");
+                    }
                 }
-                
             }
-            else
+            catch (Exception ex)
             {
-                var response = await _courseService.Update(courseModel, apiUrl);
-                if (response != null)
-                {
-                    _navigationManager.NavigateTo("/courses");
-                }
+                _alertCard.ShowAlert("Diçka shkoi keq: " + ex.Message, "alert-danger");
             }
         }
 
-        //SaveCourseAttendances
         protected async Task SaveCourseAttendances()
         {
-            var response = await _courseAttendanceService.UpdateList(courseAttendances, "api/course/UpdateCourseAttendance");
+            var response = await _courseAttendanceService.UpdateList(CourseAttendances, "api/course/UpdateCourseAttendance");
             if (response)
             {
-                Message = "Course attendances saved successfully!";
+                _alertCard.ShowAlert("Frekuentimet u përditësuan me sukses", "alert-success");
             }
             else
             {
-                Message = "Failed to save course attendances!";
+                _alertCard.ShowAlert("Përditësimi i frekuentimeve dështoi!", "alert-danger");
             }
         }
 
-        //calculate attendance
         protected async Task CalculateCourseAttendance()
         {
-            var response = await _courseAttendanceService.ExecuteProcessById(courseModel.Id, "api/course/CalculateCourseAttendance");
+            var response = await _courseAttendanceService.ExecuteProcessById(CourseModel.Id, "api/course/CalculateCourseAttendance");
             if (response)
             {
                 await RefreshStudentsInCourse();
-                ShowSuccessAlert();
+                _alertCard.ShowAlert("Procedura u ekzekutua me sukses. Statusi për pjesëmarrjen në kurs është përcaktuar bazuar në planin e studimit dhe orët totale për seminarë dhe laboratorë. Për të shënuar kursin si të përfunduar për një student, nevojiten të paktën 75% e orëve të seminarëve dhe 100% e orëve të laboratorit të frekuentuara.", "alert-success");
             }
             else
             {
-                Message = "Failed to calculate course attendance!";
+                _alertCard.ShowAlert("Procesi për kalkulimin e frekuentimeve të kursit dështoi!", "alert-danger");
             }
         }
-        public void ShowSuccessAlert()
-        {
-            alertCard.ShowAlert("The stored procedure has been executed successfully. The \"is Attended\" status for the course has been determined based on the study plan subject associated with this course and the total hours allocated for seminars and laboratories. To mark the course as \"attended\" for a student, it is required that at least 75% of the total seminar hours and 100% of the total lab hours have been attended.", "alert-success");
-        }
-
     }
 }

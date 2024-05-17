@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace DigitalFacultySystem.DataService.Repositories
 {
-    public class ExamRetakeRequestRepository : GenericRepository<ExamRetakeRequest>, IExamRetakeRequestRepository
+    public class ExamRetakeRequestRepository : GenericRepository<studyPlan>, IExamRetakeRequestRepository
     {
         public ExamRetakeRequestRepository(AppDbContext context, ILogger logger) : base(context, logger)
         {
@@ -23,7 +23,7 @@ namespace DigitalFacultySystem.DataService.Repositories
         {
             try
             {
-                var newRequest = new ExamRetakeRequest
+                var newRequest = new studyPlan
                 {
                     Id = Guid.NewGuid(),
                     StudentId = request.StudentId,

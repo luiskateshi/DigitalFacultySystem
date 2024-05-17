@@ -1,35 +1,44 @@
 ﻿@page "/Students"
-@attribute [Authorize(Roles = "Admin, Staff")]
+@attribute [Authorize(Roles = "admin, staff")]
 
-<h3>Students</h3>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>Studentët</h3>
+        <a href="Student" class="btn btn-primary mb-3">Shto Student</a>
+    </div>
 
-<a href="@("Student")" class="btn btn-success"> Add new</a>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>Firstname</th>
-            <th>Lastname</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Birthday</th>
-            <th>Edit</th>
-
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var student in _students)
-        {
-            <tr>
-                <td>@student.Id</td>
-                <td>@student.Firstname</td>
-                <td>@student.Lastname</td>
-                <td>@student.Email</td>
-                <td>@student.Tel</td>
-                <td>@student.Birthdate</td>
-                <td><a href="@("Student/" + student.Id)" class="btn btn-primary">Edit</a></td>
-            </tr>
-        }
-    </tbody>
-
-</table>
+    @if (_students == null)
+    {
+        <p><em>Duke ngarkuar...</em></p>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col">Emri</th>
+                        <th scope="col">Mbiemri</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Telefoni</th>
+                        <th scope="col">Data e Lindjes</th>
+                        <th scope="col" class="text-end pe-3">Veprimet</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var student in _students)
+                    {
+                        <tr>
+                            <td>@student.Firstname</td>
+                            <td>@student.Lastname</td>
+                            <td>@student.Email</td>
+                            <td>@student.Tel</td>
+                            <td>@student.Birthdate</td>
+                            <td class="text-end pe-3"><a href="@("Student/" + student.Id)" class="btn btn-warning">Edito</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

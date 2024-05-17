@@ -13,7 +13,5 @@ public class ExamsSession : BaseEntity
 
     public virtual AcademicYear? AcademicYear { get; set; }
 
-    public virtual ICollection<ExamRetakeRequest> ExamRetakeRequests { get; set; } = new List<ExamRetakeRequest>();
-
     public virtual ICollection<Exam> Exams { get; set; } = new List<Exam>();
 }

@@ -19,7 +19,7 @@ namespace DigitalFacultySystem.Api.Controllers
         }
 
         [HttpGet("all")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> GetAllAcademicYears()
         {
             var years = await _unitOfWork.AcademicYears.All();

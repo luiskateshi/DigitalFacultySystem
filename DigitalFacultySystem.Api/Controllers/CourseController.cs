@@ -45,6 +45,7 @@ namespace DigitalFacultySystem.Api.Controllers
             return Ok();
             
         }
+
         [HttpPost("generateStudentsInCourses")]
         public async Task<IActionResult> GenerateStudentsInCourses()
         {

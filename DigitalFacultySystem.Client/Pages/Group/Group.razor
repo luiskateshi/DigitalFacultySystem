@@ -1,103 +1,141 @@
 ﻿@page "/Group"
-@page "/Group/{id}"
-@attribute [Authorize(Roles = "Admin, Staff")]
+@page "/Group/{Id}"
+@attribute [Authorize(Roles = "admin, staff")]
 
+<PageTitle>Grupi</PageTitle>
 
-@if (string.IsNullOrEmpty(Id))
-{
-    <PageTitle>Group Add</PageTitle>
-    <h3>Add a Group</h3>
-}
-else
-{
-    <h3>Group - @groupModel.Name</h3>
-    <PageTitle>Group Update</PageTitle>
-    <p>Update Group</p>
-}
+<div class="container p-4 bg-light rounded border shadow-lg mb-4">
+    @if (string.IsNullOrEmpty(Id))
+    {
+        <h3>Shto Grupin</h3>
+    }
+    else
+    {
+        <h3>Grupi - @groupModel.Name</h3>
+        <p class="text-muted">Përditëso Grupin</p>
+    }
+</div>
 
-<div class="row card">
-    <EditForm Model="@groupModel" OnValidSubmit="@HandleValidSubmit" OnInvalidSubmit="@HandleInvalidSubmit" FormName="sampleForm">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <button class="btn btn-secondary" @onclick="@(() => _navi.NavigateTo("groups"))">Kthehu</button>
+                <div>
+                    @if (string.IsNullOrEmpty(Id))
+                    {
+                        <h4>Shto Grupin</h4>
+                    }
+                    else
+                    {
+                        <h4>Përditëso Grupin</h4>
+                    }
+                </div>
+            </div>
+            <div class="card shadow-lg">
+                <div class="card-body">
+                    <EditForm Model="@groupModel" OnValidSubmit="@HandleValidSubmit" OnInvalidSubmit="@HandleInvalidSubmit" class="needs-validation" novalidate>
+                        <DataAnnotationsValidator />
+                        <ValidationSummary class="text-danger" />
 
-        <div class="form-group">
-            <label for="name">Name (Unique*)</label>
-            <InputText class="form-control" @bind-Value="groupModel.Name" />
-            <label for="gen">Generation</label>
-            <select class="form-control" @bind="groupModel.GenerationId">
-                <option value="">Select a Generation</option>
-                @foreach (var row in generations)
-                {
-                    <option value="@row.Id">@row.Name</option>
-                }
-            </select>
-            <br />
-            <button type="submit" class="btn btn-primary">Save</button>
-
-
-            <div class="form-group">
-                <p>@Message</p>
+                        <div class="form-group mb-3">
+                            <label for="name" class="form-label">Emri (Unik*)</label>
+                            <InputText id="name" class="form-control" @bind-Value="groupModel.Name" required />
+                            <ValidationMessage For="@(() => groupModel.Name)" class="text-danger" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="gen" class="form-label">Gjenerata</label>
+                            <select id="gen" class="form-control" @bind="groupModel.GenerationId" required>
+                                <option value="">Zgjidh një Gjeneratë</option>
+                                @foreach (var row in generations)
+                                {
+                                    <option value="@row.Id">@row.Name</option>
+                                }
+                            </select>
+                            <ValidationMessage For="@(() => groupModel.GenerationId)" class="text-danger" />
+                        </div>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button type="submit" class="btn btn-success me-md-2">Ruaj</button>
+                            @if (!string.IsNullOrEmpty(Id))
+                            {
+                                <button type="button" class="btn btn-danger">Fshi</button>
+                            }
+                        </div>
+                    </EditForm>
+                </div>
             </div>
         </div>
-    </EditForm>
-    <br />
-    <br />
-
-    <!-- Students without a group table on the left and students inside the group of this page in the right side-->
-    <div class="row">
-        <div class="col-md-6">
-            <h2>Students without a group</h2>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Firstname</th>
-                        <th>Lastname</th>
-                        <th>Birthdate</th>
-                        <th>Acation</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var student in studentsWithoutGroup)
-                    {
-                        <tr>
-                            <td>@student.Firstname</td>
-                            <td>@student.Lastname</td>
-                            <td>@student.Birthdate</td>
-                            <td>
-                                <button class="btn btn-primary" @onclick="() => AddStudentToGroup(student.Id)">Add</button>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-        <div class="col-md-6">
-            <h2>Students in this group</h2>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Firstname</th>
-                        <th>Lastname</th>
-                        <th>Birthdate</th>
-                        <th>Acation</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var student in studentsInGroup)
-                    {
-                        <tr>
-                            <td>@student.Firstname</td>
-                            <td>@student.Lastname</td>
-                            <td>@student.Birthdate</td>
-                            <td>
-                                <button class="btn btn-danger" @onclick="() => RemoveStudentFromGroup(student.Id)">Remove</button>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-
-
     </div>
 </div>
+
+<br />
+<AlertCard @ref="_alertCard" />
+
+@if (!string.IsNullOrEmpty(Id))
+{
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <div class="col-md-6">
+                <h4>Studentët pa grup</h4>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Emri</th>
+                            <th>Mbiemri</th>
+                            <th>Data e Lindjes</th>
+                            <th>Veprim</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var student in studentsWithoutGroup)
+                        {
+                            <tr>
+                                <td>@student.Firstname</td>
+                                <td>@student.Lastname</td>
+                                <td>@student.Birthdate</td>
+                                <td>
+                                    <button class="btn btn-primary" @onclick="() => AddStudentToGroup(student.Id)">Shto</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-6">
+                <h4>Studentët në këtë grup</h4>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Emri</th>
+                            <th>Mbiemri</th>
+                            <th>Data e Lindjes</th>
+                            <th>Veprim</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var student in studentsInGroup)
+                        {
+                            <tr>
+                                <td>@student.Firstname</td>
+                                <td>@student.Lastname</td>
+                                <td>@student.Birthdate</td>
+                                <td>
+                                    <button class="btn btn-danger" @onclick="() => RemoveStudentFromGroup(student.Id)">Hiq</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private void DoNothing()
+    {
+        // This method intentionally left blank
+    }
+
+    // Other code from your existing component...
+}
