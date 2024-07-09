@@ -1,11 +1,11 @@
 ﻿@page "/StudyPlanSubject/{Id}"
 @attribute [Authorize(Roles = "admin, staff")]
 
-<PageTitle>Subjekti i Planit të Studimit</PageTitle>
+<PageTitle>Lënda e Planit të Studimit</PageTitle>
 
 <div class="container p-4 bg-light rounded border shadow-lg mb-4">
-    <h3>Subjekti i Planit të Studimit - @planSubjectModel.Name</h3>
-    <p class="text-muted">Përditëso Subjektin e Planit të Studimit</p>
+    <h3>Lënda e Planit të Studimit - @planSubjectModel.Name</h3>
+    <p class="text-muted">Përditëso Lëndën e Planit të Studimit</p>
 </div>
 
 <div class="container mt-4">
@@ -14,7 +14,7 @@
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <button class="btn btn-secondary" @onclick="GoBack">Kthehu</button>
                 <div>
-                    <h4>Përditëso Subjektin e Planit të Studimit</h4>
+                    <h4>Përditëso Lëndën e Planit të Studimit</h4>
                 </div>
             </div>
             <div class="card shadow-lg">
@@ -24,7 +24,7 @@
                         <ValidationSummary class="text-danger" />
 
                         <div class="form-group mb-3">
-                            <label for="name" class="form-label">Emri i Subjektit të Planit</label>
+                            <label for="name" class="form-label">Emri i Lëndës së Planit</label>
                             <InputText id="name" class="form-control" @bind-Value="planSubjectModel.Name" required />
                             <ValidationMessage For="@(() => planSubjectModel.Name)" class="text-danger" />
                         </div>
@@ -34,7 +34,7 @@
                             <ValidationMessage For="@(() => planSubjectModel.CreditsNo)" class="text-danger" />
                         </div>
                         <div class="form-group mb-3">
-                            <label for="totalHoursLectures">Totali i Orëve të Ligjërimeve</label>
+                            <label for="totalHoursLectures">Totali i Orëve të Leksionit</label>
                             <InputNumber id="totalHoursLectures" class="form-control" @bind-Value="planSubjectModel.TotalHoursLectures" required />
                             <ValidationMessage For="@(() => planSubjectModel.TotalHoursLectures)" class="text-danger" />
                         </div>

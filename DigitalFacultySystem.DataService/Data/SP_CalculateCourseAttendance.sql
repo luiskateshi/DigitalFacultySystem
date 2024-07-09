@@ -4,7 +4,6 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    -- Calculate total seminar hours and total lab hours for each student in the specified course
     UPDATE ca
     SET ca.isAttended = CASE 
                             WHEN ca.SeminarHoursAttended >= 0.75 * sps.TotalHoursSeminars

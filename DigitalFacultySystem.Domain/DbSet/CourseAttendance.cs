@@ -11,6 +11,8 @@ namespace DigitalFacultySystem.Domain.Entities;
 
         public bool isAttended { get; set; } = false;
 
+        public bool requirementsAreFilled { get; set; } = false;
+
         public Guid? StudentInCourseId { get; set; }
 
         public virtual StudentInCourse? StudentInCourse { get; set; }

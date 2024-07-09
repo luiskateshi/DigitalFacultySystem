@@ -11,6 +11,7 @@ namespace DigitalFacultySystem.Entities.Dtos.RequestResponse
         public int? SeminarHoursAttended { get; set; } = 0;
         public int? LabHoursAttended { get; set; } = 0;
         public bool isAttended { get; set; } = false;
+        public bool requirementsAreFilled { get; set; } = false;
         public Guid? StudentInCourseId { get; set; }
         public Guid? CourseId { get; set; }
         public Guid? StudentId { get; set; }

@@ -126,6 +126,15 @@ namespace DigitalFacultySystem.Api.Controllers
             return Ok(grades);
         }
 
+        //search for students by name or lastname
+        [HttpGet("Search")]
+        public async Task<IActionResult> Search(string name)
+        {
+            var students = await _unitOfWork.Students.GetStudentsByNameOrLastname(name);
+            var result = _mapper.Map<IEnumerable<StudentDto>>(students);
+            return Ok(result);
+        }
+
 
 
 

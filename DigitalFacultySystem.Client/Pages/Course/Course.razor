@@ -107,7 +107,8 @@
                                     <th>Emri i Grupit</th>
                                     <th>Orët e Seminarit të Frekuentuara</th>
                                     <th>Orët e Lab të Frekuentuara</th>
-                                    <th>Kursi është Frekuentuar</th>
+                                    <th>Frekuentimi i kaluar</th>
+                                    <th>Detyra e kursit fiton</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -117,10 +118,13 @@
                                         <td>@row.StudentName</td>
                                         <td>@row.StudentLastName</td>
                                         <td>@row.groupName</td>
-                                        <td><InputNumber class="form-control" @bind-Value="row.SeminarHoursAttended" disabled="@row.isAttended" /></td>
-                                        <td><InputNumber class="form-control" @bind-Value="row.LabHoursAttended" disabled="@row.LabHoursAttended" /></td>
+                                        <td><InputNumber class="form-control" @bind-Value="row.SeminarHoursAttended"  /></td>
+                                        <td><InputNumber class="form-control" @bind-Value="row.LabHoursAttended" /></td>
                                         <td style="text-align: center;">
                                             <InputCheckbox class="form-check-input" @bind-Value="row.isAttended" disabled />
+                                        </td>
+                                        <td style="text-align: center;">
+                                            <InputCheckbox class="form-check-input" @bind-Value="row.requirementsAreFilled" />
                                         </td>
                                     </tr>
                                 }

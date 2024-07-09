@@ -16,7 +16,7 @@ BEGIN
     SET IsActive = 0
     WHERE Id = @examSessionId;
 
-    -- Deactivate student records with grade > 4 in exams of this session
+    -- Deactivate student records in StudentInCoursees with grade > 4 in exams of this session
     UPDATE StudentInCoursees 
     SET IsActive = 0
     WHERE id in (SELECT sic.id FROM StudentInCoursees sic

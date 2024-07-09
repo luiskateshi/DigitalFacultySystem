@@ -20,7 +20,7 @@ namespace DigitalFacultySystem.DataService.Data
 
         public virtual DbSet<Exam> Exams { get; set; }
 
-        public virtual DbSet<studyPlan> ExamRetakeRequests { get; set; }
+        public virtual DbSet<ExamRetakeRequest> ExamRetakeRequests { get; set; }
 
         public virtual DbSet<ExamsSession> ExamsSessions { get; set; }
 

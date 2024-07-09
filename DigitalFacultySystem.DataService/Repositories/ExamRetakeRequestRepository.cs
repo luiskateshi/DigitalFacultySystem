@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace DigitalFacultySystem.DataService.Repositories
 {
-    public class ExamRetakeRequestRepository : GenericRepository<studyPlan>, IExamRetakeRequestRepository
+    public class ExamRetakeRequestRepository : GenericRepository<ExamRetakeRequest>, IExamRetakeRequestRepository
     {
         public ExamRetakeRequestRepository(AppDbContext context, ILogger logger) : base(context, logger)
         {
@@ -23,18 +23,17 @@ namespace DigitalFacultySystem.DataService.Repositories
         {
             try
             {
-                var newRequest = new studyPlan
+                var newRequest = new ExamRetakeRequest
                 {
+
                     Id = Guid.NewGuid(),
                     StudentId = request.StudentId,
+                    DateOfRequest = DateOnly.FromDateTime(DateTime.Now),
                     ExamId = request.ExamId,
-                    DateOfRequest = DateOnly.FromDateTime(DateTime.Today),
                     isActive = true
-                    
                 };
 
                 await _dbSet.AddAsync(newRequest);
-                //await _context.SaveChangesAsync();
 
                 return true;
             }
@@ -87,7 +86,6 @@ namespace DigitalFacultySystem.DataService.Repositories
 
             return result;
         }
-
 
     }
 }

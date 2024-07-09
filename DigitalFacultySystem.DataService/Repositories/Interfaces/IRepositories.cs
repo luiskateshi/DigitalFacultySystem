@@ -12,6 +12,7 @@ namespace DigitalFacultySystem.DataService.Repositories.Interfaces
 
         Task<IEnumerable<StudentExamGradesDto>> GetStudentExamGrades(Guid studentId);
         Task<Student> GetStudentByUserId(Guid userId);
+        Task<IEnumerable<Student>> GetStudentsByNameOrLastname(string name);
 
     }
 
@@ -64,7 +65,7 @@ namespace DigitalFacultySystem.DataService.Repositories.Interfaces
         Task<bool> UpdateStudentsInExam(IEnumerable<StudentsInExamDto> studentsInExam);
     }
 
-    public interface IExamRetakeRequestRepository : IGenericRepository<studyPlan>
+    public interface IExamRetakeRequestRepository : IGenericRepository<ExamRetakeRequest>
     {
         Task<bool> AddRequest(ExamRetakeRequestDto request);
         Task<IEnumerable<ExamRetakeRequestDto>> GetRequestsByStudent(Guid studentId);

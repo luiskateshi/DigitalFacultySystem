@@ -17,12 +17,15 @@ public class Student : BaseEntity
 
     public string? Tel { get; set; }
 
+    //add a field for current semester of studies and set default value to 1
+    public int? CurrentSemester { get; set; } = 1;
+
     public Guid? ApplicationUserId { get; set; }
 
     //aspiringDegree field 
     public Guid? DegreeProgramId { get; set; }
 
-    public List<studyPlan> ExamRetakeRequests { get; set; } = new List<studyPlan>();
+    public List<ExamRetakeRequest> ExamRetakeRequests { get; set; } = new List<ExamRetakeRequest>();
 
     public List<StudentInCourse> StudentInCourses { get; set; } = new List<StudentInCourse>();
 

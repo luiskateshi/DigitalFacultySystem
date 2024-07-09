@@ -70,6 +70,7 @@ namespace DigitalFacultySystem.DataService.Repositories
                     StudentLastName = x.Student.Lastname,
                     IsActive = x.isActive
                 })
+                .OrderBy(x => x.StudentFirstName)
                 .ToListAsync();
 
             return result;

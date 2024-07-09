@@ -7,9 +7,20 @@
         <a href="Student" class="btn btn-primary mb-3">Shto Student</a>
     </div>
 
+    <div class="mb-3">
+        <label for="search" class="form-label">Kërko Studentë</label>
+        <div class="input-group">
+            <input id="search" class="form-control" style="width: 50%;" @bind-value="searchTerm" @oninput="SearchStudents" placeholder="Kërko sipas emrit ose mbiemrit..." />
+        </div>
+    </div>
+
     @if (_students == null)
     {
         <p><em>Duke ngarkuar...</em></p>
+    }
+    else if (!_students.Any())
+    {
+        <p><em>Nuk u gjetën studentë.</em></p>
     }
     else
     {

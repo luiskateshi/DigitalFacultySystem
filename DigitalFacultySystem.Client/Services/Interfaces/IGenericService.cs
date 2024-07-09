@@ -12,5 +12,6 @@
         Task<bool> ExecuteProcess(string apiUrl);
         Task<bool> ExecuteProcessById(Guid Id, string apiUrl);
         Task<Guid> GetStudentIdByUserId(Guid Id, string apiUrl);
+        Task<List<T>> Search(string name, string apiUrl);
     }
 }

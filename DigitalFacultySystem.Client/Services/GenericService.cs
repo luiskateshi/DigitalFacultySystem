@@ -210,6 +210,23 @@ namespace DigitalFacultySystem.Client.Services
             }
         }
 
+        //search by name
+        public async Task<List<TDto>> Search(string name, string apiUrl)
+        {
+            try
+            {
+                string? token = await localStorageService.GetItemAsStringAsync("token");
+                _http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                var response = await _http.GetStreamAsync($"{apiUrl}?name={name}");
+                var entities = await JsonSerializer.DeserializeAsync<List<TDto>>(response, _SerializerOptions);
+                return entities;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
+        }
 
     }
 }

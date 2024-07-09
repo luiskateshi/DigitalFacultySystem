@@ -12,15 +12,29 @@ namespace DigitalFacultySystem.Client.Pages.Student
         private IGenericService<StudentDto> _studentService { get; set; }
         public IEnumerable<StudentDto> _students { get; set; } = new List<StudentDto>();
 
-        private string apiUrl = "api/Student";
+        private string searchTerm;
 
 
         protected override async Task OnInitializedAsync()
         {
-            var rows = await _studentService.GetAll(apiUrl);
-            if (rows?.Count != 0)
+            await LoadStudents();
+        }
+
+        private async Task LoadStudents()
+        {
+            _students = await _studentService.GetAll("api/student");
+        }
+
+        private async Task SearchStudents(ChangeEventArgs e)
+        {
+            searchTerm = e.Value.ToString();
+            if (string.IsNullOrEmpty(searchTerm))
             {
-                _students = rows;
+                await LoadStudents();
+            }
+            else
+            {
+                _students = await _studentService.Search(searchTerm, "api/student/search");
             }
         }
 

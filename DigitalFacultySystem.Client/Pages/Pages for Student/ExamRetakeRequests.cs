@@ -46,7 +46,7 @@ namespace DigitalFacultySystem.Client.Pages.Pages_for_Student
                 ShowAlertCardDanger(Message);
                 return;
             }
-            if (requests.Count >= 2)
+            if (requests.Count > 2)
             {
                 Message = "Numri maksimal i kërkesave për këtë vit akademik është arritur.";
                 ShowAlertCardDanger(Message);

@@ -23,7 +23,7 @@ namespace DigitalFacultySystem.Api.MappingProfiles
             CreateMap<StudentInGroupDto, StudentsInGroup>();
             CreateMap<StudyPlanSubjectDto, StudyPlanSubject>();
             CreateMap<ExamDto, Exam>();
-            CreateMap<ExamRetakeRequestDto, studyPlan>();
+            CreateMap<ExamRetakeRequestDto, ExamRetakeRequest>();
         }
     }
 }

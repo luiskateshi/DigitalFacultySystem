@@ -13,5 +13,6 @@ namespace DigitalFacultySystem.Entities.Dtos.RequestResponse
         public DateOnly? DateOfRequest { get; set; }
         public Guid? ExamId { get; set; }
         public String? ExamName { get; set; }
+
     }
 }

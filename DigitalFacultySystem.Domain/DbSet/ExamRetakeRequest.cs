@@ -2,7 +2,7 @@
 
 namespace DigitalFacultySystem.Domain.Entities;
 
-public class studyPlan : BaseEntity
+public class ExamRetakeRequest : BaseEntity
 {
     public Guid? StudentId { get; set; }
 

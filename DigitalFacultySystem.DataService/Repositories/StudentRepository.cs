@@ -122,6 +122,25 @@ namespace DigitalFacultySystem.DataService.Repositories
         }
 
 
+        //get all students whose name or lastname is like 
+        public async Task<IEnumerable<Student>> GetStudentsByNameOrLastname(string name)
+        {
+            try
+            {
+                return await _dbSet.Where(x => x.Firstname.Contains(name) || x.Lastname.Contains(name))
+                    .AsNoTracking()
+                    .AsSplitQuery()
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "{Repo} Error in GetStudentsByNameOrLastname function", typeof(StudentRepository));
+                throw;
+            }
+        }
+
+
+
 
 
 

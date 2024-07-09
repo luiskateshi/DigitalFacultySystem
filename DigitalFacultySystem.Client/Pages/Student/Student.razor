@@ -64,7 +64,7 @@
                             <ValidationMessage For="@(() => studentModel.Tel)" class="text-danger" />
                         </div>
                         <div class="form-group mb-3">
-                            <label for="degreeProgram" class="form-label">Programi i Diplomës</label>
+                            <label for="degreeProgram" class="form-label">Programi i përzgjedhur</label>
                             <InputSelect id="degreeProgram" class="form-control" @bind-Value="studentModel.DegreeProgramId" required>
                                 <option value="">Zgjidh Programin e Diplomës</option>
                                 @foreach (var degreeProgram in degreePrograms)
